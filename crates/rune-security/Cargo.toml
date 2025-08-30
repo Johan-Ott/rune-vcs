@@ -12,7 +12,7 @@ serde_json = "1.0"
 tokio = { version = "1.0", features = ["full"] }
 uuid = { version = "1.0", features = ["v4"] }
 bcrypt = "0.15"
-ring = "0.17"
+ring = "0.17.12"
 aes-gcm = "0.10"
 rsa = "0.9"
 x509-parser = "0.16"
