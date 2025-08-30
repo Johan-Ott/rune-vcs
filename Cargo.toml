@@ -15,6 +15,7 @@ members = [
     "crates/rune-planning",
     "crates/rune-security",
     "crates/rune-ai",
+    "tests",
 ]
 
 [workspace.package]

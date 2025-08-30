@@ -4,14 +4,21 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-rune-core = { path = "crates/rune-core" }
-rune-store = { path = "crates/rune-store" }
+rune-core = { path = "../crates/rune-core" }
+rune-store = { path = "../crates/rune-store" }
+rune-cli = { path = "../crates/rune-cli" }
 tempfile = { workspace = true }
+anyhow = { workspace = true }
+chrono = { workspace = true }
 
 [[test]]
 name = "integration_tests"
-path = "tests/integration_tests.rs"
+path = "integration_tests.rs"
 
 [[test]]
 name = "cli_integration_tests"
-path = "tests/cli_integration_tests.rs"
+path = "cli_integration_tests.rs"
+
+[[test]]
+name = "comprehensive_integration_tests"
+path = "comprehensive_integration_tests.rs"
