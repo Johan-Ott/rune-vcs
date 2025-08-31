@@ -1,4 +1,4 @@
-# Rune VCS Release Notes
+# Rune Release Notes
 
 ## Version 0.0.2 (August 14, 2025) 🚀
 

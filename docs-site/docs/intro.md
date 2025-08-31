@@ -2,13 +2,13 @@
 sidebar_position: 1
 ---
 
-# 🚀 Welcome to Rune VCS
+# 🚀 Welcome to Rune
 
 **Revolutionary AI-Powered Version Control System**
 
-Rune VCS transforms how developers interact with version control by introducing natural language commands, AI-powered operations, and intelligent automation that makes Git look outdated and P4V seem primitive.
+Rune transforms how developers interact with version control by introducing natural language commands, AI-powered operations, and intelligent automation that makes Git look outdated and P4V seem primitive.
 
-## ✨ Why Rune VCS?
+## ✨ Why Rune?
 
 ### 🧠 Natural Language Interface
 ```bash

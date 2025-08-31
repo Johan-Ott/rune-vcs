@@ -1,0 +1,328 @@
+/**
+ * Rune VCS Documentation - Dark Theme
+ * Matching the visual client design
+ */
+
+/* CSS variables for consistent theming */
+:root {
+  /* Primary Brand Colors */
+  --ifm-color-primary: #00d4aa;  /* Rune green accent */
+  --ifm-color-primary-dark: #00c299;
+  --ifm-color-primary-darker: #00b88f;
+  --ifm-color-primary-darkest: #009975;
+  --ifm-color-primary-light: #00e6bb;
+  --ifm-color-primary-lighter: #00f0c5;
+  --ifm-color-primary-lightest: #1affd4;
+
+  /* Dark theme colors matching your visual client */
+  --ifm-background-color: #1a1a1a;
+  --ifm-background-surface-color: #242424;
+  --ifm-color-content: #e0e0e0;
+  --ifm-color-content-secondary: #b0b0b0;
+  
+  /* Navigation and UI elements */
+  --ifm-navbar-background-color: #1e1e1e;
+  --ifm-navbar-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  
+  /* Sidebar colors */
+  --ifm-menu-color: #d0d0d0;
+  --ifm-menu-color-background-active: rgba(0, 212, 170, 0.1);
+  --ifm-menu-color-background-hover: rgba(255, 255, 255, 0.05);
+  
+  /* Code blocks */
+  --ifm-code-background: #2d2d2d;
+  --ifm-code-color: #f8f8f2;
+  
+  /* Cards and containers */
+  --ifm-card-background-color: #2a2a2a;
+  
+  /* Borders */
+  --ifm-border-color: #3a3a3a;
+  
+  /* Success/warning colors matching your UI */
+  --ifm-color-success: #00d4aa;
+  --ifm-color-warning: #ffb84d;
+  --ifm-color-danger: #ff6b6b;
+  --ifm-color-info: #4da6ff;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Dark theme specific overrides */
+[data-theme='dark'] {
+  --ifm-color-primary: #00d4aa;
+  --ifm-color-primary-dark: #00c299;
+  --ifm-color-primary-darker: #00b88f;
+  --ifm-color-primary-darkest: #009975;
+  --ifm-color-primary-light: #00e6bb;
+  --ifm-color-primary-lighter: #00f0c5;
+  --ifm-color-primary-lightest: #1affd4;
+
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  
+  /* Match your visual client's dark theme */
+  --ifm-background-color: #1a1a1a;
+  --ifm-background-surface-color: #242424;
+  --ifm-navbar-background-color: #1e1e1e;
+}
+
+/* Custom styling for Rune VCS branding */
+.hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-bottom: 2px solid var(--ifm-color-primary);
+}
+
+.hero__title {
+  background: linear-gradient(135deg, var(--ifm-color-primary), #1affd4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 3.5rem;
+}
+
+.hero__subtitle {
+  color: var(--ifm-color-content-secondary);
+  font-size: 1.3rem;
+  margin-top: 1rem;
+}
+
+/* Code blocks styling to match your visual client */
+.prism-code {
+  background-color: #2d2d2d !important;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6c7986;
+}
+
+.token.punctuation {
+  color: #d4d4d4;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #00d4aa;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #a8e6cf;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #d4d4d4;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #4da6ff;
+}
+
+.token.function,
+.token.class-name {
+  color: #ffb84d;
+}
+
+/* Navigation styling to match your design */
+.navbar {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.navbar__brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.navbar__title {
+  background: linear-gradient(135deg, var(--ifm-color-primary), #1affd4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Sidebar styling */
+.theme-doc-sidebar-container {
+  background-color: var(--ifm-background-surface-color);
+  border-right: 1px solid var(--ifm-border-color);
+}
+
+.menu__link {
+  border-radius: 6px;
+  margin: 2px 0;
+  transition: all 0.2s ease;
+}
+
+.menu__link:hover {
+  background-color: rgba(0, 212, 170, 0.1);
+  color: var(--ifm-color-primary);
+}
+
+.menu__link--active {
+  background-color: rgba(0, 212, 170, 0.15);
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  border-left: 3px solid var(--ifm-color-primary);
+  padding-left: calc(var(--ifm-menu-link-padding-horizontal) - 3px);
+}
+
+/* Cards and feature boxes */
+.card {
+  background-color: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 212, 170, 0.15);
+  border-color: rgba(0, 212, 170, 0.3);
+}
+
+/* Button styling */
+.button--primary {
+  background: linear-gradient(135deg, var(--ifm-color-primary), #00e6bb);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.button--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 212, 170, 0.3);
+  background: linear-gradient(135deg, #00e6bb, var(--ifm-color-primary));
+}
+
+.button--secondary {
+  background-color: transparent;
+  border: 2px solid var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.button--secondary:hover {
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-background-color);
+  transform: translateY(-1px);
+}
+
+/* Table styling to match your interface */
+table {
+  background-color: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th {
+  background-color: rgba(0, 212, 170, 0.1);
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+td {
+  border-color: var(--ifm-border-color);
+}
+
+tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Status badges like in your visual client */
+.badge {
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+}
+
+.badge--success {
+  background-color: rgba(0, 212, 170, 0.2);
+  color: var(--ifm-color-primary);
+  border: 1px solid var(--ifm-color-primary);
+}
+
+.badge--warning {
+  background-color: rgba(255, 184, 77, 0.2);
+  color: var(--ifm-color-warning);
+  border: 1px solid var(--ifm-color-warning);
+}
+
+.badge--danger {
+  background-color: rgba(255, 107, 107, 0.2);
+  color: var(--ifm-color-danger);
+  border: 1px solid var(--ifm-color-danger);
+}
+
+/* Custom command demo styling */
+.command-demo {
+  background-color: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.command-demo:before {
+  content: "💻 Terminal";
+  display: block;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .hero__title {
+    font-size: 2.5rem;
+  }
+  
+  .hero__subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ifm-background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ifm-color-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-color-primary-light);
+}

@@ -2,35 +2,29 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
 const config: Config = {
-  title: 'Rune VCS',
-  tagline: 'Revolutionary AI-Powered Version Control System',
+  title: 'Rune',
+  tagline: 'Version control, finally simplified',
   favicon: 'img/favicon.ico',
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+  // Future flags for Docusaurus v4 compatibility
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: true,
   },
 
-  // Set the production url of your site here
+  // Production deployment configuration
   url: 'https://captainotlo.github.io',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/rune-vcs/',
 
   // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'CaptainOtto', // Usually your GitHub org/user name.
-  projectName: 'rune-vcs', // Usually your repo name.
+  // GitHub deployment configuration
+  organizationName: 'CaptainOtto',
+  projectName: 'rune-vcs',
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
+  // Internationalization configuration
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -42,26 +36,11 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+          // Edit URL for our repository
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/CaptainOtto/rune-vcs/tree/main/docs-site/docs/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false, // Disable blog functionality
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -71,24 +50,34 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/rune-vcs-social-card.jpg',
+    // Force dark mode to match visual client aesthetic
+    colorMode: {
+      defaultMode: 'dark',
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
     navbar: {
-      title: 'My Site',
+      title: '',
       logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        alt: 'Rune VCS',
+        src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDNMMTggOUwxMiAxNUw2IDlMMTIgM1oiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjEuNSIgZmlsbD0ibm9uZSIvPgo8cGF0aCBkPSJNMTIgOUwxMiAyMU05IDEyTDE1IDEyIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjkiIHI9IjEuNSIgZmlsbD0iY3VycmVudENvbG9yIi8+Cjwvc3ZnPgo=',
       },
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'docsSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Docs',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
+          to: '/docs/installation/quick-start',
+          label: 'Quick Start',
+          position: 'left'
+        },
+        {
+          href: 'https://github.com/CaptainOtto/rune-vcs/releases',
+          label: 'Download',
           position: 'right',
         },
       ],
@@ -97,11 +86,36 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Documentation',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Getting Started',
               to: '/docs/intro',
+            },
+            {
+              label: 'Installation',
+              to: '/docs/installation/quick-start',
+            },
+            {
+              label: 'API Reference',
+              to: '/docs/api',
+            },
+          ],
+        },
+        {
+          title: 'Features',
+          items: [
+            {
+              label: 'Natural Language Commands',
+              to: '/docs/features/natural-language',
+            },
+            {
+              label: 'AI-Powered Operations',
+              to: '/docs/features/ai-commands',
+            },
+            {
+              label: 'Binary Management',
+              to: '/docs/features/binary-management',
             },
           ],
         },
@@ -109,16 +123,16 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'GitHub Issues',
+              href: 'https://github.com/CaptainOtto/rune-vcs/issues',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'Discussions',
+              href: 'https://github.com/CaptainOtto/rune-vcs/discussions',
             },
             {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'Release Notes',
+              to: '/blog',
             },
           ],
         },
@@ -126,17 +140,17 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'GitHub Repository',
+              href: 'https://github.com/CaptainOtto/rune-vcs',
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: 'Download Latest',
+              href: 'https://github.com/CaptainOtto/rune-vcs/releases',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Rune VCS. Revolutionary AI-Powered Version Control.`,
     },
     prism: {
       theme: prismThemes.github,
