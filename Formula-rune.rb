@@ -1,10 +1,10 @@
 class Rune < Formula
-  desc "Rune VCS - Revolutionary AI-powered version control system"
-  homepage "https://github.com/CaptainOtto/rune-vcs"
-  url "https://github.com/CaptainOtto/rune-vcs/releases/download/v0.3.1-alpha.5/rune-v0.3.1-alpha.5-aarch64-apple-darwin.tar.gz"
-  sha256 "7f8f000d5e878848e6b6e17605d6a7fda0a5c308b078ca7a58eed8a7c7b2c2ad"
-  license "MIT"
-  version "0.3.1-alpha.5"
+  desc "Rune - Modern, intelligent version control system"
+  homepage "https://github.com/Johan-Ott/rune-vcs"
+  url "https://github.com/Johan-Ott/rune-vcs/releases/download/v0.3.2-alpha.6/rune-0.3.2-alpha.6-aarch64-apple-darwin.tar.gz"
+  sha256 "287ca9250b499f7aac37b1f866136e7663bd66e26b708bd751fa56363b114377"
+  license "Apache-2.0"
+  version "0.3.2-alpha.6"
 
   depends_on "git"
 
