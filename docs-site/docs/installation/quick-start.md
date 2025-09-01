@@ -26,6 +26,7 @@ rune --version
 ```
 
 **Expected Output:**
+
 ```
 rune 0.3.1-alpha.5
 ```
@@ -35,6 +36,7 @@ rune 0.3.1-alpha.5
 Download the pre-built binary for your platform:
 
 #### macOS (Apple Silicon)
+
 ```bash
 # Download and extract
 curl -L https://github.com/CaptainOtto/rune-vcs/releases/latest/download/rune-v0.3.1-alpha.5-aarch64-apple-darwin.tar.gz | tar xz
@@ -48,8 +50,9 @@ rune --version
 ```
 
 #### macOS (Intel)
+
 ```bash
-# Download and extract  
+# Download and extract
 curl -L https://github.com/CaptainOtto/rune-vcs/releases/latest/download/rune-v0.3.1-alpha.5-x86_64-apple-darwin.tar.gz | tar xz
 
 # Make executable and install
@@ -58,6 +61,7 @@ sudo mv rune /usr/local/bin/
 ```
 
 #### Linux (x86_64)
+
 ```bash
 # Download and extract
 wget https://github.com/CaptainOtto/rune-vcs/releases/latest/download/rune-v0.3.1-alpha.5-x86_64-unknown-linux-gnu.tar.gz
@@ -68,6 +72,7 @@ sudo mv rune /usr/local/bin/
 ```
 
 #### Windows
+
 ```powershell
 # Download from GitHub releases
 # Extract the ZIP file
@@ -91,6 +96,7 @@ sudo cp target/release/rune /usr/local/bin/
 ```
 
 **Requirements for building:**
+
 - Rust 1.70.0 or later
 - Git
 - 2GB free space for build artifacts
@@ -121,6 +127,7 @@ rune status
 ```
 
 **Expected Output:**
+
 ```
 ✅ Initialized empty Rune repository in /path/to/my-rune-project/.rune
 On branch main
@@ -161,6 +168,7 @@ rune work  # Interactive workflow assistance
 ### Common Issues
 
 #### Permission Denied
+
 ```bash
 # If you get permission denied errors
 sudo chmod +x /usr/local/bin/rune
@@ -173,6 +181,7 @@ source ~/.bashrc
 ```
 
 #### Command Not Found
+
 ```bash
 # Check if rune is in your PATH
 which rune
@@ -186,6 +195,7 @@ source ~/.bashrc
 ```
 
 #### macOS Security Warning
+
 If you see "rune cannot be opened because it is from an unidentified developer":
 
 ```bash
@@ -208,16 +218,19 @@ If you encounter issues:
 Now that you have Rune VCS installed:
 
 ### 🎓 **Learn the Basics**
+
 - [Natural Language Commands](/docs/features/natural-language) - Learn the revolutionary interface
 - [AI-Powered Operations](/docs/features/ai-commands) - Explore intelligent automation
 - [Smart Workflows](/docs/features/smart-workflows) - Streamline your development process
 
 ### 📦 **Migrate Existing Projects**
+
 - [From Git](/docs/guides/migration-from-git) - Seamlessly migrate Git repositories
 - [From Perforce](/docs/guides/migration-from-p4v) - Move from P4V to Rune VCS
 - [Team Migration](/docs/guides/team-migration) - Onboard your entire team
 
 ### 🏢 **Enterprise Setup**
+
 - [Authentication](/docs/enterprise/authentication) - Set up user management
 - [Security](/docs/enterprise/security) - Configure security policies
 - [CI/CD Integration](/docs/enterprise/cicd) - Integrate with your pipeline

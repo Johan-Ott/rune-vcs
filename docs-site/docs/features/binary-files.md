@@ -9,12 +9,14 @@ Rune excels at managing binary files like images, videos, 3D models, and databas
 ## Why Binary Files Are Hard
 
 ### Traditional VCS Problems
+
 - **No meaningful diffs**: "binary file changed" tells you nothing
 - **Large repository sizes**: Every version stored completely
 - **Slow operations**: Downloading entire history for large files
 - **Merge conflicts**: Impossible to merge binary changes intelligently
 
 ### Rune's Solutions
+
 - **Semantic understanding**: AI analyzes what actually changed
 - **Smart storage**: Efficient binary diffing and compression
 - **Intelligent merging**: Context-aware binary conflict resolution
@@ -23,6 +25,7 @@ Rune excels at managing binary files like images, videos, 3D models, and databas
 ## Supported File Types
 
 ### Images
+
 ```bash
 # Smart image handling
 rune add images/logo.png
@@ -35,6 +38,7 @@ rune diff images/logo.png
 ```
 
 ### 3D Models
+
 ```bash
 # 3D model intelligence
 rune add models/character.fbx
@@ -47,6 +51,7 @@ rune diff models/character.fbx
 ```
 
 ### Audio/Video
+
 ```bash
 # Media file analysis
 rune add media/soundtrack.wav
@@ -58,6 +63,7 @@ rune add video/demo.mp4
 ```
 
 ### Documents
+
 ```bash
 # Office documents
 rune add documents/proposal.docx
@@ -68,6 +74,7 @@ rune add spreadsheets/budget.xlsx
 ```
 
 ### Databases
+
 ```bash
 # Database files
 rune add data/users.sqlite
@@ -82,6 +89,7 @@ rune diff data/users.sqlite
 ## Smart Storage
 
 ### Binary Diffing
+
 ```bash
 # Traditional Git: stores complete files
 # File v1: 10MB
@@ -95,6 +103,7 @@ rune diff data/users.sqlite
 ```
 
 ### Compression
+
 ```bash
 # Automatic compression by file type
 rune add textures/*.png
@@ -105,6 +114,7 @@ rune add models/*.obj
 ```
 
 ### Smart Deduplication
+
 ```bash
 # Detects similar binary content
 rune add screenshots/
@@ -115,6 +125,7 @@ rune add screenshots/
 ## AI-Powered Analysis
 
 ### Image Analysis
+
 ```bash
 # Content understanding
 rune analyze images/screenshot.png
@@ -130,6 +141,7 @@ rune diff images/before.png images/after.png
 ```
 
 ### Model Analysis
+
 ```bash
 # 3D model intelligence
 rune analyze models/car.blend
@@ -145,6 +157,7 @@ rune diff models/car_v1.blend models/car_v2.blend
 ```
 
 ### Document Analysis
+
 ```bash
 # Document content understanding
 rune analyze documents/report.pdf
@@ -162,6 +175,7 @@ rune diff documents/draft.docx documents/final.docx
 ## Binary Conflict Resolution
 
 ### Intelligent Strategies
+
 ```bash
 # Traditional: binary merge always fails
 git merge feature/assets
@@ -176,6 +190,7 @@ rune merge --smart feature/assets
 ```
 
 ### Resolution Options
+
 ```bash
 # Choose resolution strategy
 rune merge --binary-strategy newest      # Use most recent
@@ -190,6 +205,7 @@ rune config binary.documents.strategy newest
 ```
 
 ### Interactive Resolution
+
 ```bash
 # When automatic resolution isn't possible
 rune merge feature/models
@@ -203,6 +219,7 @@ rune merge feature/models
 ## Performance Optimization
 
 ### Lazy Loading
+
 ```bash
 # Only download what you need
 rune clone --shallow project.git
@@ -215,6 +232,7 @@ rune checkout models/character.fbx
 ```
 
 ### Smart Caching
+
 ```bash
 # Intelligent binary caching
 rune config cache.binary.size 5GB      # Cache up to 5GB
@@ -228,6 +246,7 @@ rune cache status
 ```
 
 ### Network Optimization
+
 ```bash
 # Efficient binary transfers
 rune push --compress-binaries
@@ -242,6 +261,7 @@ rune pull --binary-parallel 4
 ## Binary File Best Practices
 
 ### Organization
+
 ```bash
 # Organize by type
 assets/
@@ -258,6 +278,7 @@ assets/
 ```
 
 ### Naming Conventions
+
 ```bash
 # Descriptive names help AI
 character_idle_animation.fbx      # Good
@@ -268,6 +289,7 @@ button2.png                       # Poor
 ```
 
 ### Version Management
+
 ```bash
 # Use branches for major asset changes
 rune "create a branch for character model updates"
@@ -281,6 +303,7 @@ rune tag textures-hd -m "High definition texture pack"
 ## Integration with External Tools
 
 ### Image Editors
+
 ```bash
 # Configure external tools
 rune config tool.images "Photoshop.exe"
@@ -292,6 +315,7 @@ rune edit images/logo.png
 ```
 
 ### 3D Software Integration
+
 ```bash
 # Blender integration
 rune config tool.blend "blender"
@@ -304,6 +328,7 @@ rune edit scenes/main_scene.ma
 ```
 
 ### Game Engine Integration
+
 ```bash
 # Unity project handling
 rune add Assets/
@@ -321,6 +346,7 @@ rune add Content/
 ## Troubleshooting
 
 ### Large Files
+
 ```bash
 # File too large
 rune add video/demo.mov
@@ -333,6 +359,7 @@ rune config binary.max-size 5GB
 ```
 
 ### Corruption Detection
+
 ```bash
 # Verify binary integrity
 rune verify binaries/
@@ -347,6 +374,7 @@ rune repair texture.png
 ```
 
 ### Storage Issues
+
 ```bash
 # Repository too large
 rune analyze storage

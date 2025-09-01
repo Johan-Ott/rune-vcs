@@ -9,6 +9,7 @@ Discover how Rune's AI features revolutionize version control workflows.
 ## Natural Language Interface
 
 ### Command Translation
+
 Rune understands plain English and translates it to version control operations:
 
 ```bash
@@ -20,6 +21,7 @@ git merge --no-ff feature    → rune "merge the feature branch properly"
 ```
 
 ### Context-Aware Commands
+
 The AI understands your project context:
 
 ```bash
@@ -37,6 +39,7 @@ rune "back out the last risky change"
 ## Smart Commit Messages
 
 ### Automatic Message Generation
+
 ```bash
 # Instead of writing commit messages manually
 git add .
@@ -49,6 +52,7 @@ rune commit --smart
 ```
 
 ### Message Quality Examples
+
 ```bash
 # Poor manual messages
 git commit -m "fix"
@@ -63,6 +67,7 @@ rune commit --smart
 ```
 
 ### Custom Message Styles
+
 ```bash
 # Configure AI message style
 rune config ai.commit-style conventional  # feat: add user auth
@@ -73,6 +78,7 @@ rune config ai.commit-style brief         # User authentication
 ## Intelligent Conflict Resolution
 
 ### Automatic Resolution
+
 ```bash
 # Traditional Git conflicts
 git merge feature/auth
@@ -86,6 +92,7 @@ rune merge --smart feature/auth
 ```
 
 ### Conflict Analysis
+
 ```bash
 # Before merging, predict conflicts
 rune predict-conflicts feature/auth
@@ -96,6 +103,7 @@ rune predict-conflicts feature/auth
 ```
 
 ### Resolution Strategies
+
 ```bash
 # Let AI choose the best strategy
 rune merge --smart feature/auth
@@ -109,6 +117,7 @@ rune merge --ai-strategy balanced      # Best of both (default)
 ## Binary File Intelligence
 
 ### Smart Binary Handling
+
 ```bash
 # AI understands different binary types
 rune add images/
@@ -121,6 +130,7 @@ rune add models/character.fbx
 ```
 
 ### Binary File Analysis
+
 ```bash
 # Traditional: no insight into binary changes
 git diff --stat
@@ -136,6 +146,7 @@ rune diff --smart
 ## Predictive Features
 
 ### Conflict Prediction
+
 ```bash
 # Before starting work
 rune "will my branch conflict with main?"
@@ -150,6 +161,7 @@ rune suggest
 ```
 
 ### Workflow Suggestions
+
 ```bash
 # AI suggests next actions
 rune suggest
@@ -165,6 +177,7 @@ rune "what should I do next?"
 ## Team Collaboration AI
 
 ### Smart Merging
+
 ```bash
 # AI coordinates team merges
 rune merge --team-smart feature/auth
@@ -175,6 +188,7 @@ rune merge --team-smart feature/auth
 ```
 
 ### Collaboration Insights
+
 ```bash
 # Understand team activity
 rune "show me what the team changed this week"
@@ -190,6 +204,7 @@ rune "who else is working on authentication?"
 ## Advanced AI Features
 
 ### Code Understanding
+
 ```bash
 # AI understands code semantics
 rune "create a branch for refactoring the database layer"
@@ -203,6 +218,7 @@ rune "show me security-related changes"
 ```
 
 ### Pattern Recognition
+
 ```bash
 # AI learns from your patterns
 rune commit --smart
@@ -218,6 +234,7 @@ rune "create a branch for the new service"
 ```
 
 ### Intelligent Suggestions
+
 ```bash
 # AI suggests improvements
 rune analyze
@@ -235,6 +252,7 @@ rune performance
 ## Configuration
 
 ### Enable AI Features
+
 ```bash
 # Enable all AI features
 rune config ai.enabled true
@@ -246,6 +264,7 @@ rune config ai.suggestions frequent
 ```
 
 ### AI Behavior Settings
+
 ```bash
 # Commit message style
 rune config ai.commit-style conventional
@@ -262,6 +281,7 @@ rune config ai.suggestions detailed
 ```
 
 ### Privacy and Security
+
 ```bash
 # AI privacy settings
 rune config ai.local-only true        # No cloud processing
@@ -272,6 +292,7 @@ rune config ai.opt-out false          # Participate in improvements
 ## Troubleshooting AI Features
 
 ### When AI Gets It Wrong
+
 ```bash
 # Override AI commit message
 rune commit --smart --edit
@@ -287,6 +308,7 @@ rune config ai.reset-learning
 ```
 
 ### AI Performance
+
 ```bash
 # Check AI status
 rune ai status
@@ -304,6 +326,7 @@ rune ai update
 ### Getting the Most from AI
 
 #### Do's
+
 - Use descriptive branch names for better AI understanding
 - Let AI generate commit messages, then review and edit
 - Trust AI for simple conflicts, review complex ones
@@ -311,6 +334,7 @@ rune ai update
 - Provide feedback when AI suggestions are wrong
 
 #### Don'ts
+
 - Don't blindly accept all AI suggestions
 - Don't skip reviewing AI-generated commit messages
 - Don't disable AI features without trying them
@@ -318,6 +342,7 @@ rune ai update
 - Don't ignore AI security recommendations
 
 ### Training the AI
+
 ```bash
 # Help AI learn your preferences
 rune feedback good      # After good AI suggestion

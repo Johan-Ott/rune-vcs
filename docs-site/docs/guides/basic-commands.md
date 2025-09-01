@@ -9,6 +9,7 @@ Learn the essential Rune commands to manage your repositories effectively.
 ## Repository Operations
 
 ### Initialize Repository
+
 ```bash
 # Create new repository
 rune init
@@ -21,6 +22,7 @@ rune init --bare
 ```
 
 ### Clone Repository
+
 ```bash
 # Clone from URL
 rune clone https://github.com/user/repo.git
@@ -35,6 +37,7 @@ rune clone --branch develop https://github.com/user/repo.git
 ## File Operations
 
 ### Check Status
+
 ```bash
 # Traditional syntax
 rune status
@@ -45,6 +48,7 @@ rune "what files are modified?"
 ```
 
 ### Add Files
+
 ```bash
 # Add specific file
 rune add filename.txt
@@ -60,6 +64,7 @@ rune "stage all JavaScript files"
 ```
 
 ### Commit Changes
+
 ```bash
 # Commit with message
 rune commit -m "Add user authentication"
@@ -77,6 +82,7 @@ rune "commit these changes with a good message"
 ## Branch Operations
 
 ### Create Branches
+
 ```bash
 # Create new branch
 rune branch feature/login
@@ -89,6 +95,7 @@ rune "create a branch for user authentication"
 ```
 
 ### Switch Branches
+
 ```bash
 # Switch to existing branch
 rune checkout main
@@ -102,6 +109,7 @@ rune "switch to the main branch"
 ```
 
 ### Merge Branches
+
 ```bash
 # Merge branch
 rune merge feature/login
@@ -116,6 +124,7 @@ rune "merge the login feature intelligently"
 ## Remote Operations
 
 ### Add Remotes
+
 ```bash
 # Add origin remote
 rune remote add origin https://github.com/user/repo.git
@@ -125,6 +134,7 @@ rune remote -v
 ```
 
 ### Push Changes
+
 ```bash
 # Push to origin/main
 rune push origin main
@@ -137,6 +147,7 @@ rune push -u origin feature/login
 ```
 
 ### Pull Changes
+
 ```bash
 # Pull from origin
 rune pull origin main
@@ -151,6 +162,7 @@ rune pull --smart
 ## History and Logs
 
 ### View History
+
 ```bash
 # Show commit history
 rune log
@@ -166,6 +178,7 @@ rune "show me the last 10 commits"
 ```
 
 ### View Differences
+
 ```bash
 # Show working directory changes
 rune diff
@@ -183,6 +196,7 @@ rune "show me what changed between main and this branch"
 ## AI-Powered Commands
 
 ### Natural Language Interface
+
 ```bash
 # Any operation in plain English
 rune "undo the last commit"
@@ -192,6 +206,7 @@ rune "resolve conflicts and commit"
 ```
 
 ### Smart Operations
+
 ```bash
 # AI-generated commit messages
 rune commit --smart
@@ -209,6 +224,7 @@ rune predict-conflicts
 ## Configuration
 
 ### User Settings
+
 ```bash
 # Set user name and email
 rune config user.name "Your Name"
@@ -219,6 +235,7 @@ rune config --list
 ```
 
 ### Repository Settings
+
 ```bash
 # Set default branch
 rune config init.defaultBranch main

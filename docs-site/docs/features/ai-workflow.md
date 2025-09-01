@@ -16,6 +16,7 @@ rune "find who broke the login function"
 ## Intelligent Conflict Resolution
 
 When conflicts arise, Rune's AI analyzes:
+
 - **Code context** and semantic meaning
 - **Historical patterns** from your repository
 - **Team coding styles** and conventions
@@ -43,18 +44,21 @@ Rune learns from your workflow patterns:
 ## AI Features in Action
 
 ### Smart Branch Management
+
 ```bash
 rune "create a branch for the user dashboard feature"
 # → Creates 'feature/user-dashboard-ui' with proper conventions
 ```
 
 ### Contextual Help
+
 ```bash
 rune "how do I revert this specific file?"
 # → Shows relevant commands with examples from your repository
 ```
 
 ### Automated Workflows
+
 ```bash
 rune "deploy to staging when tests pass"
 # → Sets up intelligent CI/CD automation
@@ -69,4 +73,4 @@ rune "deploy to staging when tests pass"
 
 ---
 
-*Experience the future of version control. Let AI handle the complexity while you focus on building amazing software.*
+_Experience the future of version control. Let AI handle the complexity while you focus on building amazing software._

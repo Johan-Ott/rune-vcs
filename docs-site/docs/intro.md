@@ -11,6 +11,7 @@ Rune transforms how developers interact with version control by introducing natu
 ## ✨ Why Rune?
 
 ### 🧠 Natural Language Interface
+
 ```bash
 # Instead of cryptic Git commands
 rune "show me what conflicts exist"
@@ -19,6 +20,7 @@ rune "stage all changes and commit with a smart message"
 ```
 
 ### 🤖 AI-Powered Operations
+
 ```bash
 # Revolutionary AI features
 rune binary analyze          # Smart binary file analysis
@@ -28,6 +30,7 @@ rune predict-conflicts     # Proactive conflict detection
 ```
 
 ### ⚡ Superior Performance
+
 - **3x faster** than standard Git operations
 - **Parallel processing** for large repositories
 - **Intelligent caching** reduces redundant work
@@ -36,18 +39,21 @@ rune predict-conflicts     # Proactive conflict detection
 ## 🎯 Perfect For
 
 ### 👥 **Development Teams**
+
 - Frustrated with Git's complexity
 - Need better binary file handling
 - Want AI-assisted workflows
 - Require enterprise security
 
 ### 🏢 **Enterprises**
+
 - Moving from Perforce (P4V)
 - Need advanced security features
 - Require compliance documentation
 - Want to reduce training costs
 
 ### 🚀 **Innovation Leaders**
+
 - Early adopters of cutting-edge tech
 - Building AI-first development workflows
 - Creating next-generation products
@@ -55,18 +61,19 @@ rune predict-conflicts     # Proactive conflict detection
 
 ## 🔥 Revolutionary Features
 
-| Feature | Traditional Git | Perforce (P4V) | **Rune VCS** |
-|---------|----------------|-----------------|--------------|
-| **Natural Language** | ❌ Cryptic commands | ❌ GUI-only | ✅ `"show me conflicts"` |
-| **AI Integration** | ❌ None | ❌ None | ✅ Smart suggestions & automation |
-| **Binary Handling** | ⚠️ Poor | ✅ Good | ✅ **Revolutionary** (AI-optimized) |
-| **Performance** | ⚠️ Slow on large repos | ⚠️ Network dependent | ✅ **3x faster** |
-| **Learning Curve** | ❌ Steep | ⚠️ Moderate | ✅ **Intuitive** |
-| **Cost** | ✅ Free | ❌ Expensive licensing | ✅ **Open Source** |
+| Feature              | Traditional Git        | Perforce (P4V)         | **Rune VCS**                        |
+| -------------------- | ---------------------- | ---------------------- | ----------------------------------- |
+| **Natural Language** | ❌ Cryptic commands    | ❌ GUI-only            | ✅ `"show me conflicts"`            |
+| **AI Integration**   | ❌ None                | ❌ None                | ✅ Smart suggestions & automation   |
+| **Binary Handling**  | ⚠️ Poor                | ✅ Good                | ✅ **Revolutionary** (AI-optimized) |
+| **Performance**      | ⚠️ Slow on large repos | ⚠️ Network dependent   | ✅ **3x faster**                    |
+| **Learning Curve**   | ❌ Steep               | ⚠️ Moderate            | ✅ **Intuitive**                    |
+| **Cost**             | ✅ Free                | ❌ Expensive licensing | ✅ **Open Source**                  |
 
 ## 🎬 See It In Action
 
 ### Quick Demo: Natural Language Commands
+
 ```bash
 # Traditional Git workflow (painful)
 git status
@@ -80,6 +87,7 @@ rune "ship my changes for user auth feature"
 ```
 
 ### AI Binary Management
+
 ```bash
 # Analyze and optimize binary files
 rune binary analyze
@@ -94,6 +102,7 @@ rune binary optimize --smart
 ## 📚 Getting Started
 
 ### Option 1: Homebrew (Recommended for macOS)
+
 ```bash
 brew tap CaptainOtto/rune-vcs
 brew install rune
@@ -101,6 +110,7 @@ rune --version
 ```
 
 ### Option 2: Direct Download
+
 ```bash
 # Download latest release
 curl -L https://github.com/CaptainOtto/rune-vcs/releases/latest/download/rune-macos.tar.gz | tar xz
@@ -108,6 +118,7 @@ sudo mv rune /usr/local/bin/
 ```
 
 ### Option 3: From Source
+
 ```bash
 git clone https://github.com/CaptainOtto/rune-vcs.git
 cd rune-vcs
@@ -118,21 +129,25 @@ sudo cp target/release/rune /usr/local/bin/
 ## 🎓 Learning Path
 
 ### 1. **Quick Start** (5 minutes)
+
 - Install Rune VCS
 - Initialize your first repository
 - Try basic natural language commands
 
 ### 2. **Revolutionary Features** (15 minutes)
+
 - Explore AI-powered commands
 - Test binary management
 - Experience smart workflows
 
 ### 3. **Migration Guide** (30 minutes)
+
 - Migrate from Git repositories
 - Import from Perforce (P4V)
 - Team onboarding strategies
 
 ### 4. **Advanced Features** (1 hour)
+
 - Enterprise authentication
 - Custom AI workflows
 - Performance optimization
@@ -140,13 +155,13 @@ sudo cp target/release/rune /usr/local/bin/
 
 ## 🌟 What Users Say
 
-> *"Rune VCS made our team 3x more productive. The natural language interface eliminated the learning curve completely."*
+> _"Rune VCS made our team 3x more productive. The natural language interface eliminated the learning curve completely."_
 > — **Sarah Chen**, Senior Developer at TechCorp
 
-> *"Moving from P4V to Rune VCS was the best decision we made. Better performance, lower costs, and the AI features are game-changing."*
+> _"Moving from P4V to Rune VCS was the best decision we made. Better performance, lower costs, and the AI features are game-changing."_
 > — **Marcus Rodriguez**, DevOps Lead at StartupXYZ
 
-> *"Finally, a version control system that thinks like developers do. The AI suggestions are surprisingly accurate."*
+> _"Finally, a version control system that thinks like developers do. The AI suggestions are surprisingly accurate."_
 > — **Dr. Emily Watson**, Research Team Lead at AILabs
 
 ## 🚀 Ready to Transform Your Workflow?

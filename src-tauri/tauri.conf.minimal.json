@@ -1,0 +1,15 @@
+{
+  "package": {
+    "productName": "Rune VCS Visual Client",
+    "version": "0.3.2-alpha.6"
+  },
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:3001"
+  },
+  "tauri": {
+    "bundle": {
+      "identifier": "com.runevcs.visual-client"
+    }
+  }
+}

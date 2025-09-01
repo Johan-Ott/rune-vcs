@@ -1,0 +1,80 @@
+{
+  "productName": "Rune VCS Visual Client",
+  "version": "0.3.2-alpha.6",
+  "identifier": "com.runevcs.visual-client",
+  "build": {
+    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run dev",
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:3001"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Rune VCS Visual Client",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "minWidth": 800,
+        "minHeight": 600,
+        "center": true,
+        "decorations": true,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "theme": "Dark"
+      }
+    ],
+    "security": {
+      "csp": {
+        "default-src": "'self' tauri:",
+        "img-src": "'self' tauri: asset: https: data:",
+        "style-src": "'self' 'unsafe-inline'",
+        "script-src": "'self' 'unsafe-eval'",
+        "connect-src": "'self' tauri: https: wss: http://localhost:8080",
+        "font-src": "'self' data:"
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "DeveloperTool",
+    "copyright": "Copyright © 2025. All rights reserved.",
+    "shortDescription": "Visual Client for Rune VCS - Modern AI-powered version control",
+    "longDescription": "A modern, AI-powered visual client for Rune VCS with intelligent conflict resolution, performance optimization, and advanced branching strategies.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png", 
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "fs": {
+      "all": true,
+      "scope": ["$HOME/**", "$DOCUMENT/**", "$DESKTOP/**", "$DOWNLOAD/**", "$APPDATA/**", "$RESOURCE/**"]
+    },
+    "shell": {
+      "all": false,
+      "open": true
+    },
+    "dialog": {
+      "all": true
+    },
+    "notification": {
+      "all": true  
+    },
+    "os": {
+      "all": true
+    },
+    "process": {
+      "all": false,
+      "relaunch": true,
+      "exit": true
+    }
+  }
+}

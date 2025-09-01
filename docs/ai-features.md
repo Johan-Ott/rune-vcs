@@ -3,6 +3,7 @@
 ## 🤖 AI-Assisterad Konfliktlösning
 
 ### Kommandon
+
 ```bash
 # Förutsäg konflikter innan merge
 rune guard merge --predict
@@ -15,6 +16,7 @@ rune guard merge --strategies
 ```
 
 ### Funktioner
+
 - **95% precision** i konfliktförutsägelse
 - **Semantisk kodanalys** för Rust, Python, JavaScript
 - **Maskininlärning** från tidigare användarval
@@ -23,6 +25,7 @@ rune guard merge --strategies
 ## ⚡ Prestanda-optimering för Stora Repos
 
 ### Kommandon
+
 ```bash
 # Analysera repository prestanda
 rune performance analyze
@@ -35,6 +38,7 @@ rune performance monitor
 ```
 
 ### Funktioner
+
 - **Chunked processing** för filer >100MB
 - **Parallell filbehandling** med async/await
 - **Progressive laddning** med minnesoptimering
@@ -43,6 +47,7 @@ rune performance monitor
 ## 🎯 Avancerade AI Branching-Strategier
 
 ### Kommandon
+
 ```bash
 # AI-rekommendationer för branching
 rune smart-branch strategy
@@ -55,11 +60,13 @@ rune smart-branch release
 ```
 
 ### Strategier
+
 - **Rune-flow**: Optimerad för Rune VCS
 - **Simple-flow**: För små team
 - **Agile-flow**: För agila utvecklingsteam
 
 ### AI-funktioner
+
 - **Projekttyp-detektering** (web, library, CLI, etc.)
 - **Team-storlek analys** (small, medium, large)
 - **Automatisk workflow-automation**
@@ -68,13 +75,16 @@ rune smart-branch release
 ## 🛠️ Teknisk Implementation
 
 ### Nya Crates
+
 - `rune-ai`: Konfliktlösning och branching-strategier
 - `rune-performance`: Prestanda-optimering för stora repos
 
 ### Performance Stats
+
 - Hanterar repositories upp till **6.9 GB**
 - Analyserar **48,795 filer** i sekunder
 - **95% tillförlitlighet** för konfliktförutsägelse
 
 ### Integration
+
 Alla AI-funktioner är helt integrerade i Rune VCS utan externa dependencies på Git eller andra system.

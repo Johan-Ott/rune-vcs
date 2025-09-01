@@ -9,6 +9,7 @@ Learn how to work effectively with Rune in team environments.
 ## Team Workflow Setup
 
 ### Repository Initialization
+
 ```bash
 # Team lead creates main repository
 rune init --branch main
@@ -20,6 +21,7 @@ rune clone https://github.com/company/project.git
 ```
 
 ### Branch Protection Rules
+
 ```bash
 # Configure main branch protection
 rune config branch.main.protected true
@@ -30,6 +32,7 @@ rune config branch.main.require-ai-check true
 ## Collaborative Branching
 
 ### Feature Development
+
 ```bash
 # Developer starts new feature
 rune "create a branch for user authentication"
@@ -42,6 +45,7 @@ rune push origin feature/user-authentication
 ```
 
 ### Code Review Process
+
 ```bash
 # Before creating PR
 rune "prepare for code review"
@@ -54,6 +58,7 @@ rune push origin feature/user-authentication
 ```
 
 ### Integration Workflow
+
 ```bash
 # Merge approved feature
 rune checkout main
@@ -69,6 +74,7 @@ rune push origin --delete feature/user-authentication
 ## Conflict Resolution
 
 ### Prevention
+
 ```bash
 # Check for conflicts before starting work
 rune "will my branch conflict with main?"
@@ -80,6 +86,7 @@ rune "who else is working on authentication?"
 ```
 
 ### Resolution Strategies
+
 ```bash
 # Automatic resolution for simple conflicts
 rune merge --smart feature/auth
@@ -97,6 +104,7 @@ rune "coordinate merge with Alice's changes"
 ## Communication & Coordination
 
 ### Smart Notifications
+
 ```bash
 # Configure team notifications
 rune config team.notifications true
@@ -108,6 +116,7 @@ rune push origin feature/auth
 ```
 
 ### Work Visibility
+
 ```bash
 # Show team activity
 rune "what is everyone working on?"
@@ -121,6 +130,7 @@ rune "what branches depend on my changes?"
 ```
 
 ### Code Ownership
+
 ```bash
 # Set code owners
 echo "src/auth/ @alice" > .runeowners
@@ -135,6 +145,7 @@ rune commit --smart
 ## Team Configuration
 
 ### Shared Settings
+
 ```bash
 # Team-wide configuration
 rune config --team ai.commit-style conventional
@@ -147,6 +158,7 @@ rune config hooks.pre-push "npm run lint"
 ```
 
 ### Access Control
+
 ```bash
 # Role-based permissions
 rune config access.developers "read,write,merge"
@@ -162,6 +174,7 @@ rune config access.feature/* "developers+"
 ## Continuous Integration
 
 ### CI/CD Integration
+
 ```bash
 # Configure CI triggers
 rune config ci.on-push "npm test && npm run build"
@@ -174,6 +187,7 @@ rune status --ci
 ```
 
 ### Quality Gates
+
 ```bash
 # Automatic quality checks
 rune config quality.test-coverage 80
@@ -188,6 +202,7 @@ rune merge --validate feature/auth
 ## Distributed Teams
 
 ### Timezone Coordination
+
 ```bash
 # Show team timezone activity
 rune "when is the team most active?"
@@ -199,6 +214,7 @@ rune config team.auto-merge true  # Only during window
 ```
 
 ### Asynchronous Collaboration
+
 ```bash
 # Detailed commit messages for async teams
 rune commit --smart --detailed
@@ -216,6 +232,7 @@ rune "prepare handoff for Alice"
 ## Performance & Monitoring
 
 ### Repository Health
+
 ```bash
 # Team repository metrics
 rune analyze --team
@@ -227,6 +244,7 @@ rune analyze --team
 ```
 
 ### Collaboration Metrics
+
 ```bash
 # Team collaboration insights
 rune metrics --collaboration
@@ -238,6 +256,7 @@ rune metrics --collaboration
 ```
 
 ### Optimization Suggestions
+
 ```bash
 # AI-powered team recommendations
 rune suggest --team
@@ -250,6 +269,7 @@ rune suggest --team
 ## Security & Compliance
 
 ### Access Auditing
+
 ```bash
 # Audit trail
 rune audit --team --since "last month"
@@ -261,6 +281,7 @@ rune security --scan-commits
 ```
 
 ### Compliance Reporting
+
 ```bash
 # Generate compliance reports
 rune report --compliance --format pdf
@@ -276,6 +297,7 @@ rune restore --from-backup backup-2024-01-15.enc
 ### Common Problems
 
 #### Merge Conflicts
+
 ```bash
 # Problem: Frequent conflicts in specific files
 # Solution: Code ownership and coordination
@@ -284,6 +306,7 @@ rune "suggest coordination for src/database.js"
 ```
 
 #### Large Repository
+
 ```bash
 # Problem: Repository getting too large
 # Solution: Binary file management
@@ -292,6 +315,7 @@ rune suggest --storage-optimization
 ```
 
 #### Slow Operations
+
 ```bash
 # Problem: Slow push/pull for team
 # Solution: Network optimization
@@ -300,6 +324,7 @@ rune config network.parallel-transfers 4
 ```
 
 ### Emergency Procedures
+
 ```bash
 # Rollback problematic merge
 rune "undo the last team merge safely"
@@ -317,18 +342,21 @@ rune repair --team --verify-integrity
 ### Team Guidelines
 
 #### Communication
+
 - Use descriptive branch names
 - Write meaningful commit messages (or use AI)
 - Document breaking changes
 - Coordinate on shared files
 
 #### Workflow
+
 - Pull before starting work
 - Push frequently
 - Use feature branches
 - Review before merging
 
 #### Quality
+
 - Let AI help with code quality
 - Maintain test coverage
 - Use consistent coding standards
@@ -337,6 +365,7 @@ rune repair --team --verify-integrity
 ### Anti-Patterns to Avoid
 
 #### Bad Practices
+
 ```bash
 # Don't: Work directly on main
 rune checkout main
@@ -347,6 +376,7 @@ rune "create a branch for quick fix"  # ✅
 ```
 
 #### Communication Issues
+
 ```bash
 # Don't: Silent force pushes
 rune push --force  # ❌

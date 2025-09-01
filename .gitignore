@@ -75,3 +75,10 @@ rune-locks/
 # API/Server runtime data
 shrine-data/
 api-data/
+
+# npm
+node_modules/
+
+# Build output
+target/
+releases/

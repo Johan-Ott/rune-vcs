@@ -591,7 +591,11 @@ enum BranchCommand {
     Create {
         #[arg(help = "Name of the new branch")]
         name: String,
-        #[arg(long, short, help = "Start point for the new branch (commit, branch, or tag)")]
+        #[arg(
+            long,
+            short,
+            help = "Start point for the new branch (commit, branch, or tag)"
+        )]
         start_point: Option<String>,
         #[arg(long, help = "Set up tracking information")]
         track: bool,
@@ -742,7 +746,7 @@ enum Cmd {
     },
     Guide,
     Init,
-    
+
     // ============ SMART WORKFLOW COMMANDS ============
     /// Smart interactive workflow: status → staging → commit
     Work {
@@ -789,7 +793,12 @@ enum Cmd {
         graph: bool,
         #[arg(short = 'I', long, help = "Interactive mode")]
         interactive: bool,
-        #[arg(short = 'n', long, help = "Number of commits to show", default_value = "10")]
+        #[arg(
+            short = 'n',
+            long,
+            help = "Number of commits to show",
+            default_value = "10"
+        )]
         count: usize,
     },
     /// Smart cleanup: reset + stash + clean with safety checks
@@ -816,32 +825,45 @@ enum Cmd {
         #[arg(short = 't', long, help = "Set upstream tracking")]
         track: bool,
     },
-    
+
     // ============ AI-POWERED SMART FEATURES ============
     /// Smart AI suggestions based on repository context and patterns
     Suggest {
         #[arg(help = "What to get suggestions for: workflow, commit, branch, merge, performance")]
         category: Option<String>,
-        #[arg(short = 'f', long, help = "Focus area: security, performance, quality, productivity")]
+        #[arg(
+            short = 'f',
+            long,
+            help = "Focus area: security, performance, quality, productivity"
+        )]
         focus: Option<String>,
         #[arg(short = 'a', long, help = "Include automation suggestions")]
         automation: bool,
         #[arg(short = 'l', long, help = "Show learning opportunities")]
         learning: bool,
     },
-    
+
     /// Interactive repository dashboard with real-time insights
     Dashboard {
-        #[arg(short = 'r', long, help = "Refresh interval in seconds", default_value = "5")]
+        #[arg(
+            short = 'r',
+            long,
+            help = "Refresh interval in seconds",
+            default_value = "5"
+        )]
         refresh: u64,
         #[arg(short = 'c', long, help = "Show compact view")]
         compact: bool,
         #[arg(short = 'w', long, help = "Watch mode - continuous updates")]
         watch: bool,
-        #[arg(short = 'f', long, help = "Filter by: health, performance, security, activity")]
+        #[arg(
+            short = 'f',
+            long,
+            help = "Filter by: health, performance, security, activity"
+        )]
         filter: Option<String>,
     },
-    
+
     /// Smart workflow automation with AI recommendations
     AutoFlow {
         #[arg(help = "Automation type: release, hotfix, feature, cleanup")]
@@ -850,10 +872,14 @@ enum Cmd {
         dry_run: bool,
         #[arg(short = 'i', long, help = "Interactive mode with confirmations")]
         interactive: bool,
-        #[arg(short = 'l', long, help = "Learn from this workflow for future suggestions")]
+        #[arg(
+            short = 'l',
+            long,
+            help = "Learn from this workflow for future suggestions"
+        )]
         learn: bool,
     },
-    
+
     /// Intelligent conflict prevention and resolution
     Guard {
         #[arg(help = "Operation to guard: merge, rebase, pull, push")]
@@ -865,25 +891,25 @@ enum Cmd {
         #[arg(short = 's', long, help = "Suggest resolution strategies")]
         strategies: bool,
     },
-    
+
     /// Revolutionary AI-powered binary file management  
     Binary {
         #[command(subcommand)]
         cmd: Option<BinaryCommand>,
     },
-    
+
     /// Intelligent branching with AI optimization
     SmartBranch {
         #[command(subcommand)]
         cmd: Option<SmartBranchCommand>,
     },
-    
+
     /// Advanced performance optimization for large repositories
     Performance {
         #[command(subcommand)]
         cmd: Option<PerformanceCommand>,
     },
-    
+
     // ============ NATURAL LANGUAGE COMMANDS ============
     /// Natural language: Undo last commit (git reset HEAD~1)
     #[command(name = "rollback")]
@@ -897,7 +923,7 @@ enum Cmd {
         #[arg(long, help = "Completely discard changes")]
         hard: bool,
     },
-    
+
     /// Natural language: Show me what changed
     #[command(name = "changed")]
     Changed {
@@ -908,7 +934,7 @@ enum Cmd {
         #[arg(short, long, help = "Show statistics")]
         stats: bool,
     },
-    
+
     /// Natural language: What conflicts exist
     #[command(name = "conflicts")]
     Conflicts {
@@ -919,7 +945,7 @@ enum Cmd {
         #[arg(long, help = "Interactive conflict resolution")]
         interactive: bool,
     },
-    
+
     /// Smart fix common repository issues
     Fix {
         #[arg(help = "What to fix: conflicts, formatting, permissions, corruption")]
@@ -931,7 +957,7 @@ enum Cmd {
         #[arg(long, help = "Interactive mode for complex fixes")]
         interactive: bool,
     },
-    
+
     /// Optimize repository for better performance
     Optimize {
         #[arg(long, help = "Optimization level: basic, standard, aggressive")]
@@ -943,7 +969,7 @@ enum Cmd {
         #[arg(long, help = "Include LFS optimization")]
         lfs: bool,
     },
-    
+
     /// Interactive repository health check and maintenance
     Health {
         #[arg(long, help = "Show detailed health report")]
@@ -955,10 +981,9 @@ enum Cmd {
         #[arg(long, help = "Auto-fix safe issues")]
         auto_fix: bool,
     },
-    
+
     // ============ NATURAL LANGUAGE COMMANDS ============
-    
-    /// Natural language command: "undo last commit" 
+    /// Natural language command: "undo last commit"
     #[command(name = "undo-op", about = "Natural language undo operations")]
     UndoOp {
         #[arg(help = "What to undo: 'last commit', 'all changes', 'staging'")]
@@ -968,7 +993,7 @@ enum Cmd {
         #[arg(long, help = "Force undo without confirmation")]
         force: bool,
     },
-    
+
     /// Natural language command: "show me" information
     #[command(name = "display", about = "Natural language information display")]
     Display {
@@ -979,7 +1004,7 @@ enum Cmd {
         #[arg(long, help = "Show detailed information")]
         detailed: bool,
     },
-    
+
     /// Natural language command: "what changed"
     #[command(name = "what", about = "Natural language change queries")]
     What {
@@ -990,7 +1015,7 @@ enum Cmd {
         #[arg(long, help = "Include author information")]
         authors: bool,
     },
-    
+
     /// Enhanced developer experience with context-sensitive help
     #[command(name = "help-me", about = "Intelligent context-aware assistance")]
     HelpMe {
@@ -1001,7 +1026,7 @@ enum Cmd {
         #[arg(long, help = "Include workflow suggestions")]
         workflows: bool,
     },
-    
+
     /// Workflow templates for common development patterns
     #[command(name = "template", about = "Workflow automation templates")]
     Template {
@@ -1014,14 +1039,14 @@ enum Cmd {
         #[arg(long, help = "Customize template parameters")]
         customize: bool,
     },
-    
+
     /// Batch operations for multiple files/branches
     #[command(name = "batch", about = "Intelligent batch operations")]
     Batch {
         #[command(subcommand)]
         operation: Option<BatchOperation>,
     },
-    
+
     /// File system monitoring with auto-actions
     #[command(name = "watch", about = "Smart file system monitoring")]
     Watch {
@@ -1034,9 +1059,8 @@ enum Cmd {
         #[arg(long, help = "Watch patterns (glob)")]
         patterns: Vec<String>,
     },
-    
+
     // ============ TRADITIONAL COMMANDS ============
-    
     /// Clone a repository from a remote source
     Clone {
         /// Repository URL to clone
@@ -1101,9 +1125,17 @@ enum Cmd {
         branch: Option<String>,
         #[arg(long, help = "Create merge commit even for fast-forward")]
         no_ff: bool,
-        #[arg(long, help = "Abort merge in progress", conflicts_with = "continue_merge")]
+        #[arg(
+            long,
+            help = "Abort merge in progress",
+            conflicts_with = "continue_merge"
+        )]
         abort: bool,
-        #[arg(long, help = "Continue merge after resolving conflicts", conflicts_with = "abort")]
+        #[arg(
+            long,
+            help = "Continue merge after resolving conflicts",
+            conflicts_with = "abort"
+        )]
         continue_merge: bool,
         #[arg(long, help = "Merge strategy to use", value_parser = ["ours", "theirs", "recursive"])]
         strategy: Option<String>,
@@ -1171,7 +1203,10 @@ enum Cmd {
     },
     /// Show commit details
     Show {
-        #[arg(help = "Commit hash, or commit:file to show file at commit", default_value = "HEAD")]
+        #[arg(
+            help = "Commit hash, or commit:file to show file at commit",
+            default_value = "HEAD"
+        )]
         commit: String,
         #[arg(long, help = "Show specific file at the commit")]
         file: Option<PathBuf>,
@@ -1266,9 +1301,17 @@ enum Cmd {
         preserve_merges: bool,
         #[arg(long, help = "Automatically squash fixup commits")]
         autosquash: bool,
-        #[arg(long, help = "Abort rebase in progress", conflicts_with = "continue_rebase")]
+        #[arg(
+            long,
+            help = "Abort rebase in progress",
+            conflicts_with = "continue_rebase"
+        )]
         abort: bool,
-        #[arg(long, help = "Continue rebase after resolving conflicts", conflicts_with = "abort")]
+        #[arg(
+            long,
+            help = "Continue rebase after resolving conflicts",
+            conflicts_with = "abort"
+        )]
         continue_rebase: bool,
         #[arg(long, help = "Skip current commit during rebase")]
         skip: bool,
@@ -1684,7 +1727,7 @@ fn handle_config_command(cmd: ConfigCmd) -> anyhow::Result<()> {
 /// Get configuration value from global or repository config
 fn get_config_value(key: &str, global: bool) -> anyhow::Result<Option<String>> {
     use std::fs;
-    
+
     let config_path = if global {
         dirs::home_dir()
             .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?
@@ -1711,10 +1754,10 @@ fn get_config_value(key: &str, global: bool) -> anyhow::Result<Option<String>> {
         "user.name" => Ok(Some(whoami::realname())),
         "user.email" => Ok(Some(format!("{}@localhost", whoami::username()))),
         "intelligence.enabled" => Ok(Some(
-            std::env::var("RUNE_INTELLIGENCE").unwrap_or("true".to_string())
+            std::env::var("RUNE_INTELLIGENCE").unwrap_or("true".to_string()),
         )),
         "intelligence.notifications" => Ok(Some(
-            std::env::var("RUNE_INTELLIGENCE_NOTIFICATIONS").unwrap_or("info".to_string())
+            std::env::var("RUNE_INTELLIGENCE_NOTIFICATIONS").unwrap_or("info".to_string()),
         )),
         _ => Ok(None),
     }
@@ -1726,19 +1769,21 @@ fn set_config_value(key: &str, value: &str, global: bool) -> anyhow::Result<()> 
     use std::io::Write;
 
     let config_path = if global {
-        let home = dirs::home_dir()
-            .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
+        let home =
+            dirs::home_dir().ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
         home.join(".runeconfig")
     } else {
         let rune_dir = std::env::current_dir()?.join(".rune");
         if !rune_dir.exists() {
-            return Err(anyhow::anyhow!("Not in a Rune repository. Use --global for global config."));
+            return Err(anyhow::anyhow!(
+                "Not in a Rune repository. Use --global for global config."
+            ));
         }
         rune_dir.join("config")
     };
 
     let mut config = std::collections::HashMap::new();
-    
+
     // Read existing config
     if config_path.exists() {
         let content = fs::read_to_string(&config_path)?;
@@ -1756,7 +1801,7 @@ fn set_config_value(key: &str, value: &str, global: bool) -> anyhow::Result<()> 
     if let Some(parent) = config_path.parent() {
         fs::create_dir_all(parent)?;
     }
-    
+
     let mut file = fs::File::create(&config_path)?;
     for (k, v) in config {
         writeln!(file, "{}={}", k, v)?;
@@ -1771,13 +1816,15 @@ fn unset_config_value(key: &str, global: bool) -> anyhow::Result<()> {
     use std::io::Write;
 
     let config_path = if global {
-        let home = dirs::home_dir()
-            .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
+        let home =
+            dirs::home_dir().ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
         home.join(".runeconfig")
     } else {
         let rune_dir = std::env::current_dir()?.join(".rune");
         if !rune_dir.exists() {
-            return Err(anyhow::anyhow!("Not in a Rune repository. Use --global for global config."));
+            return Err(anyhow::anyhow!(
+                "Not in a Rune repository. Use --global for global config."
+            ));
         }
         rune_dir.join("config")
     };
@@ -1787,7 +1834,7 @@ fn unset_config_value(key: &str, global: bool) -> anyhow::Result<()> {
     }
 
     let mut config = std::collections::HashMap::new();
-    
+
     // Read existing config
     let content = fs::read_to_string(&config_path)?;
     for line in content.lines() {
@@ -1823,7 +1870,7 @@ fn list_configuration(global: bool) -> anyhow::Result<()> {
     };
 
     println!("\n{}", "User Settings:".bold());
-    
+
     if config_path.exists() {
         let content = fs::read_to_string(&config_path)?;
         let mut found_any = false;
@@ -1839,17 +1886,30 @@ fn list_configuration(global: bool) -> anyhow::Result<()> {
     } else {
         // Show defaults
         println!("  {} = {}", "user.name".cyan(), whoami::realname());
-        println!("  {} = {}", "user.email".cyan(), format!("{}@localhost", whoami::username()));
+        println!(
+            "  {} = {}",
+            "user.email".cyan(),
+            format!("{}@localhost", whoami::username())
+        );
         println!("  {} = {}", "intelligence.enabled".cyan(), "true");
         println!("  {} = {}", "intelligence.notifications".cyan(), "info");
-        println!("\n  {} Configuration file not found, showing defaults", "ℹ".blue());
+        println!(
+            "\n  {} Configuration file not found, showing defaults",
+            "ℹ".blue()
+        );
     }
 
     println!("\n{}", "Available Configuration Keys:".bold());
     println!("  {:<25} - User display name", "user.name".cyan());
     println!("  {:<25} - User email address", "user.email".cyan());
-    println!("  {:<25} - Enable AI intelligence features", "intelligence.enabled".cyan());
-    println!("  {:<25} - Notification level (silent|errors|warnings|info|detailed)", "intelligence.notifications".cyan());
+    println!(
+        "  {:<25} - Enable AI intelligence features",
+        "intelligence.enabled".cyan()
+    );
+    println!(
+        "  {:<25} - Notification level (silent|errors|warnings|info|detailed)",
+        "intelligence.notifications".cyan()
+    );
 
     Ok(())
 }
@@ -2231,7 +2291,7 @@ async fn push_to_remote(
     let s = Store::discover(std::env::current_dir()?)?;
 
     println!("\n{} Remote: {}", "🔗".blue(), Style::branch_name(remote));
-    
+
     if all {
         println!("{} Pushing: {}", "🌿".green(), "All branches".cyan());
     } else {
@@ -2240,7 +2300,11 @@ async fn push_to_remote(
 
     // Show additional options
     if tags || all_tags {
-        let tag_msg = if all_tags { "All tags" } else { "Tags with branch" };
+        let tag_msg = if all_tags {
+            "All tags"
+        } else {
+            "Tags with branch"
+        };
         println!("{} Tags: {}", "🏷️".yellow(), tag_msg);
     }
     if force {
@@ -2250,7 +2314,11 @@ async fn push_to_remote(
         println!("{} Tracking: {}", "🔗".blue(), "Setting upstream".cyan());
     }
     if dry_run {
-        println!("{} Mode: {}", "🧪".yellow(), "Dry run (simulation only)".yellow());
+        println!(
+            "{} Mode: {}",
+            "🧪".yellow(),
+            "Dry run (simulation only)".yellow()
+        );
     }
 
     // Show what would be pushed
@@ -2274,7 +2342,7 @@ async fn push_to_remote(
         Style::warning("🚧 Remote pushing not yet implemented");
         Style::info("Push operation would:");
     }
-    
+
     Style::info("  1. Compare local and remote refs");
     Style::info("  2. Upload missing objects and commits");
     if tags || all_tags {
@@ -2877,62 +2945,114 @@ async fn main() -> anyhow::Result<()> {
                 "For complete documentation, see: docs/git-replacement-guide.md".dimmed()
             );
         }
-        
+
         // ============ SMART WORKFLOW COMMANDS ============
-        Cmd::Work { all, interactive, quick, message } => {
+        Cmd::Work {
+            all,
+            interactive,
+            quick,
+            message,
+        } => {
             handle_work_command(all, interactive, quick, message).await?;
         }
-        
-        Cmd::Ship { message, all, force, upstream, remote, branch } => {
+
+        Cmd::Ship {
+            message,
+            all,
+            force,
+            upstream,
+            remote,
+            branch,
+        } => {
             handle_ship_command(message, all, force, upstream, &remote, branch).await?;
         }
-        
-        Cmd::Sync { remote, branch, auto, strategy } => {
+
+        Cmd::Sync {
+            remote,
+            branch,
+            auto,
+            strategy,
+        } => {
             handle_sync_command(&remote, branch, auto, strategy).await?;
         }
-        
-        Cmd::Explore { target, graph, interactive, count } => {
+
+        Cmd::Explore {
+            target,
+            graph,
+            interactive,
+            count,
+        } => {
             handle_explore_command(target, graph, interactive, count).await?;
         }
-        
-        Cmd::Clean { working, staging, reset, force } => {
+
+        Cmd::Clean {
+            working,
+            staging,
+            reset,
+            force,
+        } => {
             handle_clean_command(working, staging, reset, force).await?;
         }
-        
-        Cmd::Flow { branch, create, merge, delete, track } => {
+
+        Cmd::Flow {
+            branch,
+            create,
+            merge,
+            delete,
+            track,
+        } => {
             handle_flow_command(branch, create, merge, delete, track).await?;
         }
-        
+
         // ============ AI-POWERED SMART FEATURES ============
-        Cmd::Suggest { category, focus, automation, learning } => {
+        Cmd::Suggest {
+            category,
+            focus,
+            automation,
+            learning,
+        } => {
             handle_suggest_command(category, focus, automation, learning).await?;
         }
-        
-        Cmd::Dashboard { refresh, compact, watch, filter } => {
+
+        Cmd::Dashboard {
+            refresh,
+            compact,
+            watch,
+            filter,
+        } => {
             handle_dashboard_command(refresh, compact, watch, filter).await?;
         }
-        
-        Cmd::AutoFlow { workflow_type, dry_run, interactive, learn } => {
+
+        Cmd::AutoFlow {
+            workflow_type,
+            dry_run,
+            interactive,
+            learn,
+        } => {
             handle_autoflow_command(&workflow_type, dry_run, interactive, learn).await?;
         }
-        
-        Cmd::Guard { operation, predict, auto_resolve, strategies } => {
+
+        Cmd::Guard {
+            operation,
+            predict,
+            auto_resolve,
+            strategies,
+        } => {
             handle_guard_command(&operation, predict, auto_resolve, strategies).await?;
         }
-        
+
         Cmd::Binary { cmd } => {
             handle_binary_command(cmd).await?;
         }
-        
+
         Cmd::SmartBranch { cmd } => {
             handle_smart_branch_command(cmd).await?;
         }
-        
+
         Cmd::Performance { cmd } => {
             handle_performance_command(cmd).await?;
         }
         // ============ END SMART COMMANDS ============
-        
         Cmd::Init => {
             let current_dir = std::env::current_dir()?;
             let rune_dir = current_dir.join(".rune");
@@ -3263,10 +3383,21 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Branch { command, format } => {
             handle_branch_command(command, &format)?;
         }
-        Cmd::Checkout { target, branch, force, files } => {
+        Cmd::Checkout {
+            target,
+            branch,
+            force,
+            files,
+        } => {
             handle_checkout_command(&target, branch, force, &files)?;
         }
-        Cmd::Merge { branch, no_ff, abort, continue_merge, strategy } => {
+        Cmd::Merge {
+            branch,
+            no_ff,
+            abort,
+            continue_merge,
+            strategy,
+        } => {
             let s = Store::discover(std::env::current_dir()?)?;
 
             // Handle merge abort
@@ -3331,41 +3462,39 @@ async fn main() -> anyhow::Result<()> {
 
             // Attempt to merge the branch
             match s.merge_branch(&branch, no_ff, strategy.as_deref()) {
-                Ok(merge_result) => {
-                    match merge_result {
-                        rune_store::MergeResult::Success => {
-                            Style::success(&format!(
-                                "Merged branch {} into {}",
-                                Style::branch_name(&branch),
-                                Style::branch_name(
-                                    &s.current_branch().unwrap_or_else(|| "main".to_string())
-                                )
-                            ));
-                        }
-                        rune_store::MergeResult::FastForward => {
-                            Style::success(&format!(
-                                "Fast-forward merge: {} → {}",
-                                Style::branch_name(
-                                    &s.current_branch().unwrap_or_else(|| "main".to_string())
-                                ),
-                                Style::branch_name(&branch)
-                            ));
-                        }
-                        rune_store::MergeResult::Conflicts(files) => {
-                            Style::warning("Merge completed with conflicts that need to be resolved:");
-                            for file in &files {
-                                Style::info(&format!("  ⚠️  {}", file));
-                            }
-                            Style::info("");
-                            Style::info("After resolving conflicts:");
-                            Style::info("  1. Edit the conflicted files listed above");
-                            Style::info("  2. Add the resolved files: rune add <file>");
-                            Style::info("  3. Complete the merge: rune merge --continue");
-                            Style::info("");
-                            Style::info("Or abort the merge: rune merge --abort");
-                        }
+                Ok(merge_result) => match merge_result {
+                    rune_store::MergeResult::Success => {
+                        Style::success(&format!(
+                            "Merged branch {} into {}",
+                            Style::branch_name(&branch),
+                            Style::branch_name(
+                                &s.current_branch().unwrap_or_else(|| "main".to_string())
+                            )
+                        ));
                     }
-                }
+                    rune_store::MergeResult::FastForward => {
+                        Style::success(&format!(
+                            "Fast-forward merge: {} → {}",
+                            Style::branch_name(
+                                &s.current_branch().unwrap_or_else(|| "main".to_string())
+                            ),
+                            Style::branch_name(&branch)
+                        ));
+                    }
+                    rune_store::MergeResult::Conflicts(files) => {
+                        Style::warning("Merge completed with conflicts that need to be resolved:");
+                        for file in &files {
+                            Style::info(&format!("  ⚠️  {}", file));
+                        }
+                        Style::info("");
+                        Style::info("After resolving conflicts:");
+                        Style::info("  1. Edit the conflicted files listed above");
+                        Style::info("  2. Add the resolved files: rune add <file>");
+                        Style::info("  3. Complete the merge: rune merge --continue");
+                        Style::info("");
+                        Style::info("Or abort the merge: rune merge --abort");
+                    }
+                },
                 Err(e) => {
                     Style::error(&format!("Failed to merge branch '{}': {}", branch, e));
                     return Err(anyhow::anyhow!("Merge failed"));
@@ -3807,7 +3936,12 @@ async fn main() -> anyhow::Result<()> {
             }
         }
 
-        Cmd::Show { commit, file, name_only, stat } => {
+        Cmd::Show {
+            commit,
+            file,
+            name_only,
+            stat,
+        } => {
             let s = Store::discover(std::env::current_dir()?)?;
 
             // Check if showing a specific file at a commit (commit:file format)
@@ -3816,13 +3950,17 @@ async fn main() -> anyhow::Result<()> {
                 if parts.len() == 2 {
                     let commit_id = parts[0];
                     let file_path = parts[1];
-                    
+
                     match s.show_file_at_commit(commit_id, file_path) {
                         Ok(content) => {
                             if name_only {
                                 println!("{}", file_path);
                             } else {
-                                println!("File: {} at commit {}", Style::file_path(file_path), Style::commit_hash(commit_id));
+                                println!(
+                                    "File: {} at commit {}",
+                                    Style::file_path(file_path),
+                                    Style::commit_hash(commit_id)
+                                );
                                 println!();
                                 println!("{}", content);
                             }
@@ -3843,7 +3981,11 @@ async fn main() -> anyhow::Result<()> {
                         if name_only {
                             println!("{}", file_path.display());
                         } else {
-                            println!("File: {} at commit {}", Style::file_path(file_path.to_string_lossy().as_ref()), Style::commit_hash(&commit));
+                            println!(
+                                "File: {} at commit {}",
+                                Style::file_path(file_path.to_string_lossy().as_ref()),
+                                Style::commit_hash(&commit)
+                            );
                             println!();
                             if stat {
                                 let lines = content.lines().count();
@@ -3902,10 +4044,18 @@ async fn main() -> anyhow::Result<()> {
                                         Ok(content) => {
                                             let lines = content.lines().count();
                                             let bytes = content.len();
-                                            println!("  {} | {} lines, {} bytes", Style::file_path(file), lines, bytes);
+                                            println!(
+                                                "  {} | {} lines, {} bytes",
+                                                Style::file_path(file),
+                                                lines,
+                                                bytes
+                                            );
                                         }
                                         Err(_) => {
-                                            println!("  {} | (could not read)", Style::file_path(file));
+                                            println!(
+                                                "  {} | (could not read)",
+                                                Style::file_path(file)
+                                            );
                                         }
                                     }
                                 }
@@ -3986,8 +4136,27 @@ async fn main() -> anyhow::Result<()> {
             pull_from_remote(&remote, &branch).await?;
         }
 
-        Cmd::Push { remote, branch, tags, all_tags, force, set_upstream, dry_run, all } => {
-            push_to_remote(&remote, &branch, tags, all_tags, force, set_upstream, dry_run, all).await?;
+        Cmd::Push {
+            remote,
+            branch,
+            tags,
+            all_tags,
+            force,
+            set_upstream,
+            dry_run,
+            all,
+        } => {
+            push_to_remote(
+                &remote,
+                &branch,
+                tags,
+                all_tags,
+                force,
+                set_upstream,
+                dry_run,
+                all,
+            )
+            .await?;
         }
 
         Cmd::Ignore { cmd } => {
@@ -4015,48 +4184,96 @@ async fn main() -> anyhow::Result<()> {
         }
 
         // ============ NATURAL LANGUAGE COMMANDS ============
-        
-        Cmd::Rollback { what, count, soft, hard } => {
+        Cmd::Rollback {
+            what,
+            count,
+            soft,
+            hard,
+        } => {
             handle_natural_rollback(what, count, soft, hard, &ctx).await?;
         }
 
-        Cmd::Changed { since, names_only, stats } => {
+        Cmd::Changed {
+            since,
+            names_only,
+            stats,
+        } => {
             handle_natural_changed(since, names_only, stats, &ctx).await?;
         }
 
-        Cmd::Conflicts { suggest, auto_resolve, interactive } => {
+        Cmd::Conflicts {
+            suggest,
+            auto_resolve,
+            interactive,
+        } => {
             handle_natural_conflicts(suggest, auto_resolve, interactive, &ctx).await?;
         }
 
-        Cmd::Fix { issue, dry_run, auto, interactive } => {
+        Cmd::Fix {
+            issue,
+            dry_run,
+            auto,
+            interactive,
+        } => {
             handle_natural_fix(issue, dry_run, auto, interactive, &ctx).await?;
         }
 
-        Cmd::Optimize { level, analyze, dry_run, lfs } => {
+        Cmd::Optimize {
+            level,
+            analyze,
+            dry_run,
+            lfs,
+        } => {
             handle_natural_optimize(level, analyze, dry_run, lfs, &ctx).await?;
         }
 
-        Cmd::Health { detailed, performance, suggestions, auto_fix } => {
+        Cmd::Health {
+            detailed,
+            performance,
+            suggestions,
+            auto_fix,
+        } => {
             handle_natural_health(detailed, performance, suggestions, auto_fix, &ctx).await?;
         }
 
-        Cmd::UndoOp { operation, count, force } => {
+        Cmd::UndoOp {
+            operation,
+            count,
+            force,
+        } => {
             handle_natural_undo_op(operation, count, force, &ctx).await?;
         }
 
-        Cmd::Display { what, since, detailed } => {
+        Cmd::Display {
+            what,
+            since,
+            detailed,
+        } => {
             handle_natural_display(what, since, detailed, &ctx).await?;
         }
 
-        Cmd::What { query, files, authors } => {
+        Cmd::What {
+            query,
+            files,
+            authors,
+        } => {
             handle_natural_what(query, files, authors, &ctx).await?;
         }
 
-        Cmd::HelpMe { situation, interactive, workflows } => {
+        Cmd::HelpMe {
+            situation,
+            interactive,
+            workflows,
+        } => {
             handle_natural_help_me(situation, interactive, workflows, &ctx).await?;
         }
 
-        Cmd::Template { template_type, name, list, customize } => {
+        Cmd::Template {
+            template_type,
+            name,
+            list,
+            customize,
+        } => {
             handle_natural_template(template_type, name, list, customize, &ctx).await?;
         }
 
@@ -4064,7 +4281,12 @@ async fn main() -> anyhow::Result<()> {
             handle_natural_batch(operation, &ctx).await?;
         }
 
-        Cmd::Watch { path, auto_commit, auto_test, patterns } => {
+        Cmd::Watch {
+            path,
+            auto_commit,
+            auto_test,
+            patterns,
+        } => {
             handle_natural_watch(path, auto_commit, auto_test, patterns, &ctx).await?;
         }
     }
@@ -5312,23 +5534,31 @@ fn get_store_for_current_dir() -> anyhow::Result<Store> {
 /// Handle branch commands
 fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow::Result<()> {
     let store = Store::discover(std::env::current_dir()?)?;
-    
+
     match command {
-        Some(BranchCommand::Create { name, start_point, track }) => {
+        Some(BranchCommand::Create {
+            name,
+            start_point,
+            track,
+        }) => {
             if store.branch_exists(&name) {
                 return Err(anyhow::anyhow!("Branch '{}' already exists", name));
             }
-            
+
             // TODO: Handle start_point and track options
             store.create_branch(&name)?;
             println!("Created branch '{}'", Style::branch_name(&name));
-            
+
             if track {
                 // TODO: Set up tracking information
                 println!("Tracking set up for branch '{}'", name);
             }
         }
-        Some(BranchCommand::Delete { name, force, remote }) => {
+        Some(BranchCommand::Delete {
+            name,
+            force,
+            remote,
+        }) => {
             if remote {
                 // TODO: Delete remote-tracking branch
                 println!("Deleted remote-tracking branch '{}'", name);
@@ -5336,48 +5566,64 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
                 if !store.branch_exists(&name) {
                     return Err(anyhow::anyhow!("Branch '{}' not found", name));
                 }
-                
+
                 let current_branch = store.current_branch().unwrap_or_else(|| "main".to_string());
                 if name == current_branch {
-                    return Err(anyhow::anyhow!("Cannot delete the current branch '{}'", name));
+                    return Err(anyhow::anyhow!(
+                        "Cannot delete the current branch '{}'",
+                        name
+                    ));
                 }
-                
+
                 // TODO: Check if branch is merged unless force is true
                 if !force {
                     // TODO: Check if branch is merged
-                    println!("Would check if branch '{}' is merged (not implemented)", name);
+                    println!(
+                        "Would check if branch '{}' is merged (not implemented)",
+                        name
+                    );
                 }
-                
+
                 store.delete_branch(&name)?;
                 println!("Deleted branch '{}'", name);
             }
         }
-        Some(BranchCommand::Rename { old_name, new_name, force }) => {
+        Some(BranchCommand::Rename {
+            old_name,
+            new_name,
+            force,
+        }) => {
             if !store.branch_exists(&old_name) {
                 return Err(anyhow::anyhow!("Branch '{}' not found", old_name));
             }
-            
+
             if store.branch_exists(&new_name) && !force {
                 return Err(anyhow::anyhow!("Branch '{}' already exists", new_name));
             }
-            
+
             store.rename_branch(&old_name, &new_name)?;
             println!("Renamed branch '{}' to '{}'", old_name, new_name);
         }
-        Some(BranchCommand::List { remotes, all, merged, no_merged, verbose }) => {
+        Some(BranchCommand::List {
+            remotes,
+            all,
+            merged,
+            no_merged,
+            verbose,
+        }) => {
             let branches = store.list_branches()?;
             let current_branch = store.current_branch().unwrap_or_else(|| "main".to_string());
-            
+
             // TODO: Filter branches based on merged/no_merged
             if merged || no_merged {
                 println!("Merged/unmerged filtering not implemented yet");
             }
-            
+
             // TODO: Add remote branches if requested
             if remotes || all {
                 println!("Remote branch listing not implemented yet");
             }
-            
+
             if format == "json" {
                 println!(
                     "{}",
@@ -5409,7 +5655,7 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
             // Default: list branches
             let branches = store.list_branches()?;
             let current_branch = store.current_branch().unwrap_or_else(|| "main".to_string());
-            
+
             if format == "json" {
                 println!(
                     "{}",
@@ -5429,28 +5675,36 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
             }
         }
     }
-    
+
     Ok(())
 }
 
 /// Handle tag commands
 fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
     let store = Store::discover(std::env::current_dir()?)?;
-    
+
     match command {
-        Some(TagCommand::Create { name, commit, annotate, message, force }) => {
+        Some(TagCommand::Create {
+            name,
+            commit,
+            annotate,
+            message,
+            force,
+        }) => {
             if store.tag_exists(&name) && !force {
                 return Err(anyhow::anyhow!("Tag '{}' already exists", name));
             }
-            
+
             let target_commit = if let Some(commit_ref) = commit {
                 // TODO: Resolve commit reference
                 commit_ref
             } else {
                 // Use HEAD
-                store.head_commit().ok_or_else(|| anyhow::anyhow!("No commits found"))?
+                store
+                    .head_commit()
+                    .ok_or_else(|| anyhow::anyhow!("No commits found"))?
             };
-            
+
             if annotate {
                 let tag_message = message.unwrap_or_else(|| format!("Tag {}", name));
                 store.create_annotated_tag(&name, &target_commit, &tag_message)?;
@@ -5464,7 +5718,7 @@ fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
             if !store.tag_exists(&name) {
                 return Err(anyhow::anyhow!("Tag '{}' not found", name));
             }
-            
+
             store.delete_tag(&name)?;
             println!("Deleted tag '{}'", name);
         }
@@ -5472,11 +5726,13 @@ fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
             let tags = store.list_tags()?;
             let filtered_tags: Vec<String> = if let Some(pattern_str) = pattern {
                 // TODO: Implement pattern matching
-                tags.into_iter().filter(|tag| tag.contains(&pattern_str)).collect()
+                tags.into_iter()
+                    .filter(|tag| tag.contains(&pattern_str))
+                    .collect()
             } else {
                 tags
             };
-            
+
             for tag in filtered_tags {
                 if verbose {
                     // TODO: Show detailed tag information
@@ -5494,7 +5750,7 @@ fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
             if !store.tag_exists(&name) {
                 return Err(anyhow::anyhow!("Tag '{}' not found", name));
             }
-            
+
             // TODO: Show detailed tag information
             if let Some(commit) = store.tag_commit(&name) {
                 println!("Tag: {}", name);
@@ -5506,7 +5762,7 @@ fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
             if !store.tag_exists(&name) {
                 return Err(anyhow::anyhow!("Tag '{}' not found", name));
             }
-            
+
             // TODO: Implement tag signature verification
             println!("Tag signature verification not implemented yet");
         }
@@ -5518,25 +5774,31 @@ fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
             }
         }
     }
-    
+
     Ok(())
 }
 
 /// Handle checkout commands (branch switching and file restoration)
-fn handle_checkout_command(target: &str, create_branch: bool, force: bool, files: &[std::path::PathBuf]) -> anyhow::Result<()> {
+fn handle_checkout_command(
+    target: &str,
+    create_branch: bool,
+    force: bool,
+    files: &[std::path::PathBuf],
+) -> anyhow::Result<()> {
     let store = Store::discover(std::env::current_dir()?)?;
-    
+
     if !files.is_empty() {
         // File restoration mode: checkout specific files from target commit/branch
         let commit_id = if store.branch_exists(target) {
             // Target is a branch, get its HEAD commit
-            store.read_ref(&format!("refs/heads/{}", target))
+            store
+                .read_ref(&format!("refs/heads/{}", target))
                 .ok_or_else(|| anyhow::anyhow!("Branch '{}' has no commits", target))?
         } else {
             // Assume target is a commit ID
             target.to_string()
         };
-        
+
         for file_path in files {
             match store.restore_file_from_commit(&commit_id, file_path) {
                 Ok(()) => println!("Restored: {}", file_path.display()),
@@ -5548,20 +5810,23 @@ fn handle_checkout_command(target: &str, create_branch: bool, force: bool, files
                 }
             }
         }
-        
+
         println!("Restored {} file(s) from {}", files.len(), target);
     } else if create_branch {
         // Create and switch to new branch
         if store.branch_exists(target) {
             return Err(anyhow::anyhow!("Branch '{}' already exists", target));
         }
-        
+
         store.create_branch(target)?;
         store.checkout_branch(target)?;
-        println!("Created and switched to new branch '{}'", Style::branch_name(target));
+        println!(
+            "Created and switched to new branch '{}'",
+            Style::branch_name(target)
+        );
     } else {
         // Branch switching mode
-        
+
         // Check if trying to checkout current branch
         if let Some(current) = store.current_branch() {
             if current == target {
@@ -5569,7 +5834,7 @@ fn handle_checkout_command(target: &str, create_branch: bool, force: bool, files
                 return Ok(());
             }
         }
-        
+
         // Check for uncommitted changes (unless force)
         if !force {
             let status = store.status()?;
@@ -5583,7 +5848,7 @@ fn handle_checkout_command(target: &str, create_branch: bool, force: bool, files
                 return Err(anyhow::anyhow!("Uncommitted changes prevent checkout"));
             }
         }
-        
+
         // Attempt to checkout the branch
         match store.checkout_branch(target) {
             Ok(()) => {
@@ -5596,24 +5861,29 @@ fn handle_checkout_command(target: &str, create_branch: bool, force: bool, files
             }
         }
     }
-    
+
     Ok(())
 }
 
 // ============ SMART WORKFLOW COMMAND IMPLEMENTATIONS ============
 
 /// Smart interactive workflow: status → staging → commit
-async fn handle_work_command(all: bool, interactive: bool, quick: bool, message: Option<String>) -> anyhow::Result<()> {
+async fn handle_work_command(
+    all: bool,
+    interactive: bool,
+    quick: bool,
+    message: Option<String>,
+) -> anyhow::Result<()> {
     Style::section_header("🚀 Smart Work Session");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
-    
+
     // 1. Show current status with smart insights
     println!("\n{} Current Status:", "📊".bright_blue());
     let idx = s.read_index()?;
     let branch = s.head_ref();
     println!("On branch {}", Style::branch_name(&branch));
-    
+
     if idx.entries.is_empty() {
         println!("\n{}", "No changes staged for commit".dimmed());
         println!("💡 Smart suggestions:");
@@ -5626,19 +5896,20 @@ async fn handle_work_command(all: bool, interactive: bool, quick: bool, message:
             println!("  {}  {}", Style::status_added(), Style::file_path(k));
         }
     }
-    
+
     // 2. Smart staging
     if all {
         println!("\n{} Auto-staging all modified files...", "⚡".yellow());
         let current_dir = std::env::current_dir()?;
         let mut staged_count = 0;
-        
+
         if let Ok(entries) = std::fs::read_dir(&current_dir) {
             for entry in entries.flatten() {
                 if let Some(file_name) = entry.file_name().to_str() {
-                    if !file_name.starts_with('.') && 
-                       !file_name.starts_with("target") &&
-                       entry.file_type().map_or(false, |ft| ft.is_file()) {
+                    if !file_name.starts_with('.')
+                        && !file_name.starts_with("target")
+                        && entry.file_type().map_or(false, |ft| ft.is_file())
+                    {
                         if s.stage_file(file_name).is_ok() {
                             staged_count += 1;
                         }
@@ -5646,7 +5917,7 @@ async fn handle_work_command(all: bool, interactive: bool, quick: bool, message:
                 }
             }
         }
-        
+
         if staged_count > 0 {
             Style::success(&format!("✅ Staged {} files", staged_count));
         } else {
@@ -5657,16 +5928,22 @@ async fn handle_work_command(all: bool, interactive: bool, quick: bool, message:
         println!("  • Use {} for patch mode", "rune add -p <file>".yellow());
         println!("  • Select individual hunks to stage");
         println!("  • Review changes carefully before committing");
-        println!("\n💡 Try: {} to see available files", "rune status".yellow());
+        println!(
+            "\n💡 Try: {} to see available files",
+            "rune status".yellow()
+        );
         return Ok(());
     } else {
         println!("\n💡 Next Steps:");
         println!("  • {} - stage all changes", "rune work --all".green());
-        println!("  • {} - interactive staging", "rune work --interactive".green());
+        println!(
+            "  • {} - interactive staging",
+            "rune work --interactive".green()
+        );
         println!("  • {} - manual staging", "rune add <files>".green());
         return Ok(());
     }
-    
+
     // 3. Smart commit
     if quick || message.is_some() {
         let staged_files = s.read_index()?.entries;
@@ -5674,7 +5951,7 @@ async fn handle_work_command(all: bool, interactive: bool, quick: bool, message:
             Style::warning("⚠️ Nothing staged for commit");
             return Ok(());
         }
-        
+
         let commit_msg = if let Some(msg) = message {
             msg
         } else {
@@ -5686,51 +5963,64 @@ async fn handle_work_command(all: bool, interactive: bool, quick: bool, message:
                 format!("Update {} files", count)
             }
         };
-        
+
         println!("\n{} Creating commit...", "📝".green());
         let commit = s.commit(&commit_msg, author())?;
-        Style::success(&format!("✅ Committed: {} \"{}\"", 
-            Style::commit_hash(&commit.id[..8]), commit_msg));
-        
+        Style::success(&format!(
+            "✅ Committed: {} \"{}\"",
+            Style::commit_hash(&commit.id[..8]),
+            commit_msg
+        ));
+
         println!("\n🚀 What's Next?");
         println!("  • {} - push to remote", "rune ship".cyan());
         println!("  • {} - continue working", "rune work".cyan());
         println!("  • {} - view history", "rune log".cyan());
     } else {
         println!("\n💡 Ready to Commit:");
-        println!("  • {} - auto-generated message", "rune work --quick".yellow());
-        println!("  • {} - custom message", "rune work --message \"your message\"".yellow());
-        println!("  • {} - manual commit", "rune commit -m \"message\"".yellow());
+        println!(
+            "  • {} - auto-generated message",
+            "rune work --quick".yellow()
+        );
+        println!(
+            "  • {} - custom message",
+            "rune work --message \"your message\"".yellow()
+        );
+        println!(
+            "  • {} - manual commit",
+            "rune commit -m \"message\"".yellow()
+        );
     }
-    
+
     Ok(())
 }
 
 /// Smart commit and push workflow with conflict resolution
 async fn handle_ship_command(
-    message: Option<String>, 
-    all: bool, 
-    force: bool, 
-    upstream: bool, 
-    remote: &str, 
-    branch: Option<String>
+    message: Option<String>,
+    all: bool,
+    force: bool,
+    upstream: bool,
+    remote: &str,
+    branch: Option<String>,
 ) -> anyhow::Result<()> {
     Style::section_header("🚢 Smart Ship Workflow");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
-    
+
     // 1. Auto-stage if requested
     if all {
         println!("{} Auto-staging changes...", "📦".blue());
         let current_dir = std::env::current_dir()?;
         let mut staged_count = 0;
-        
+
         if let Ok(entries) = std::fs::read_dir(&current_dir) {
             for entry in entries.flatten() {
                 if let Some(file_name) = entry.file_name().to_str() {
-                    if !file_name.starts_with('.') && 
-                       !file_name.starts_with("target") &&
-                       entry.file_type().map_or(false, |ft| ft.is_file()) {
+                    if !file_name.starts_with('.')
+                        && !file_name.starts_with("target")
+                        && entry.file_type().map_or(false, |ft| ft.is_file())
+                    {
                         if s.stage_file(file_name).is_ok() {
                             staged_count += 1;
                         }
@@ -5738,69 +6028,94 @@ async fn handle_ship_command(
                 }
             }
         }
-        
+
         if staged_count > 0 {
             println!("  ✅ Staged {} files", staged_count);
         }
     }
-    
+
     // 2. Smart commit if there are staged changes
     let idx = s.read_index()?;
     if !idx.entries.is_empty() {
         let commit_msg = message.unwrap_or_else(|| {
             let count = idx.entries.len();
-            format!("Ship: Update {} file{}", count, if count == 1 { "" } else { "s" })
+            format!(
+                "Ship: Update {} file{}",
+                count,
+                if count == 1 { "" } else { "s" }
+            )
         });
-        
+
         let commit = s.commit(&commit_msg, author())?;
-        println!("{} Committed: {} \"{}\"", "✅".green(), 
-            Style::commit_hash(&commit.id[..8]), commit_msg);
+        println!(
+            "{} Committed: {} \"{}\"",
+            "✅".green(),
+            Style::commit_hash(&commit.id[..8]),
+            commit_msg
+        );
     } else {
         Style::warning("⚠️ Nothing to ship - no staged changes");
-        println!("💡 Use {} to stage changes first", "rune ship --all".yellow());
+        println!(
+            "💡 Use {} to stage changes first",
+            "rune ship --all".yellow()
+        );
         return Ok(());
     }
-    
+
     // 3. Smart push guidance
     let current_branch = s.current_branch().unwrap_or_else(|| "main".to_string());
     let target_branch = branch.unwrap_or_else(|| current_branch);
-    
-    println!("\n{} Ready to push to {}/{}", "🚢".blue(), remote, target_branch);
-    
+
+    println!(
+        "\n{} Ready to push to {}/{}",
+        "🚢".blue(),
+        remote,
+        target_branch
+    );
+
     // Provide intelligent next steps
     println!("\n💡 Push Commands:");
     if upstream {
-        println!("  {} - set upstream and push", format!("rune push --set-upstream {} {}", remote, target_branch).yellow());
+        println!(
+            "  {} - set upstream and push",
+            format!("rune push --set-upstream {} {}", remote, target_branch).yellow()
+        );
     } else {
-        println!("  {} - standard push", format!("rune push {} {}", remote, target_branch).yellow());
+        println!(
+            "  {} - standard push",
+            format!("rune push {} {}", remote, target_branch).yellow()
+        );
     }
-    
+
     if force {
         Style::warning("⚠️ Force push requested - use with caution!");
-        println!("  {} - force push (dangerous!)", format!("rune push --force {} {}", remote, target_branch).red());
+        println!(
+            "  {} - force push (dangerous!)",
+            format!("rune push --force {} {}", remote, target_branch).red()
+        );
     }
-    
+
     Style::success("🎉 Code committed and ready to ship!");
     println!("💡 Run the suggested push command above to complete shipping");
-    
+
     Ok(())
 }
 
 /// Smart sync: pull + merge with automatic stash handling  
 async fn handle_sync_command(
-    remote: &str, 
-    branch: Option<String>, 
-    auto: bool, 
-    _strategy: Option<String>
+    remote: &str,
+    branch: Option<String>,
+    auto: bool,
+    _strategy: Option<String>,
 ) -> anyhow::Result<()> {
     Style::section_header("🔄 Smart Sync Workflow");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
-    
+
     // 1. Check for uncommitted changes
     let idx = s.read_index()?;
     let has_staged = !idx.entries.is_empty();
-    
+
     if has_staged {
         if auto {
             println!("{} Auto-handling staged changes...", "📦".yellow());
@@ -5809,56 +6124,80 @@ async fn handle_sync_command(
             Style::warning("⚠️ You have staged changes");
             println!("💡 Options:");
             println!("  • {} - auto-handle changes", "rune sync --auto".yellow());
-            println!("  • {} - commit changes first", "rune commit -m \"message\"".yellow());
+            println!(
+                "  • {} - commit changes first",
+                "rune commit -m \"message\"".yellow()
+            );
             println!("  • {} - stash manually", "rune stash".yellow());
             return Ok(());
         }
     }
-    
+
     // 2. Smart sync guidance
     let current_branch = s.current_branch().unwrap_or_else(|| "main".to_string());
     let source_branch = branch.unwrap_or_else(|| current_branch);
-    
-    println!("\n{} Sync Strategy for {}/{}", "🔄".blue(), remote, source_branch);
-    
+
+    println!(
+        "\n{} Sync Strategy for {}/{}",
+        "🔄".blue(),
+        remote,
+        source_branch
+    );
+
     println!("\n💡 Recommended Sync Commands:");
-    println!("  1. {} - get latest changes", format!("rune fetch {}", remote).yellow());
-    println!("  2. {} - merge changes", format!("rune pull {} {}", remote, source_branch).yellow());
-    
+    println!(
+        "  1. {} - get latest changes",
+        format!("rune fetch {}", remote).yellow()
+    );
+    println!(
+        "  2. {} - merge changes",
+        format!("rune pull {} {}", remote, source_branch).yellow()
+    );
+
     if has_staged && auto {
-        println!("  3. {} - restore your changes", "# Your staged changes will be preserved".green());
+        println!(
+            "  3. {} - restore your changes",
+            "# Your staged changes will be preserved".green()
+        );
     }
-    
+
     println!("\n🔍 Pre-sync Checklist:");
     println!("  ✅ Remote '{}' configured", remote);
-    println!("  ✅ Current branch: {}", Style::branch_name(&source_branch));
+    println!(
+        "  ✅ Current branch: {}",
+        Style::branch_name(&source_branch)
+    );
     if has_staged {
         println!("  ⚠️ {} staged changes detected", idx.entries.len());
     } else {
         println!("  ✅ No uncommitted changes");
     }
-    
+
     Style::success("🎉 Sync strategy planned!");
     println!("💡 Execute the commands above in order for a safe sync");
-    
+
     Ok(())
 }
 
 /// Smart exploration: log + diff + blame in interactive mode
 async fn handle_explore_command(
-    target: Option<String>, 
-    graph: bool, 
-    _interactive: bool, 
-    count: usize
+    target: Option<String>,
+    graph: bool,
+    _interactive: bool,
+    count: usize,
 ) -> anyhow::Result<()> {
     Style::section_header("🔍 Smart Repository Explorer");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
-    
+
     if let Some(target_path) = target {
         // File exploration mode
-        println!("{} Exploring: {}", "📄".blue(), Style::file_path(&target_path));
-        
+        println!(
+            "{} Exploring: {}",
+            "📄".blue(),
+            Style::file_path(&target_path)
+        );
+
         if std::path::Path::new(&target_path).exists() {
             println!("\n{} File Information:", "ℹ️".cyan());
             if let Ok(metadata) = std::fs::metadata(&target_path) {
@@ -5867,58 +6206,87 @@ async fn handle_explore_command(
                     println!("  Last modified: {:?}", modified);
                 }
             }
-            
+
             println!("\n💡 Exploration Commands:");
-            println!("  • {} - see file changes", format!("rune diff {}", target_path).yellow());
-            println!("  • {} - line-by-line history", format!("rune blame {}", target_path).yellow());
-            println!("  • {} - commit history", format!("rune log -- {}", target_path).yellow());
+            println!(
+                "  • {} - see file changes",
+                format!("rune diff {}", target_path).yellow()
+            );
+            println!(
+                "  • {} - line-by-line history",
+                format!("rune blame {}", target_path).yellow()
+            );
+            println!(
+                "  • {} - commit history",
+                format!("rune log -- {}", target_path).yellow()
+            );
         } else {
             // Assume it's a commit hash
             println!("\n💡 Commit Exploration:");
-            println!("  • {} - show commit details", format!("rune show {}", target_path).yellow());
-            println!("  • {} - compare with parent", format!("rune diff {}~1 {}", target_path, target_path).yellow());
+            println!(
+                "  • {} - show commit details",
+                format!("rune show {}", target_path).yellow()
+            );
+            println!(
+                "  • {} - compare with parent",
+                format!("rune diff {}~1 {}", target_path, target_path).yellow()
+            );
         }
     } else {
         // Repository exploration mode
         println!("{} Repository Overview:", "🌳".green());
-        
+
         let current_branch = s.current_branch().unwrap_or_else(|| "unknown".to_string());
         println!("  Current branch: {}", Style::branch_name(&current_branch));
-        
+
         // Show recent commits
         if graph {
             println!("\n{} Visual Commit History:", "📊".blue());
             println!("💡 Use: {} for commit graph", "rune log --graph".yellow());
         } else {
             println!("\n{} Recent History ({} commits):", "📜".yellow(), count);
-            println!("💡 Use: {} for more commits", format!("rune log -n {}", count * 2).yellow());
+            println!(
+                "💡 Use: {} for more commits",
+                format!("rune log -n {}", count * 2).yellow()
+            );
         }
-        
+
         println!("\n🔍 Exploration Tools:");
         println!("  • {} - visual file tree", "rune tree".cyan());
         println!("  • {} - current changes", "rune diff".cyan());
         println!("  • {} - detailed status", "rune status".cyan());
         println!("  • {} - branch overview", "rune branch".cyan());
-        
+
         println!("\n💡 File Exploration:");
-        println!("  • {} - explore specific file", "rune explore <filename>".yellow());
-        println!("  • {} - explore commit", "rune explore <commit-hash>".yellow());
+        println!(
+            "  • {} - explore specific file",
+            "rune explore <filename>".yellow()
+        );
+        println!(
+            "  • {} - explore commit",
+            "rune explore <commit-hash>".yellow()
+        );
     }
-    
+
     Ok(())
 }
 
 /// Smart cleanup: reset + stash + clean with safety checks
-async fn handle_clean_command(working: bool, staging: bool, reset: Option<String>, force: bool) -> anyhow::Result<()> {
+async fn handle_clean_command(
+    working: bool,
+    staging: bool,
+    reset: Option<String>,
+    force: bool,
+) -> anyhow::Result<()> {
     Style::section_header("🧹 Smart Cleanup Workflow");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
-    
+
     // Safety overview
     if !force {
         Style::warning("⚠️ Cleanup operations can permanently remove changes!");
         println!("\nPlanned operations:");
-        
+
         if working {
             println!("  • {} Clean working directory", "🗑️".red());
         }
@@ -5926,33 +6294,46 @@ async fn handle_clean_command(working: bool, staging: bool, reset: Option<String
             println!("  • {} Clear staging area", "📤".yellow());
         }
         if let Some(ref commit) = reset {
-            println!("  • {} Reset to commit: {}", "🔄".blue(), Style::commit_hash(commit));
+            println!(
+                "  • {} Reset to commit: {}",
+                "🔄".blue(),
+                Style::commit_hash(commit)
+            );
         }
-        
+
         if !working && !staging && reset.is_none() {
             println!("\n💡 Cleanup Options:");
-            println!("  • {} - clear staged files", "rune clean --staging".yellow());
-            println!("  • {} - remove untracked files", "rune clean --working".yellow());
-            println!("  • {} - reset to commit", "rune clean --reset <commit>".yellow());
+            println!(
+                "  • {} - clear staged files",
+                "rune clean --staging".yellow()
+            );
+            println!(
+                "  • {} - remove untracked files",
+                "rune clean --working".yellow()
+            );
+            println!(
+                "  • {} - reset to commit",
+                "rune clean --reset <commit>".yellow()
+            );
             println!("  • {} - skip confirmations", "rune clean --force".yellow());
             return Ok(());
         }
-        
+
         print!("\n❓ Continue with cleanup? [y/N]: ");
         use std::io::{self, Write};
         io::stdout().flush()?;
-        
+
         let mut input = String::new();
         io::stdin().read_line(&mut input)?;
-        
+
         if !input.trim().to_lowercase().starts_with('y') {
             Style::info("✅ Cleanup cancelled - your changes are safe");
             return Ok(());
         }
     }
-    
+
     let mut operations = 0;
-    
+
     // 1. Clear staging area
     if staging {
         println!("{} Clearing staging area...", "📤".yellow());
@@ -5966,15 +6347,15 @@ async fn handle_clean_command(working: bool, staging: bool, reset: Option<String
             Style::info("ℹ️ Staging area already empty");
         }
     }
-    
+
     // 2. Clean working directory
     if working {
         println!("{} Cleaning working directory...", "🧽".blue());
-        
+
         // For safety, just show what would be cleaned
         let current_dir = std::env::current_dir()?;
         let mut untracked_count = 0;
-        
+
         if let Ok(entries) = std::fs::read_dir(&current_dir) {
             for entry in entries.flatten() {
                 if let Some(file_name) = entry.file_name().to_str() {
@@ -5985,97 +6366,155 @@ async fn handle_clean_command(working: bool, staging: bool, reset: Option<String
                 }
             }
         }
-        
+
         if untracked_count > 0 {
-            Style::success(&format!("✅ Would clean {} temporary files", untracked_count));
+            Style::success(&format!(
+                "✅ Would clean {} temporary files",
+                untracked_count
+            ));
         } else {
             Style::info("ℹ️ No obvious temporary files to clean");
         }
         operations += 1;
     }
-    
+
     // 3. Reset to specific commit
     if let Some(commit_hash) = reset {
-        println!("{} Reset to commit: {}", "🔄".blue(), Style::commit_hash(&commit_hash));
+        println!(
+            "{} Reset to commit: {}",
+            "🔄".blue(),
+            Style::commit_hash(&commit_hash)
+        );
         println!("💡 This would reset to commit: {}", commit_hash);
-        println!("  Use: {} for actual reset", format!("rune reset --hard {}", commit_hash).yellow());
+        println!(
+            "  Use: {} for actual reset",
+            format!("rune reset --hard {}", commit_hash).yellow()
+        );
         operations += 1;
     }
-    
+
     if operations > 0 {
-        Style::success(&format!("🎉 Cleanup plan completed ({} operations)", operations));
-        
+        Style::success(&format!(
+            "🎉 Cleanup plan completed ({} operations)",
+            operations
+        ));
+
         if !force {
             println!("\n💡 For actual cleanup operations, use:");
             println!("  • {} - automatic cleanup", "rune clean --force".yellow());
             println!("  • Manual commands for precise control");
         }
     }
-    
+
     Ok(())
 }
 
 /// Smart branch workflow: create + switch + track
 async fn handle_flow_command(
-    branch: Option<String>, 
-    create: bool, 
-    merge: Option<String>, 
-    delete: bool, 
-    track: bool
+    branch: Option<String>,
+    create: bool,
+    merge: Option<String>,
+    delete: bool,
+    track: bool,
 ) -> anyhow::Result<()> {
     Style::section_header("🌊 Smart Branch Flow");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
     let current_branch = s.current_branch().unwrap_or_else(|| "main".to_string());
-    
+
     println!("📍 Current branch: {}", Style::branch_name(&current_branch));
-    
+
     // Handle branch operations
     let has_branch_op = branch.is_some() || merge.is_some();
-    
+
     if let Some(branch_name) = branch {
         if create {
-            println!("\n{} Creating new branch: {}", "🌿".green(), Style::branch_name(&branch_name));
+            println!(
+                "\n{} Creating new branch: {}",
+                "🌿".green(),
+                Style::branch_name(&branch_name)
+            );
             println!("💡 Commands to execute:");
-            println!("  1. {} - create branch", format!("rune branch create {}", branch_name).yellow());
+            println!(
+                "  1. {} - create branch",
+                format!("rune branch create {}", branch_name).yellow()
+            );
             if track {
-                println!("  2. {} - set up tracking", format!("rune branch create {} --track", branch_name).yellow());
+                println!(
+                    "  2. {} - set up tracking",
+                    format!("rune branch create {} --track", branch_name).yellow()
+                );
             }
-            println!("  3. {} - switch to branch", format!("rune checkout {}", branch_name).yellow());
+            println!(
+                "  3. {} - switch to branch",
+                format!("rune checkout {}", branch_name).yellow()
+            );
         } else {
-            println!("\n{} Switching to branch: {}", "🔄".blue(), Style::branch_name(&branch_name));
-            println!("💡 Command: {}", format!("rune checkout {}", branch_name).yellow());
+            println!(
+                "\n{} Switching to branch: {}",
+                "🔄".blue(),
+                Style::branch_name(&branch_name)
+            );
+            println!(
+                "💡 Command: {}",
+                format!("rune checkout {}", branch_name).yellow()
+            );
         }
     }
-    
+
     if let Some(merge_branch) = merge {
-        println!("\n{} Merging branch: {}", "🔀".cyan(), Style::branch_name(&merge_branch));
-        
+        println!(
+            "\n{} Merging branch: {}",
+            "🔀".cyan(),
+            Style::branch_name(&merge_branch)
+        );
+
         println!("💡 Smart merge workflow:");
-        println!("  1. {} - switch to target", format!("rune checkout {}", current_branch).yellow());
-        println!("  2. {} - merge branch", format!("rune merge {}", merge_branch).yellow());
-        
+        println!(
+            "  1. {} - switch to target",
+            format!("rune checkout {}", current_branch).yellow()
+        );
+        println!(
+            "  2. {} - merge branch",
+            format!("rune merge {}", merge_branch).yellow()
+        );
+
         if delete {
-            println!("  3. {} - delete merged branch", format!("rune branch delete {}", merge_branch).yellow());
+            println!(
+                "  3. {} - delete merged branch",
+                format!("rune branch delete {}", merge_branch).yellow()
+            );
         }
     }
-    
+
     // Show current branches
     println!("\n{} Branch Status:", "🌳".blue());
     println!("💡 View all branches: {}", "rune branch".yellow());
-    println!("💡 Create new branch: {}", "rune flow --create <name>".yellow());
-    println!("💡 Merge workflow: {}", "rune flow --merge <branch>".yellow());
-    
+    println!(
+        "💡 Create new branch: {}",
+        "rune flow --create <name>".yellow()
+    );
+    println!(
+        "💡 Merge workflow: {}",
+        "rune flow --merge <branch>".yellow()
+    );
+
     if !has_branch_op {
         println!("\n💡 Flow Commands:");
-        println!("  • {} - create and switch", "rune flow --create <branch>".green());
-        println!("  • {} - merge branch", "rune flow --merge <branch>".green());
+        println!(
+            "  • {} - create and switch",
+            "rune flow --create <branch>".green()
+        );
+        println!(
+            "  • {} - merge branch",
+            "rune flow --merge <branch>".green()
+        );
         println!("  • {} - switch branches", "rune flow <branch>".green());
         println!("  • {} - track upstream", "rune flow --track".green());
     }
-    
+
     Style::success("✅ Branch flow planned!");
-    
+
     Ok(())
 }
 
@@ -6083,29 +6522,38 @@ async fn handle_flow_command(
 
 /// Smart AI suggestions based on repository context and patterns
 async fn handle_suggest_command(
-    category: Option<String>, 
-    focus: Option<String>, 
-    automation: bool, 
-    learning: bool
+    category: Option<String>,
+    focus: Option<String>,
+    automation: bool,
+    learning: bool,
 ) -> anyhow::Result<()> {
     Style::section_header("🧠 Smart AI Suggestions");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
     let current_branch = s.current_branch().unwrap_or_else(|| "main".to_string());
-    
+
     println!("🔍 Analyzing repository context...");
     println!("📍 Current branch: {}", Style::branch_name(&current_branch));
-    
+
     let category = category.unwrap_or_else(|| "workflow".to_string());
     let focus = focus.unwrap_or_else(|| "productivity".to_string());
-    
+
     match category.as_str() {
         "workflow" => {
             println!("\n{} Workflow Suggestions:", "🚀".blue());
-            println!("  • {} - Streamline your commit process", "rune ship --all".green());
-            println!("  • {} - Automate branch creation", "rune flow --create feature/new-feature".green());
-            println!("  • {} - Smart conflict prevention", "rune guard merge".green());
-            
+            println!(
+                "  • {} - Streamline your commit process",
+                "rune ship --all".green()
+            );
+            println!(
+                "  • {} - Automate branch creation",
+                "rune flow --create feature/new-feature".green()
+            );
+            println!(
+                "  • {} - Smart conflict prevention",
+                "rune guard merge".green()
+            );
+
             if automation {
                 println!("\n{} Automation Opportunities:", "🤖".cyan());
                 println!("  • Set up pre-commit hooks for quality checks");
@@ -6118,20 +6566,32 @@ async fn handle_suggest_command(
             println!("  • Consider breaking large changes into smaller commits");
             println!("  • Add more descriptive commit messages");
             println!("  • Use conventional commit format for better tracking");
-            
+
             println!("\n💡 Smart Commit Commands:");
-            println!("  • {} - Quick commit with AI message", "rune work --quick".yellow());
-            println!("  • {} - Interactive staging", "rune work --interactive".yellow());
+            println!(
+                "  • {} - Quick commit with AI message",
+                "rune work --quick".yellow()
+            );
+            println!(
+                "  • {} - Interactive staging",
+                "rune work --interactive".yellow()
+            );
         }
         "performance" => {
             println!("\n{} Performance Suggestions:", "⚡".blue());
             println!("  • Large files detected - consider using LFS");
             println!("  • Repository size growing - run cleanup");
             println!("  • Multiple large branches - consider merging");
-            
+
             println!("\n💡 Performance Commands:");
-            println!("  • {} - Analyze repository health", "rune intelligence analyze".yellow());
-            println!("  • {} - Clean up repository", "rune clean --working --staging".yellow());
+            println!(
+                "  • {} - Analyze repository health",
+                "rune intelligence analyze".yellow()
+            );
+            println!(
+                "  • {} - Clean up repository",
+                "rune clean --working --staging".yellow()
+            );
         }
         _ => {
             println!("💡 Available suggestion categories:");
@@ -6141,14 +6601,20 @@ async fn handle_suggest_command(
             println!("  • {} - Security recommendations", "security".green());
         }
     }
-    
+
     if learning {
         println!("\n{} Learning Opportunities:", "📚".cyan());
-        println!("  • Try interactive rebasing: {}", "rune rebase -i HEAD~3".yellow());
-        println!("  • Explore branch visualization: {}", "rune explore --graph".yellow());
+        println!(
+            "  • Try interactive rebasing: {}",
+            "rune rebase -i HEAD~3".yellow()
+        );
+        println!(
+            "  • Explore branch visualization: {}",
+            "rune explore --graph".yellow()
+        );
         println!("  • Learn about smart workflows: {}", "rune guide".yellow());
     }
-    
+
     println!("\n{} Focus Area: {}", "🎯".blue(), focus);
     match focus.as_str() {
         "security" => {
@@ -6172,62 +6638,62 @@ async fn handle_suggest_command(
             println!("  • Enhance collaboration");
         }
     }
-    
+
     Style::success("💡 AI suggestions ready! Try the recommended commands above.");
-    
+
     Ok(())
 }
 
 /// Interactive repository dashboard with real-time insights
 async fn handle_dashboard_command(
-    refresh: u64, 
-    compact: bool, 
-    watch: bool, 
-    filter: Option<String>
+    refresh: u64,
+    compact: bool,
+    watch: bool,
+    filter: Option<String>,
 ) -> anyhow::Result<()> {
     Style::section_header("📊 Smart Repository Dashboard");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
     let current_branch = s.current_branch().unwrap_or_else(|| "main".to_string());
-    
+
     if watch {
         println!("👀 Watch mode enabled - press Ctrl+C to exit");
         println!("🔄 Refreshing every {} seconds\n", refresh);
     }
-    
+
     loop {
         // Clear screen for watch mode
         if watch {
             print!("\x1B[2J\x1B[1;1H");
             Style::section_header("📊 Smart Repository Dashboard (Live)");
         }
-        
+
         // Repository Health Overview
         println!("{} Repository Health:", "🏥".green());
         println!("  Status: {} Healthy", "✅".green());
         println!("  Current Branch: {}", Style::branch_name(&current_branch));
         println!("  Total Commits: ~50+ commits");
         println!("  Repository Size: ~2.5MB");
-        
+
         // Recent Activity
         println!("\n{} Recent Activity:", "📈".blue());
         println!("  • Latest commit: 2 hours ago");
         println!("  • Active branches: 3 branches");
         println!("  • Pending changes: None");
-        
+
         // AI Insights
         println!("\n{} AI Insights:", "🧠".cyan());
         println!("  • {} Repository growing steadily", "📊".blue());
         println!("  • {} Good commit frequency", "✅".green());
         println!("  • {} Consider branch cleanup", "🧹".yellow());
-        
+
         // Performance Metrics
         if !compact {
             println!("\n{} Performance Metrics:", "⚡".yellow());
             println!("  • Clone Speed: Fast (~2s)");
             println!("  • Merge Performance: Excellent");
             println!("  • Storage Efficiency: 95%");
-            
+
             // Quick Actions
             println!("\n{} Quick Actions:", "🚀".magenta());
             println!("  • {} - Commit changes", "rune work".green());
@@ -6235,7 +6701,7 @@ async fn handle_dashboard_command(
             println!("  • {} - Sync with origin", "rune sync".green());
             println!("  • {} - Get suggestions", "rune suggest".green());
         }
-        
+
         // Filter-specific information
         if let Some(filter_type) = &filter {
             println!("\n{} Filter: {}", "🔍".blue(), filter_type);
@@ -6258,53 +6724,71 @@ async fn handle_dashboard_command(
                 _ => {}
             }
         }
-        
+
         if !watch {
             break;
         }
-        
+
         // Wait for refresh interval
         tokio::time::sleep(tokio::time::Duration::from_secs(refresh)).await;
     }
-    
+
     if !watch {
-        println!("\n💡 Pro tip: Use {} for live updates!", "rune dashboard --watch".yellow());
+        println!(
+            "\n💡 Pro tip: Use {} for live updates!",
+            "rune dashboard --watch".yellow()
+        );
     }
-    
+
     Style::success("📊 Dashboard ready!");
-    
+
     Ok(())
 }
 
 /// Smart workflow automation with AI recommendations
 async fn handle_autoflow_command(
-    workflow_type: &str, 
-    dry_run: bool, 
-    interactive: bool, 
-    learn: bool
+    workflow_type: &str,
+    dry_run: bool,
+    interactive: bool,
+    learn: bool,
 ) -> anyhow::Result<()> {
     Style::section_header("🤖 Smart AutoFlow");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
     let current_branch = s.current_branch().unwrap_or_else(|| "main".to_string());
-    
+
     println!("🎯 Workflow Type: {}", workflow_type.bright_blue());
     println!("📍 Current Branch: {}", Style::branch_name(&current_branch));
-    
+
     if dry_run {
         println!("\n{} DRY RUN MODE - No changes will be made", "🔍".yellow());
     }
-    
+
     match workflow_type {
         "release" => {
             println!("\n{} Release Workflow Automation:", "🚀".blue());
-            println!("  1. {} Verify all tests pass", if dry_run { "WOULD" } else { "✓" });
-            println!("  2. {} Update version numbers", if dry_run { "WOULD" } else { "✓" });
-            println!("  3. {} Create release branch", if dry_run { "WOULD" } else { "✓" });
-            println!("  4. {} Generate changelog", if dry_run { "WOULD" } else { "✓" });
-            println!("  5. {} Create release tag", if dry_run { "WOULD" } else { "✓" });
+            println!(
+                "  1. {} Verify all tests pass",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  2. {} Update version numbers",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  3. {} Create release branch",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  4. {} Generate changelog",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  5. {} Create release tag",
+                if dry_run { "WOULD" } else { "✓" }
+            );
             println!("  6. {} Merge to main", if dry_run { "WOULD" } else { "✓" });
-            
+
             if interactive {
                 println!("\n🤝 Interactive confirmations enabled");
                 println!("   You'll be prompted before each step");
@@ -6312,27 +6796,72 @@ async fn handle_autoflow_command(
         }
         "hotfix" => {
             println!("\n{} Hotfix Workflow Automation:", "🔧".red());
-            println!("  1. {} Create hotfix branch from main", if dry_run { "WOULD" } else { "✓" });
-            println!("  2. {} Apply critical fix", if dry_run { "WOULD" } else { "✓" });
-            println!("  3. {} Run security checks", if dry_run { "WOULD" } else { "✓" });
-            println!("  4. {} Fast-track review", if dry_run { "WOULD" } else { "✓" });
-            println!("  5. {} Deploy immediately", if dry_run { "WOULD" } else { "✓" });
+            println!(
+                "  1. {} Create hotfix branch from main",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  2. {} Apply critical fix",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  3. {} Run security checks",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  4. {} Fast-track review",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  5. {} Deploy immediately",
+                if dry_run { "WOULD" } else { "✓" }
+            );
         }
         "feature" => {
             println!("\n{} Feature Workflow Automation:", "✨".green());
-            println!("  1. {} Create feature branch", if dry_run { "WOULD" } else { "✓" });
-            println!("  2. {} Set up development environment", if dry_run { "WOULD" } else { "✓" });
-            println!("  3. {} Configure branch protection", if dry_run { "WOULD" } else { "✓" });
-            println!("  4. {} Set up CI/CD pipeline", if dry_run { "WOULD" } else { "✓" });
-            println!("  5. {} Create draft PR template", if dry_run { "WOULD" } else { "✓" });
+            println!(
+                "  1. {} Create feature branch",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  2. {} Set up development environment",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  3. {} Configure branch protection",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  4. {} Set up CI/CD pipeline",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  5. {} Create draft PR template",
+                if dry_run { "WOULD" } else { "✓" }
+            );
         }
         "cleanup" => {
             println!("\n{} Cleanup Workflow Automation:", "🧹".cyan());
-            println!("  1. {} Identify merged branches", if dry_run { "WOULD" } else { "✓" });
-            println!("  2. {} Clean up local branches", if dry_run { "WOULD" } else { "✓" });
-            println!("  3. {} Prune remote tracking", if dry_run { "WOULD" } else { "✓" });
-            println!("  4. {} Optimize repository", if dry_run { "WOULD" } else { "✓" });
-            println!("  5. {} Update documentation", if dry_run { "WOULD" } else { "✓" });
+            println!(
+                "  1. {} Identify merged branches",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  2. {} Clean up local branches",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  3. {} Prune remote tracking",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  4. {} Optimize repository",
+                if dry_run { "WOULD" } else { "✓" }
+            );
+            println!(
+                "  5. {} Update documentation",
+                if dry_run { "WOULD" } else { "✓" }
+            );
         }
         _ => {
             println!("💡 Available workflow types:");
@@ -6343,41 +6872,44 @@ async fn handle_autoflow_command(
             return Ok(());
         }
     }
-    
+
     if learn {
         println!("\n{} Learning Mode:", "📚".magenta());
         println!("   AI will remember your preferences for future automations");
         println!("   Building personalized workflow patterns...");
     }
-    
+
     if dry_run {
-        println!("\n💡 Run without {} to execute the workflow", "--dry-run".yellow());
+        println!(
+            "\n💡 Run without {} to execute the workflow",
+            "--dry-run".yellow()
+        );
     } else {
         Style::success("🤖 AutoFlow workflow completed successfully!");
     }
-    
+
     Ok(())
 }
 
 /// Intelligent conflict prevention and resolution
 async fn handle_guard_command(
-    operation: &str, 
-    predict: bool, 
-    auto_resolve: bool, 
-    strategies: bool
+    operation: &str,
+    predict: bool,
+    auto_resolve: bool,
+    strategies: bool,
 ) -> anyhow::Result<()> {
     Style::section_header("🛡️ Smart Guard Protection");
-    
+
     let s = Store::discover(std::env::current_dir()?)?;
     let current_branch = s.current_branch().unwrap_or_else(|| "main".to_string());
-    
+
     println!("🎯 Guarding Operation: {}", operation.bright_blue());
     println!("📍 Current Branch: {}", Style::branch_name(&current_branch));
-    
+
     match operation {
         "merge" => {
             println!("\n{} Merge Guard Analysis:", "🔀".blue());
-            
+
             if predict {
                 println!("🔮 Conflict Prediction:");
                 println!("  • {} No conflicts detected", "✅".green());
@@ -6385,21 +6917,27 @@ async fn handle_guard_command(
                 println!("  • {} All files compatible", "✅".green());
                 println!("  • Confidence: 95%");
             }
-            
+
             if auto_resolve {
                 println!("\n🤖 Auto-Resolution Capabilities:");
                 println!("  • {} Whitespace conflicts: Auto-fixable", "✅".green());
                 println!("  • {} Import order conflicts: Auto-fixable", "✅".green());
                 println!("  • {} Comment conflicts: Auto-fixable", "✅".green());
-                println!("  • {} Logic conflicts: Manual review required", "⚠️".yellow());
+                println!(
+                    "  • {} Logic conflicts: Manual review required",
+                    "⚠️".yellow()
+                );
             }
-            
+
             if strategies {
                 println!("\n📋 Resolution Strategies:");
                 println!("  1. {} - Prefer current branch changes", "Ours".cyan());
                 println!("  2. {} - Prefer incoming changes", "Theirs".cyan());
                 println!("  3. {} - Three-way intelligent merge", "Recursive".cyan());
-                println!("  4. {} - Manual resolution with AI hints", "Interactive".cyan());
+                println!(
+                    "  4. {} - Manual resolution with AI hints",
+                    "Interactive".cyan()
+                );
             }
         }
         "rebase" => {
@@ -6429,19 +6967,28 @@ async fn handle_guard_command(
             return Ok(());
         }
     }
-    
+
     println!("\n{} AI Recommendations:", "🧠".cyan());
     println!("  • Operation appears safe to proceed");
     println!("  • Consider running tests before continuing");
     println!("  • Backup current state if needed");
-    
+
     println!("\n💡 Smart Guard Commands:");
-    println!("  • {} - Predict conflicts", "rune guard merge --predict".yellow());
-    println!("  • {} - Auto-resolve simple conflicts", "rune guard merge --auto-resolve".yellow());
-    println!("  • {} - Show resolution strategies", "rune guard merge --strategies".yellow());
-    
+    println!(
+        "  • {} - Predict conflicts",
+        "rune guard merge --predict".yellow()
+    );
+    println!(
+        "  • {} - Auto-resolve simple conflicts",
+        "rune guard merge --auto-resolve".yellow()
+    );
+    println!(
+        "  • {} - Show resolution strategies",
+        "rune guard merge --strategies".yellow()
+    );
+
     Style::success("🛡️ Guard analysis complete - operation is protected!");
-    
+
     Ok(())
 }
 
@@ -6463,7 +7010,7 @@ fn format_bytes(bytes: usize) -> String {
 
 /// Handle revolutionary binary file management command
 async fn handle_binary_command(cmd: Option<BinaryCommand>) -> anyhow::Result<()> {
-    let cmd = cmd.unwrap_or(BinaryCommand::Analyze { 
+    let cmd = cmd.unwrap_or(BinaryCommand::Analyze {
         path: ".".to_string(),
         detailed: false,
         performance: false,
@@ -6471,10 +7018,15 @@ async fn handle_binary_command(cmd: Option<BinaryCommand>) -> anyhow::Result<()>
     });
 
     match cmd {
-        BinaryCommand::Analyze { path, detailed, performance, lfs_suggestions } => {
+        BinaryCommand::Analyze {
+            path,
+            detailed,
+            performance,
+            lfs_suggestions,
+        } => {
             Style::section_header("🔬 Revolutionary Binary Analysis");
             Style::info(&format!("📁 Analyzing path: {}", Style::file_path(&path)));
-            
+
             if detailed {
                 println!("🔍 Performing deep binary analysis...");
                 // Simulate AI-powered binary analysis
@@ -6483,7 +7035,7 @@ async fn handle_binary_command(cmd: Option<BinaryCommand>) -> anyhow::Result<()>
                 println!("    • {} media files (.png, .jpg, .mp4)", "45".cyan());
                 println!("    • {} archives (.zip, .tar.gz)", "8".cyan());
                 println!("    • {} game assets (.uasset, .prefab)", "156".cyan());
-                
+
                 if performance {
                     println!("  ⚡ Performance Impact Analysis:");
                     println!("    • Repository bloat: {} (HIGH RISK)", "2.3GB".red());
@@ -6491,51 +7043,78 @@ async fn handle_binary_command(cmd: Option<BinaryCommand>) -> anyhow::Result<()>
                     println!("    • Storage efficiency: {} (POOR)", "23%".red());
                     println!("    • Compression ratio: {} achievable", "67%".green());
                 }
-                
+
                 if lfs_suggestions {
                     println!("  💡 LFS Migration Recommendations:");
                     println!("    • {} files should migrate to LFS", "89".yellow());
                     println!("    • Potential space savings: {}", "1.8GB".green());
-                    println!("    • Performance improvement: {} faster clones", "85%".green());
+                    println!(
+                        "    • Performance improvement: {} faster clones",
+                        "85%".green()
+                    );
                 }
             } else {
                 println!("📈 Binary Analysis Summary:");
                 println!("  • Total binary files: {}", "221".cyan());
                 println!("  • Total size: {}", "2.3GB".yellow());
                 println!("  • LFS candidates: {}", "89 files".yellow());
-                println!("  • Repository health: {} (needs optimization)", "Poor".red());
+                println!(
+                    "  • Repository health: {} (needs optimization)",
+                    "Poor".red()
+                );
             }
-            
+
             println!("💡 Smart Recommendations:");
-            println!("  • {} - Deep analysis", "rune binary analyze --detailed --performance".yellow());
-            println!("  • {} - Migrate large files to LFS", "rune binary migrate 50".yellow());
-            println!("  • {} - Optimize storage", "rune binary optimize --aggressive".yellow());
-            
+            println!(
+                "  • {} - Deep analysis",
+                "rune binary analyze --detailed --performance".yellow()
+            );
+            println!(
+                "  • {} - Migrate large files to LFS",
+                "rune binary migrate 50".yellow()
+            );
+            println!(
+                "  • {} - Optimize storage",
+                "rune binary optimize --aggressive".yellow()
+            );
+
             Style::success("🔬 Binary analysis complete!");
         }
-        
-        BinaryCommand::Migrate { threshold_mb, dry_run, auto_confirm, patterns } => {
+
+        BinaryCommand::Migrate {
+            threshold_mb,
+            dry_run,
+            auto_confirm,
+            patterns,
+        } => {
             Style::section_header("🚀 Smart Binary Migration to LFS");
             let threshold = threshold_mb.unwrap_or(50);
-            
+
             if dry_run {
                 Style::info("🔍 DRY RUN MODE - No changes will be made");
             }
-            
+
             Style::info(&format!("📏 Migration threshold: {}MB", threshold));
-            
+
             println!("🔍 Scanning for migration candidates...");
             println!("  Found {} files larger than {}MB:", "23".cyan(), threshold);
             println!("    • assets/video/intro.mp4 ({}) -> LFS", "156MB".yellow());
             println!("    • builds/game-release.zip ({}) -> LFS", "89MB".yellow());
-            println!("    • textures/4k-landscape.png ({}) -> LFS", "67MB".yellow());
-            
+            println!(
+                "    • textures/4k-landscape.png ({}) -> LFS",
+                "67MB".yellow()
+            );
+
             if !patterns.is_empty() {
                 println!("  📋 Using patterns: {}", patterns.join(", "));
             }
-            
+
             if dry_run {
-                println!("💡 Would migrate {} files, saving {}GB in repository size", "23".cyan(), "1.2".green());
+                println!(
+                    "💡 Would migrate {} files, saving {}GB in repository size",
+                    "23".cyan(),
+                    "1.2".green()
+                );
             } else {
                 if auto_confirm {
                     println!("✅ Auto-confirming migration...");
@@ -6543,52 +7122,66 @@ async fn handle_binary_command(cmd: Option<BinaryCommand>) -> anyhow::Result<()>
                     println!("⚠️  Ready to migrate (use --auto-confirm to skip prompts)");
                 }
                 println!("🚀 Migrating {} files to LFS...", "23".cyan());
-                println!("✅ Migration complete! Repository size reduced by {}GB", "1.2".green());
+                println!(
+                    "✅ Migration complete! Repository size reduced by {}GB",
+                    "1.2".green()
+                );
             }
-            
+
             Style::success("🚀 Binary migration complete!");
         }
-        
-        BinaryCommand::Optimize { target_ratio, aggressive, preserve } => {
+
+        BinaryCommand::Optimize {
+            target_ratio,
+            aggressive,
+            preserve,
+        } => {
             Style::section_header("⚡ Binary Storage Optimization");
             let ratio = target_ratio.unwrap_or(0.7);
-            
-            Style::info(&format!("🎯 Target compression ratio: {:.1}%", ratio * 100.0));
-            
+
+            Style::info(&format!(
+                "🎯 Target compression ratio: {:.1}%",
+                ratio * 100.0
+            ));
+
             if aggressive {
                 println!("🔥 Using aggressive optimization mode");
                 println!("  • Advanced compression algorithms");
                 println!("  • Binary deduplication");
                 println!("  • Smart delta compression");
             }
-            
+
             println!("🔧 Optimizing binary storage...");
             println!("  • Analyzing {} binary files", "156".cyan());
             println!("  • Applying delta compression to similar files");
             println!("  • Deduplicating identical binaries");
             println!("  • Optimizing compression for file types");
-            
+
             if preserve {
                 println!("💾 Preserving original files as backup");
             }
-            
+
             println!("📊 Optimization Results:");
             println!("  • Storage reduced by: {}", "67%".green());
             println!("  • Space saved: {}", "1.5GB".green());
             println!("  • Performance improved by: {}", "45%".green());
-            
+
             Style::success("⚡ Binary optimization complete!");
         }
-        
-        BinaryCommand::Dependencies { file, graph, circular } => {
+
+        BinaryCommand::Dependencies {
+            file,
+            graph,
+            circular,
+        } => {
             Style::section_header("🕸️  Binary Dependency Analysis");
             Style::info(&format!("🔍 Analyzing: {}", Style::file_path(&file)));
-            
+
             println!("📋 Dependencies found:");
             println!("  • libcore.dll -> libmath.dll");
             println!("  • libmath.dll -> libutils.dll");
             println!("  • texture.png -> material.mat");
-            
+
             if graph {
                 println!("📊 Dependency Graph:");
                 println!("  {}", &file);
@@ -6597,19 +7190,23 @@ async fn handle_binary_command(cmd: Option<BinaryCommand>) -> anyhow::Result<()>
                 println!("  └── asset-bundle.pak");
                 println!("      └── nested-texture.png");
             }
-            
+
             if circular {
                 println!("🔄 Checking for circular dependencies...");
                 println!("  ⚠️  Circular dependency detected:");
                 println!("      A.dll -> B.dll -> C.dll -> A.dll");
             }
-            
+
             Style::success("🕸️  Dependency analysis complete!");
         }
-        
-        BinaryCommand::Branch { strategy, auto_detect, compare } => {
+
+        BinaryCommand::Branch {
+            strategy,
+            auto_detect,
+            compare,
+        } => {
             Style::section_header("🌿 Smart Binary Branching Strategy");
-            
+
             if auto_detect {
                 println!("🤖 Auto-detecting optimal strategy...");
                 println!("  • Repository size: Large (2.3GB)");
@@ -6619,29 +7216,29 @@ async fn handle_binary_command(cmd: Option<BinaryCommand>) -> anyhow::Result<()>
             } else {
                 Style::info(&format!("📋 Using strategy: {}", strategy));
             }
-            
+
             if compare {
                 println!("📊 Strategy Comparison:");
                 println!("  💡 Lightweight: Fast, but potential conflicts");
                 println!("  🏝️  Isolated: Safe, medium performance");
                 println!("  🤝 Shared: Collaborative, requires coordination");
             }
-            
+
             println!("🔧 Configuring binary branching strategy...");
             println!("  • Setting up LFS tracking patterns");
             println!("  • Configuring merge strategies");
             println!("  • Optimizing for binary file types");
-            
+
             Style::success("🌿 Binary branching strategy configured!");
         }
     }
-    
+
     Ok(())
 }
 
 /// Handle intelligent branching command
 async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow::Result<()> {
-    let cmd = cmd.unwrap_or(SmartBranchCommand::Health { 
+    let cmd = cmd.unwrap_or(SmartBranchCommand::Health {
         branch: "current".to_string(),
         detailed: false,
         performance: false,
@@ -6649,25 +7246,48 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
     });
 
     match cmd {
-        SmartBranchCommand::Create { purpose, description, auto_name, suggest_strategy, optimize } => {
+        SmartBranchCommand::Create {
+            purpose,
+            description,
+            auto_name,
+            suggest_strategy,
+            optimize,
+        } => {
             Style::section_header("🌱 AI-Powered Smart Branch Creation");
             Style::info(&format!("🎯 Purpose: {}", purpose));
             Style::info(&format!("📝 Description: {}", description));
-            
+
             let branch_name = if auto_name {
                 let generated = match purpose.as_str() {
-                    "feature" => format!("feature/ai-{}", description.replace(" ", "-").to_lowercase()),
+                    "feature" => format!(
+                        "feature/ai-{}",
+                        description.replace(" ", "-").to_lowercase()
+                    ),
                     "bugfix" => format!("bugfix/{}", description.replace(" ", "-").to_lowercase()),
-                    "hotfix" => format!("hotfix/urgent-{}", description.replace(" ", "-").to_lowercase()),
-                    "experiment" => format!("experiment/{}", description.replace(" ", "-").to_lowercase()),
-                    _ => format!("{}-{}", purpose, description.replace(" ", "-").to_lowercase()),
+                    "hotfix" => format!(
+                        "hotfix/urgent-{}",
+                        description.replace(" ", "-").to_lowercase()
+                    ),
+                    "experiment" => format!(
+                        "experiment/{}",
+                        description.replace(" ", "-").to_lowercase()
+                    ),
+                    _ => format!(
+                        "{}-{}",
+                        purpose,
+                        description.replace(" ", "-").to_lowercase()
+                    ),
                 };
                 println!("🤖 AI-generated branch name: {}", generated.cyan());
                 generated
             } else {
-                format!("{}/{}", purpose, description.replace(" ", "-").to_lowercase())
+                format!(
+                    "{}/{}",
+                    purpose,
+                    description.replace(" ", "-").to_lowercase()
+                )
             };
-            
+
             if suggest_strategy {
                 println!("💡 AI Strategy Suggestions:");
                 match purpose.as_str() {
@@ -6678,22 +7298,28 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                     _ => println!("  • Standard branching workflow recommended"),
                 }
             }
-            
+
             if optimize {
                 println!("⚡ Performance Optimizations:");
                 println!("  • Shallow clone for large repositories");
                 println!("  • LFS optimization for binary files");
                 println!("  • Sparse checkout for focused development");
             }
-            
+
             println!("🌱 Creating optimized branch: {}", branch_name.green());
             Style::success("🌱 Smart branch created successfully!");
         }
-        
-        SmartBranchCommand::Merge { branch, predict_conflicts, auto_resolve, smart_strategy, auto_message } => {
+
+        SmartBranchCommand::Merge {
+            branch,
+            predict_conflicts,
+            auto_resolve,
+            smart_strategy,
+            auto_message,
+        } => {
             Style::section_header("🔀 AI-Powered Smart Merge");
             Style::info(&format!("🎯 Merging branch: {}", branch));
-            
+
             // Initialize AI conflict resolver
             let config = rune_ai::ConflictResolverConfig::default();
             let mut conflict_resolver = rune_ai::ConflictResolver::new(config);
@@ -6701,7 +7327,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 Style::warning(&format!("⚠️  AI model initialization failed: {}", e));
                 Style::info("Falling back to traditional merge...");
             }
-            
+
             // Check if branch exists first
             let store = get_store_for_current_dir()?;
             if !store.branch_exists(&branch) {
@@ -6709,16 +7335,22 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 Style::info("Use 'rune smart branch list' to see available branches");
                 return Err(anyhow::anyhow!("Merge failed"));
             }
-            
+
             if predict_conflicts {
                 Style::info("🔮 AI Conflict Prediction:");
-                
+
                 // Analyze potential conflicts before merge
                 match analyze_merge_conflicts(&store, &branch) {
                     Ok(analysis) => {
-                        println!("  • Analyzed {} commits", analysis.commits_analyzed.to_string().cyan());
-                        println!("  • Checked {} files for conflicts", analysis.files_analyzed.to_string().cyan());
-                        
+                        println!(
+                            "  • Analyzed {} commits",
+                            analysis.commits_analyzed.to_string().cyan()
+                        );
+                        println!(
+                            "  • Checked {} files for conflicts",
+                            analysis.files_analyzed.to_string().cyan()
+                        );
+
                         let risk_level = if analysis.conflict_probability < 0.3 {
                             "LOW RISK".green()
                         } else if analysis.conflict_probability < 0.7 {
@@ -6726,12 +7358,18 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                         } else {
                             "HIGH RISK".red()
                         };
-                        
-                        println!("  • Conflict probability: {}% ({})", 
-                            (analysis.conflict_probability * 100.0) as u32, risk_level);
-                        
+
+                        println!(
+                            "  • Conflict probability: {}% ({})",
+                            (analysis.conflict_probability * 100.0) as u32,
+                            risk_level
+                        );
+
                         if !analysis.predicted_conflicts.is_empty() {
-                            println!("  • Predicted conflicts: {} files", analysis.predicted_conflicts.len().to_string().yellow());
+                            println!(
+                                "  • Predicted conflicts: {} files",
+                                analysis.predicted_conflicts.len().to_string().yellow()
+                            );
                             for conflict in &analysis.predicted_conflicts {
                                 println!("    - {} ({})", conflict.file, conflict.reason);
                             }
@@ -6744,20 +7382,31 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                     }
                 }
             }
-            
+
             if smart_strategy {
                 Style::info("🧠 AI Strategy Selection:");
                 match select_optimal_merge_strategy(&store, &branch) {
                     Ok(strategy_info) => {
-                        println!("  • Recommended strategy: {} ({})", 
-                            strategy_info.strategy.green(), strategy_info.reason);
+                        println!(
+                            "  • Recommended strategy: {} ({})",
+                            strategy_info.strategy.green(),
+                            strategy_info.reason
+                        );
                         if !strategy_info.alternatives.is_empty() {
-                            println!("  • Alternative strategies: {}", 
-                                strategy_info.alternatives.join(", "));
+                            println!(
+                                "  • Alternative strategies: {}",
+                                strategy_info.alternatives.join(", ")
+                            );
                         }
-                        println!("  • Confidence level: {}% ({})", 
-                            (strategy_info.confidence * 100.0) as u32, 
-                            if strategy_info.confidence > 0.8 { "HIGH".green() } else { "MEDIUM".yellow() });
+                        println!(
+                            "  • Confidence level: {}% ({})",
+                            (strategy_info.confidence * 100.0) as u32,
+                            if strategy_info.confidence > 0.8 {
+                                "HIGH".green()
+                            } else {
+                                "MEDIUM".yellow()
+                            }
+                        );
                     }
                     Err(e) => {
                         Style::warning(&format!("⚠️  Strategy selection failed: {}", e));
@@ -6765,91 +7414,114 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                     }
                 }
             }
-            
+
             // Perform the actual merge
             Style::info("🔀 Performing merge...");
             match store.merge_branch(&branch, false, None) {
-                Ok(merge_result) => {
-                    match merge_result {
-                        rune_store::MergeResult::Success => {
-                            Style::success("✅ Merge completed successfully!");
-                        }
-                        rune_store::MergeResult::FastForward => {
-                            Style::success("⚡ Fast-forward merge completed!");
-                        }
-                        rune_store::MergeResult::Conflicts(files) => {
-                            Style::warning("⚠️  Merge completed with conflicts - activating AI resolution...");
-                            
-                            if auto_resolve {
-                                let mut resolved_count = 0;
-                                let mut failed_count = 0;
-                                
-                                for file_path in &files {
-                                    match resolve_conflict_with_ai(&mut conflict_resolver, file_path) {
-                                        Ok(true) => {
-                                            resolved_count += 1;
-                                            Style::success(&format!("  ✅ Auto-resolved: {}", file_path));
-                                        }
-                                        Ok(false) => {
-                                            failed_count += 1;
-                                            Style::warning(&format!("  ⚠️  Manual resolution needed: {}", file_path));
-                                        }
-                                        Err(e) => {
-                                            failed_count += 1;
-                                            Style::error(&format!("  ❌ Resolution failed for {}: {}", file_path, e));
-                                        }
+                Ok(merge_result) => match merge_result {
+                    rune_store::MergeResult::Success => {
+                        Style::success("✅ Merge completed successfully!");
+                    }
+                    rune_store::MergeResult::FastForward => {
+                        Style::success("⚡ Fast-forward merge completed!");
+                    }
+                    rune_store::MergeResult::Conflicts(files) => {
+                        Style::warning(
+                            "⚠️  Merge completed with conflicts - activating AI resolution...",
+                        );
+
+                        if auto_resolve {
+                            let mut resolved_count = 0;
+                            let mut failed_count = 0;
+
+                            for file_path in &files {
+                                match resolve_conflict_with_ai(&mut conflict_resolver, file_path) {
+                                    Ok(true) => {
+                                        resolved_count += 1;
+                                        Style::success(&format!(
+                                            "  ✅ Auto-resolved: {}",
+                                            file_path
+                                        ));
+                                    }
+                                    Ok(false) => {
+                                        failed_count += 1;
+                                        Style::warning(&format!(
+                                            "  ⚠️  Manual resolution needed: {}",
+                                            file_path
+                                        ));
+                                    }
+                                    Err(e) => {
+                                        failed_count += 1;
+                                        Style::error(&format!(
+                                            "  ❌ Resolution failed for {}: {}",
+                                            file_path, e
+                                        ));
                                     }
                                 }
-                                
-                                println!();
-                                Style::info(&format!("🤖 AI Resolution Summary:"));
-                                println!("  • {} conflicts auto-resolved", resolved_count.to_string().green());
-                                if failed_count > 0 {
-                                    println!("  • {} conflicts require manual resolution", failed_count.to_string().yellow());
-                                    Style::info("");
-                                    Style::info("To complete the merge:");
-                                    Style::info("  1. Manually resolve remaining conflicts");
-                                    Style::info("  2. Run: rune add <files>");
-                                    Style::info("  3. Run: rune commit");
-                                }
-                            } else {
-                                Style::info("Conflicts detected in:");
-                                for file in &files {
-                                    Style::info(&format!("  ⚠️  {}", file));
-                                }
-                                Style::info("");
-                                Style::info("To resolve conflicts with AI assistance:");
-                                Style::info("  rune smart merge <branch> --auto-resolve");
                             }
+
+                            println!();
+                            Style::info(&format!("🤖 AI Resolution Summary:"));
+                            println!(
+                                "  • {} conflicts auto-resolved",
+                                resolved_count.to_string().green()
+                            );
+                            if failed_count > 0 {
+                                println!(
+                                    "  • {} conflicts require manual resolution",
+                                    failed_count.to_string().yellow()
+                                );
+                                Style::info("");
+                                Style::info("To complete the merge:");
+                                Style::info("  1. Manually resolve remaining conflicts");
+                                Style::info("  2. Run: rune add <files>");
+                                Style::info("  3. Run: rune commit");
+                            }
+                        } else {
+                            Style::info("Conflicts detected in:");
+                            for file in &files {
+                                Style::info(&format!("  ⚠️  {}", file));
+                            }
+                            Style::info("");
+                            Style::info("To resolve conflicts with AI assistance:");
+                            Style::info("  rune smart merge <branch> --auto-resolve");
                         }
                     }
-                }
+                },
                 Err(e) => {
                     Style::error(&format!("❌ Merge failed: {}", e));
                     return Err(e);
                 }
             }
-            
+
             if auto_message && !files_have_conflicts()? {
                 let ai_message = generate_ai_merge_message(&store, &branch)?;
-                Style::info(&format!("📝 AI-generated merge message: {}", ai_message.cyan()));
-                
+                Style::info(&format!(
+                    "📝 AI-generated merge message: {}",
+                    ai_message.cyan()
+                ));
+
                 // Automatically commit with AI message
                 if let Err(e) = store.commit(&ai_message, author()) {
                     Style::warning(&format!("⚠️  Auto-commit failed: {}", e));
                     Style::info("Please commit manually with: rune commit");
                 }
             }
-            
+
             Style::success("🔀 Smart merge process completed!");
         }
-        
-        SmartBranchCommand::Health { branch, detailed, performance, cleanup } => {
+
+        SmartBranchCommand::Health {
+            branch,
+            detailed,
+            performance,
+            cleanup,
+        } => {
             Style::section_header("🏥 Branch Health Analysis");
             Style::info(&format!("🔍 Analyzing branch: {}", branch));
-            
+
             println!("📊 Branch Health Score: {} (Good)", "78/100".green());
-            
+
             if detailed {
                 println!("📋 Detailed Health Report:");
                 println!("  • Code quality: {} (Good)", "82%".green());
@@ -6858,7 +7530,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 println!("  • Dependencies: {} (Up to date)", "✓".green());
                 println!("  • Security scan: {} (No issues)", "✓".green());
             }
-            
+
             if performance {
                 println!("⚡ Performance Metrics:");
                 println!("  • Build time: {} (Good)", "2m 34s".green());
@@ -6866,31 +7538,37 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 println!("  • Memory usage: {} (Excellent)", "45MB".green());
                 println!("  • Load time: {} (Good)", "850ms".green());
             }
-            
+
             if cleanup {
                 println!("🧹 Cleanup Recommendations:");
                 println!("  • Remove {} unused dependencies", "3".yellow());
                 println!("  • Clean up {} dead code blocks", "7".yellow());
                 println!("  • Update {} outdated comments", "12".yellow());
             }
-            
+
             println!("💡 AI Recommendations:");
             println!("  • Increase test coverage to 80%+");
             println!("  • Consider code refactoring in 2 modules");
             println!("  • Add performance benchmarks");
-            
+
             Style::success("🏥 Branch health analysis complete!");
         }
-        
-        SmartBranchCommand::Cleanup { merged, stale, stale_days, dry_run, interactive } => {
+
+        SmartBranchCommand::Cleanup {
+            merged,
+            stale,
+            stale_days,
+            dry_run,
+            interactive,
+        } => {
             Style::section_header("🧹 AI-Powered Branch Cleanup");
-            
+
             if dry_run {
                 Style::info("🔍 DRY RUN MODE - No changes will be made");
             }
-            
+
             let days = stale_days.unwrap_or(30);
-            
+
             if merged {
                 println!("🔍 Finding merged branches...");
                 println!("  Found {} fully merged branches:", "8".cyan());
@@ -6898,14 +7576,14 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 println!("    • bugfix/login-issue (merged 12 days ago)");
                 println!("    • feature/dashboard (merged 18 days ago)");
             }
-            
+
             if stale {
                 println!("🔍 Finding stale branches (>{} days)...", days);
                 println!("  Found {} stale branches:", "5".yellow());
                 println!("    • experiment/new-ui ({} days old)", "45".yellow());
                 println!("    • feature/abandoned ({} days old)", "67".yellow());
             }
-            
+
             if interactive {
                 println!("🤔 Interactive cleanup mode:");
                 println!("  Would you like to delete 'feature/user-auth'? [y/N]");
@@ -6914,31 +7592,36 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 println!("🗑️  Cleaning up {} branches...", "13".cyan());
                 println!("✅ Cleanup complete!");
             }
-            
+
             println!("📊 Cleanup Summary:");
             println!("  • Branches analyzed: {}", "47".cyan());
             println!("  • Candidates for cleanup: {}", "13".yellow());
             println!("  • Space that would be freed: {}", "156MB".green());
-            
+
             Style::success("🧹 Branch cleanup analysis complete!");
         }
-        
-        SmartBranchCommand::Strategy { project_type, team_size, compare, customize } => {
+
+        SmartBranchCommand::Strategy {
+            project_type,
+            team_size,
+            compare,
+            customize,
+        } => {
             Style::section_header("🎯 Intelligent Branching Strategy");
-            
+
             let proj_type = project_type.unwrap_or_else(|| {
                 println!("🤖 Auto-detecting project type...");
                 "web".to_string()
             });
-            
+
             let team = team_size.unwrap_or_else(|| {
                 println!("🤖 Auto-detecting team size...");
                 "medium".to_string()
             });
-            
+
             Style::info(&format!("🏗️  Project type: {}", proj_type));
             Style::info(&format!("👥 Team size: {}", team));
-            
+
             if compare {
                 println!("📊 Strategy Comparison:");
                 println!("  🌊 Git Flow: Structured, good for releases");
@@ -6946,7 +7629,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 println!("  🔄 GitLab Flow: Environment-based branching");
                 println!("  ⚡ Linear: Minimal branching, fast merges");
             }
-            
+
             let recommended = match (proj_type.as_str(), team.as_str()) {
                 ("web", "small") => "GitHub Flow",
                 ("web", "medium") => "Git Flow",
@@ -6955,9 +7638,9 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 ("gamedev", _) => "Custom with LFS optimization",
                 _ => "GitHub Flow",
             };
-            
+
             println!("🎯 AI Recommendation: {}", recommended.green());
-            
+
             if customize {
                 println!("🛠️  Customization options:");
                 println!("  • Branch naming conventions");
@@ -6965,7 +7648,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                 println!("  • Protection rules");
                 println!("  • Automated workflows");
             }
-            
+
             println!("💡 Strategy Benefits:");
             match recommended {
                 "GitHub Flow" => {
@@ -6983,25 +7666,31 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                     println!("  • Best practices included");
                 }
             }
-            
+
             Style::success("🎯 Branching strategy analysis complete!");
         }
-        
-        SmartBranchCommand::Workflow { action, template, project_type, team_size, automation } => {
-            use rune_ai::{RuneBranchingEngine, BranchingConfig, ProjectType, TeamSize};
-            
+
+        SmartBranchCommand::Workflow {
+            action,
+            template,
+            project_type,
+            team_size,
+            automation,
+        } => {
+            use rune_ai::{BranchingConfig, ProjectType, RuneBranchingEngine, TeamSize};
+
             Style::section_header("🔄 Advanced Branching Workflow");
-            
+
             let config = BranchingConfig::default();
             let engine = RuneBranchingEngine::new(config);
-            
+
             match action.as_str() {
                 "setup" => {
                     Style::info("🛠️  Setting up branching workflow...");
-                    
+
                     if let Some(template_name) = template {
                         Style::info(&format!("📋 Using template: {}", template_name));
-                        
+
                         let strategies = engine.get_strategies();
                         if let Some(strategy) = strategies.get(&template_name) {
                             println!("✅ Strategy loaded: {}", strategy.description);
@@ -7018,7 +7707,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                         // Auto-recommend based on project context
                         let proj_type = project_type.as_deref().unwrap_or("web");
                         let team = team_size.as_deref().unwrap_or("medium");
-                        
+
                         let project_enum = match proj_type {
                             "web" => ProjectType::WebApp,
                             "mobile" => ProjectType::MobileApp,
@@ -7028,7 +7717,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                             "enterprise" => ProjectType::Enterprise,
                             _ => ProjectType::WebApp,
                         };
-                        
+
                         let team_enum = match team {
                             "solo" => TeamSize::Solo,
                             "small" => TeamSize::Small,
@@ -7036,9 +7725,9 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                             "large" => TeamSize::Large,
                             _ => TeamSize::Medium,
                         };
-                        
+
                         let recommendations = engine.recommend_strategy(project_enum, team_enum);
-                        
+
                         if !recommendations.is_empty() {
                             Style::info("🎯 AI Recommendations:");
                             for template in recommendations {
@@ -7046,7 +7735,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                             }
                         }
                     }
-                    
+
                     if automation {
                         Style::info("🤖 Setting up automation rules...");
                         println!("  • Auto-cleanup merged branches");
@@ -7054,9 +7743,9 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                         println!("  • Conflict prevention");
                         println!("  • Release automation");
                     }
-                    
+
                     Style::success("✅ Workflow setup complete!");
-                },
+                }
                 "configure" => {
                     Style::info("⚙️  Configuring workflow settings...");
                     println!("📋 Current Configuration:");
@@ -7064,9 +7753,9 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                     println!("  • Auto-naming: enabled");
                     println!("  • Branch protection: enabled");
                     println!("  • Auto-cleanup: merged branches only");
-                    
+
                     Style::success("✅ Configuration updated!");
-                },
+                }
                 "automate" => {
                     Style::info("🤖 Enabling workflow automation...");
                     println!("🔧 Automation features:");
@@ -7074,70 +7763,76 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                     println!("  • Automatic conflict resolution");
                     println!("  • Release branch management");
                     println!("  • Branch cleanup scheduling");
-                    
+
                     Style::success("✅ Automation enabled!");
-                },
+                }
                 "status" => {
                     Style::info("📊 Workflow Status:");
                     println!("  • Active strategy: rune-flow");
                     println!("  • Automation rules: 5 active");
                     println!("  • Branch health: excellent");
                     println!("  • Last cleanup: 2 days ago");
-                    
+
                     println!("📈 Recent Activity:");
                     println!("  • 12 branches created this week");
                     println!("  • 8 branches merged");
                     println!("  • 3 branches auto-cleaned");
                     println!("  • 0 conflicts detected");
-                    
+
                     Style::success("✅ Workflow operating smoothly!");
-                },
+                }
                 _ => {
                     Style::error(&format!("❌ Unknown workflow action: {}", action));
                     println!("Available actions: setup, configure, automate, status");
                 }
             }
         }
-        
-        SmartBranchCommand::Release { action, version, changelog, deploy, environment } => {
+
+        SmartBranchCommand::Release {
+            action,
+            version,
+            changelog,
+            deploy,
+            environment,
+        } => {
             Style::section_header("🚀 Intelligent Release Management");
-            
+
             match action.as_str() {
                 "start" => {
                     let version = version.unwrap_or_else(|| {
                         Style::info("🤖 Auto-generating version number...");
                         "v1.2.3".to_string()
                     });
-                    
+
                     Style::info(&format!("🎯 Starting release: {}", version));
-                    
+
                     println!("📋 Release checklist:");
                     println!("  ✅ Code freeze initiated");
                     println!("  ✅ Release branch created: release/{}", version);
                     println!("  🔄 Running final tests...");
                     println!("  🔄 Preparing documentation...");
-                    
+
                     if changelog {
                         Style::info("📝 Generating changelog...");
                         println!("  • Analyzing commits since last release");
                         println!("  • Categorizing changes (features, fixes, breaking)");
                         println!("  • Generating release notes");
                     }
-                    
+
                     Style::success(&format!("🚀 Release {} started successfully!", version));
-                },
+                }
                 "finish" => {
                     let version = version.unwrap_or("v1.2.3".to_string());
-                    
+
                     Style::info(&format!("🏁 Finishing release: {}", version));
-                    
+
                     println!("📋 Finalization steps:");
                     println!("  ✅ All tests passed");
                     println!("  ✅ Documentation updated");
                     println!("  ✅ Release tagged: {}", version);
                     println!("  ✅ Merged to main branch");
                     println!("  ✅ Merged back to develop");
-                    
+
                     if deploy {
                         let env = environment.unwrap_or("production".to_string());
                         Style::info(&format!("🚀 Deploying to {}...", env));
@@ -7146,38 +7841,38 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
                         println!("  🔄 Performing health checks");
                         println!("  ✅ Deployment successful!");
                     }
-                    
+
                     Style::success(&format!("🎉 Release {} completed successfully!", version));
-                },
+                }
                 "hotfix" => {
                     let version = version.unwrap_or("v1.2.4".to_string());
-                    
+
                     Style::info(&format!("🔥 Creating hotfix: {}", version));
-                    
+
                     println!("⚡ Hotfix workflow:");
                     println!("  ✅ Hotfix branch created: hotfix/{}", version);
                     println!("  🔄 Cherry-picking critical fixes");
                     println!("  🔄 Fast-track testing");
                     println!("  🔄 Emergency review process");
-                    
+
                     Style::warning("⚠️  Hotfix requires immediate attention!");
                     println!("💡 Emergency contacts will be notified");
-                    
+
                     Style::success(&format!("🔥 Hotfix {} initiated!", version));
-                },
+                }
                 "rollback" => {
                     let version = version.unwrap_or("v1.2.2".to_string());
-                    
+
                     Style::warning(&format!("⏪ Rolling back to: {}", version));
-                    
+
                     println!("🔄 Rollback procedure:");
                     println!("  🔄 Reverting problematic commits");
                     println!("  🔄 Deploying previous stable version");
                     println!("  🔄 Notifying stakeholders");
                     println!("  🔄 Creating incident report");
-                    
+
                     Style::success(&format!("⏪ Rollback to {} completed!", version));
-                },
+                }
                 _ => {
                     Style::error(&format!("❌ Unknown release action: {}", action));
                     println!("Available actions: start, finish, hotfix, rollback");
@@ -7185,7 +7880,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
             }
         }
     }
-    
+
     Ok(())
 }
 
@@ -7196,13 +7891,13 @@ async fn handle_natural_rollback(
     count: Option<u32>,
     soft: bool,
     hard: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("🔄 Natural Language Rollback");
-    
+
     let operation = what.as_deref().unwrap_or("commit");
     let count = count.unwrap_or(1);
-    
+
     match operation {
         "commit" | "commits" => {
             ctx.info(&format!("Rolling back {} commit(s)", count));
@@ -7229,7 +7924,7 @@ async fn handle_natural_rollback(
             Style::error(&format!("Unknown rollback operation: {}", operation));
         }
     }
-    
+
     Style::success("✅ Rollback operation completed!");
     Ok(())
 }
@@ -7238,13 +7933,13 @@ async fn handle_natural_changed(
     since: Option<String>,
     names_only: bool,
     stats: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("📊 What Changed");
-    
+
     let timeframe = since.as_deref().unwrap_or("today");
     ctx.info(&format!("Showing changes since: {}", timeframe));
-    
+
     if names_only {
         Style::info("📁 Changed files:");
         // List file names only
@@ -7255,7 +7950,7 @@ async fn handle_natural_changed(
         Style::info("📝 Detailed changes:");
         // Show detailed changes
     }
-    
+
     Ok(())
 }
 
@@ -7263,27 +7958,27 @@ async fn handle_natural_conflicts(
     suggest: bool,
     auto_resolve: bool,
     interactive: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("⚔️ Conflict Analysis");
-    
+
     ctx.info("Analyzing conflicts...");
-    
+
     if suggest {
         Style::info("💡 Conflict resolution suggestions:");
         // Provide AI-powered suggestions
     }
-    
+
     if auto_resolve {
         Style::info("🤖 Auto-resolving safe conflicts...");
         // Auto-resolve non-critical conflicts
     }
-    
+
     if interactive {
         Style::info("🔧 Starting interactive conflict resolution...");
         // Start interactive resolution
     }
-    
+
     Ok(())
 }
 
@@ -7292,25 +7987,25 @@ async fn handle_natural_fix(
     dry_run: bool,
     auto: bool,
     interactive: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("🔧 Smart Repository Fix");
-    
+
     let issue_type = issue.as_deref().unwrap_or("all");
     ctx.info(&format!("Fixing issue type: {}", issue_type));
-    
+
     if dry_run {
         Style::info("🧪 Dry run mode - showing what would be fixed:");
     }
-    
+
     if auto {
         Style::info("🤖 Auto-fixing safe issues...");
     }
-    
+
     if interactive {
         Style::info("🔧 Interactive fix mode...");
     }
-    
+
     Ok(())
 }
 
@@ -7319,25 +8014,25 @@ async fn handle_natural_optimize(
     analyze: bool,
     dry_run: bool,
     lfs: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("⚡ Repository Optimization");
-    
+
     let opt_level = level.as_deref().unwrap_or("standard");
     ctx.info(&format!("Optimization level: {}", opt_level));
-    
+
     if analyze {
         Style::info("📊 Analyzing optimization opportunities...");
     }
-    
+
     if dry_run {
         Style::info("🧪 Dry run mode - showing optimization plan:");
     }
-    
+
     if lfs {
         Style::info("📦 Including LFS optimization...");
     }
-    
+
     Ok(())
 }
 
@@ -7346,28 +8041,28 @@ async fn handle_natural_health(
     performance: bool,
     suggestions: bool,
     auto_fix: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("🏥 Repository Health Check");
-    
+
     ctx.info("Running comprehensive health check...");
-    
+
     if detailed {
         Style::info("📋 Detailed health report:");
     }
-    
+
     if performance {
         Style::info("⚡ Performance metrics:");
     }
-    
+
     if suggestions {
         Style::info("💡 Improvement suggestions:");
     }
-    
+
     if auto_fix {
         Style::info("🔧 Auto-fixing safe issues...");
     }
-    
+
     Ok(())
 }
 
@@ -7375,17 +8070,17 @@ async fn handle_natural_undo_op(
     operation: String,
     count: Option<u32>,
     force: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("↩️ Natural Undo Operation");
-    
+
     let count = count.unwrap_or(1);
     ctx.info(&format!("Undoing: {} (count: {})", operation, count));
-    
+
     if force {
         Style::warning("⚠️  Force mode enabled - bypassing safety checks");
     }
-    
+
     match operation.as_str() {
         "last commit" => {
             ctx.info("Undoing last commit...");
@@ -7400,7 +8095,7 @@ async fn handle_natural_undo_op(
             Style::error(&format!("Unknown operation: {}", operation));
         }
     }
-    
+
     Ok(())
 }
 
@@ -7408,20 +8103,20 @@ async fn handle_natural_display(
     what: String,
     since: Option<String>,
     detailed: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("📺 Natural Display");
-    
+
     ctx.info(&format!("Displaying: {}", what));
-    
+
     if let Some(timeframe) = since {
         ctx.info(&format!("Since: {}", timeframe));
     }
-    
+
     if detailed {
         Style::info("📋 Detailed view enabled");
     }
-    
+
     match what.as_str() {
         "conflicts" => {
             Style::info("⚔️ Current conflicts:");
@@ -7439,7 +8134,7 @@ async fn handle_natural_display(
             Style::info(&format!("📊 Information about: {}", what));
         }
     }
-    
+
     Ok(())
 }
 
@@ -7447,20 +8142,20 @@ async fn handle_natural_what(
     query: String,
     files: bool,
     authors: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("❓ Natural Query: What...");
-    
+
     ctx.info(&format!("Query: {}", query));
-    
+
     if files {
         Style::info("📁 Including file details");
     }
-    
+
     if authors {
         Style::info("👥 Including author information");
     }
-    
+
     match query.as_str() {
         "changed since yesterday" => {
             Style::info("📊 Changes since yesterday:");
@@ -7475,7 +8170,7 @@ async fn handle_natural_what(
             Style::info(&format!("🔍 Processing query: {}", query));
         }
     }
-    
+
     Ok(())
 }
 
@@ -7483,27 +8178,27 @@ async fn handle_natural_help_me(
     situation: Option<String>,
     interactive: bool,
     workflows: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("🆘 Intelligent Help System");
-    
+
     if let Some(situation) = situation {
         ctx.info(&format!("Current situation: {}", situation));
     } else {
         ctx.info("General help mode");
     }
-    
+
     if interactive {
         Style::info("🔧 Starting interactive problem solver...");
     }
-    
+
     if workflows {
         Style::info("📋 Including workflow suggestions:");
         println!("  • {} - for bug fixes", "rune template hotfix".cyan());
         println!("  • {} - for new features", "rune template feature".cyan());
         println!("  • {} - for releases", "rune template release".cyan());
     }
-    
+
     Ok(())
 }
 
@@ -7512,10 +8207,10 @@ async fn handle_natural_template(
     name: String,
     list: bool,
     customize: bool,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("📋 Workflow Templates");
-    
+
     if list {
         Style::info("📝 Available templates:");
         println!("  • {} - Quick hotfix workflow", "hotfix".cyan());
@@ -7524,13 +8219,13 @@ async fn handle_natural_template(
         println!("  • {} - Bug investigation workflow", "bugfix".cyan());
         return Ok(());
     }
-    
+
     ctx.info(&format!("Template: {} - {}", template_type, name));
-    
+
     if customize {
         Style::info("🔧 Customization mode enabled");
     }
-    
+
     match template_type.as_str() {
         "hotfix" => {
             Style::info("🚨 Hotfix workflow template:");
@@ -7559,16 +8254,16 @@ async fn handle_natural_template(
             Style::info(&format!("🔧 Custom template: {}", template_type));
         }
     }
-    
+
     Ok(())
 }
 
 async fn handle_natural_batch(
     operation: Option<BatchOperation>,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("📦 Batch Operations");
-    
+
     if let Some(op) = operation {
         match op {
             BatchOperation::Commit { message } => {
@@ -7607,7 +8302,7 @@ async fn handle_natural_batch(
         println!("  • {} - Batch pull updates", "pull".cyan());
         println!("  • {} - Batch add files", "add".cyan());
     }
-    
+
     Ok(())
 }
 
@@ -7616,30 +8311,30 @@ async fn handle_natural_watch(
     auto_commit: bool,
     auto_test: bool,
     patterns: Vec<String>,
-    ctx: &RuneContext
+    ctx: &RuneContext,
 ) -> anyhow::Result<()> {
     Style::section_header("👁️ File System Monitoring");
-    
+
     ctx.info(&format!("Watching path: {}", path));
-    
+
     if auto_commit {
         Style::info("🔄 Auto-commit enabled");
     }
-    
+
     if auto_test {
         Style::info("🧪 Auto-test enabled");
     }
-    
+
     if !patterns.is_empty() {
         Style::info(&format!("📁 Watching {} patterns", patterns.len()));
         for pattern in patterns {
             println!("  • {}", pattern.cyan());
         }
     }
-    
+
     Style::info("👁️  File monitoring started (Ctrl+C to stop)");
     // In a real implementation, this would start file watching
-    
+
     Ok(())
 }
 
@@ -7668,15 +8363,22 @@ struct MergeStrategyInfo {
 }
 
 /// Analyze potential merge conflicts using AI
-fn analyze_merge_conflicts(store: &rune_store::Store, branch: &str) -> anyhow::Result<ConflictAnalysis> {
+fn analyze_merge_conflicts(
+    store: &rune_store::Store,
+    branch: &str,
+) -> anyhow::Result<ConflictAnalysis> {
     // Get commits that would be merged
-    let commits = store.get_commits_for_merge(branch).unwrap_or_else(|_| vec![]);
+    let commits = store
+        .get_commits_for_merge(branch)
+        .unwrap_or_else(|_| vec![]);
     let commits_analyzed = commits.len();
-    
+
     // Get files that have changed
-    let changed_files = store.get_changed_files_for_merge(branch).unwrap_or_else(|_| vec![]);
+    let changed_files = store
+        .get_changed_files_for_merge(branch)
+        .unwrap_or_else(|_| vec![]);
     let files_analyzed = changed_files.len();
-    
+
     // Simple heuristic for conflict probability
     let conflict_probability = if files_analyzed == 0 {
         0.0
@@ -7686,11 +8388,15 @@ fn analyze_merge_conflicts(store: &rune_store::Store, branch: &str) -> anyhow::R
         let commit_factor = (commits_analyzed as f64 * 0.05).min(0.3);
         (base_probability + commit_factor).min(0.95)
     };
-    
+
     // Predict specific conflicts based on file patterns
     let mut predicted_conflicts = Vec::new();
     for file in &changed_files {
-        if file.ends_with(".rs") && store.file_has_multiple_recent_changes(file).unwrap_or(false) {
+        if file.ends_with(".rs")
+            && store
+                .file_has_multiple_recent_changes(file)
+                .unwrap_or(false)
+        {
             predicted_conflicts.push(PredictedConflict {
                 file: file.clone(),
                 reason: "Multiple recent changes detected".to_string(),
@@ -7702,7 +8408,7 @@ fn analyze_merge_conflicts(store: &rune_store::Store, branch: &str) -> anyhow::R
             });
         }
     }
-    
+
     Ok(ConflictAnalysis {
         commits_analyzed,
         files_analyzed,
@@ -7712,24 +8418,47 @@ fn analyze_merge_conflicts(store: &rune_store::Store, branch: &str) -> anyhow::R
 }
 
 /// Select optimal merge strategy using AI analysis
-fn select_optimal_merge_strategy(store: &rune_store::Store, branch: &str) -> anyhow::Result<MergeStrategyInfo> {
+fn select_optimal_merge_strategy(
+    store: &rune_store::Store,
+    branch: &str,
+) -> anyhow::Result<MergeStrategyInfo> {
     // Analyze the branches to recommend strategy
     let current_branch = store.current_branch().unwrap_or_else(|| "main".to_string());
     let commits_ahead = store.commits_ahead(&current_branch, branch).unwrap_or(0);
     let commits_behind = store.commits_behind(&current_branch, branch).unwrap_or(0);
-    
+
     let (strategy, reason, confidence) = if commits_behind == 0 {
-        ("fast-forward".to_string(), "target branch has no new commits".to_string(), 0.95)
+        (
+            "fast-forward".to_string(),
+            "target branch has no new commits".to_string(),
+            0.95,
+        )
     } else if commits_ahead == 0 {
-        ("fast-forward".to_string(), "current branch has no unique commits".to_string(), 0.95)
+        (
+            "fast-forward".to_string(),
+            "current branch has no unique commits".to_string(),
+            0.95,
+        )
     } else if commits_ahead < 3 && commits_behind < 3 {
-        ("recursive".to_string(), "small divergence detected, safe to merge".to_string(), 0.85)
+        (
+            "recursive".to_string(),
+            "small divergence detected, safe to merge".to_string(),
+            0.85,
+        )
     } else {
-        ("recursive".to_string(), "significant divergence, careful merge recommended".to_string(), 0.70)
+        (
+            "recursive".to_string(),
+            "significant divergence, careful merge recommended".to_string(),
+            0.70,
+        )
     };
-    
-    let alternatives = vec!["ours".to_string(), "theirs".to_string(), "octopus".to_string()];
-    
+
+    let alternatives = vec![
+        "ours".to_string(),
+        "theirs".to_string(),
+        "octopus".to_string(),
+    ];
+
     Ok(MergeStrategyInfo {
         strategy,
         reason,
@@ -7740,73 +8469,81 @@ fn select_optimal_merge_strategy(store: &rune_store::Store, branch: &str) -> any
 
 /// Resolve conflict using AI
 fn resolve_conflict_with_ai(
-    conflict_resolver: &mut rune_ai::ConflictResolver, 
-    file_path: &str
+    conflict_resolver: &mut rune_ai::ConflictResolver,
+    file_path: &str,
 ) -> anyhow::Result<bool> {
     use std::fs;
     use std::path::Path;
-    
+
     let path = Path::new(file_path);
     if !path.exists() {
         return Err(anyhow::anyhow!("File does not exist: {}", file_path));
     }
-    
+
     let content = fs::read_to_string(path)?;
-    
+
     // Check if file actually has conflict markers
     if !content.contains("<<<<<<<") {
         return Ok(false); // No conflicts to resolve
     }
-    
+
     // Parse the conflict file
     let conflict = rune_ai::parse_conflict_file(path, &content)?;
-    
+
     // Get AI suggestions
-    let suggestions = tokio::runtime::Runtime::new()?.block_on(async {
-        conflict_resolver.resolve_conflict(&conflict).await
-    })?;
-    
+    let suggestions = tokio::runtime::Runtime::new()?
+        .block_on(async { conflict_resolver.resolve_conflict(&conflict).await })?;
+
     // Find the best auto-applicable suggestion
-    if let Some(best_suggestion) = suggestions.iter()
+    if let Some(best_suggestion) = suggestions
+        .iter()
         .filter(|s| s.auto_applicable && s.confidence > 0.8)
-        .max_by(|a, b| a.confidence.partial_cmp(&b.confidence).unwrap_or(std::cmp::Ordering::Equal))
+        .max_by(|a, b| {
+            a.confidence
+                .partial_cmp(&b.confidence)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        })
     {
         // Apply the resolution
         fs::write(path, &best_suggestion.resolved_content)?;
-        
+
         // Learn from the decision (assuming success for auto-applied)
         conflict_resolver.learn_from_decision(&conflict, best_suggestion, true)?;
-        
+
         return Ok(true);
     }
-    
+
     Ok(false) // No auto-applicable resolution found
 }
 
 /// Check if any files have merge conflicts
 fn files_have_conflicts() -> anyhow::Result<bool> {
     use std::process::Command;
-    
+
     let output = Command::new("git")
         .args(&["diff", "--name-only", "--diff-filter=U"])
         .output()?;
-    
+
     Ok(!output.stdout.is_empty())
 }
 
 /// Generate AI-powered merge commit message
 fn generate_ai_merge_message(store: &rune_store::Store, branch: &str) -> anyhow::Result<String> {
     // Get information about the merge
-    let commits = store.get_commits_for_merge(branch).unwrap_or_else(|_| vec![]);
-    let changed_files = store.get_changed_files_for_merge(branch).unwrap_or_else(|_| vec![]);
-    
+    let commits = store
+        .get_commits_for_merge(branch)
+        .unwrap_or_else(|_| vec![]);
+    let changed_files = store
+        .get_changed_files_for_merge(branch)
+        .unwrap_or_else(|_| vec![]);
+
     // Analyze the changes to generate a meaningful message
     let mut categories = Vec::new();
     let mut has_features = false;
     let mut has_fixes = false;
     let mut has_docs = false;
     let mut has_tests = false;
-    
+
     for file in &changed_files {
         if file.contains("test") || file.ends_with("_test.rs") {
             has_tests = true;
@@ -7814,110 +8551,156 @@ fn generate_ai_merge_message(store: &rune_store::Store, branch: &str) -> anyhow:
             has_docs = true;
         } else if file.ends_with(".rs") || file.ends_with(".py") || file.ends_with(".js") {
             // Analyze commit messages to determine if it's a feature or fix
-            if commits.iter().any(|c| c.message.to_lowercase().contains("fix") || c.message.to_lowercase().contains("bug")) {
+            if commits.iter().any(|c| {
+                c.message.to_lowercase().contains("fix") || c.message.to_lowercase().contains("bug")
+            }) {
                 has_fixes = true;
             } else {
                 has_features = true;
             }
         }
     }
-    
-    if has_features { categories.push("features"); }
-    if has_fixes { categories.push("fixes"); }
-    if has_docs { categories.push("documentation"); }
-    if has_tests { categories.push("tests"); }
-    
+
+    if has_features {
+        categories.push("features");
+    }
+    if has_fixes {
+        categories.push("fixes");
+    }
+    if has_docs {
+        categories.push("documentation");
+    }
+    if has_tests {
+        categories.push("tests");
+    }
+
     let category_str = if categories.is_empty() {
         "changes".to_string()
     } else {
         categories.join(" and ")
     };
-    
+
     let message = if commits.len() == 1 {
         format!("Merge branch '{}': {}", branch, commits[0].message)
     } else {
-        format!("Merge branch '{}' with {} ({} commits, {} files)", 
-            branch, category_str, commits.len(), changed_files.len())
+        format!(
+            "Merge branch '{}' with {} ({} commits, {} files)",
+            branch,
+            category_str,
+            commits.len(),
+            changed_files.len()
+        )
     };
-    
+
     Ok(message)
 }
 
 /// Handle performance optimization commands
 async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::Result<()> {
-    use rune_performance::{LargeRepoOptimizer, LargeRepoConfig};
-    
-    let cmd = cmd.unwrap_or(PerformanceCommand::Analyze { 
-        lfs: false, 
-        objects: false, 
-        cache: false, 
-        cleanup: false 
+    use rune_performance::{LargeRepoConfig, LargeRepoOptimizer};
+
+    let cmd = cmd.unwrap_or(PerformanceCommand::Analyze {
+        lfs: false,
+        objects: false,
+        cache: false,
+        cleanup: false,
     });
 
     match cmd {
-        PerformanceCommand::Optimize { target, max_memory, workers, compression, progress } => {
+        PerformanceCommand::Optimize {
+            target,
+            max_memory,
+            workers,
+            compression,
+            progress,
+        } => {
             Style::section_header("🚀 Repository Performance Optimization");
-            
+
             let config = LargeRepoConfig {
-                max_cache_size_bytes: max_memory.map(|m| (m * 1024 * 1024) as usize).unwrap_or(512 * 1024 * 1024),
+                max_cache_size_bytes: max_memory
+                    .map(|m| (m * 1024 * 1024) as usize)
+                    .unwrap_or(512 * 1024 * 1024),
                 parallel_workers: workers.unwrap_or(num_cpus::get()),
                 enable_compression: compression,
                 ..Default::default()
             };
-            
+
             let optimizer = LargeRepoOptimizer::new(config);
             let repo_path = std::env::current_dir()?;
-            
+
             if progress {
                 Style::info("🔄 Starting repository optimization...");
             }
-            
+
             let target = target.unwrap_or("all".to_string());
             match target.as_str() {
                 "cache" => {
                     Style::info("🗂️  Optimizing object cache...");
                     let report = optimizer.optimize_memory().await?;
-                    Style::success(&format!("✅ Cache optimized! Freed {} MB", report.freed_memory / (1024 * 1024)));
-                },
+                    Style::success(&format!(
+                        "✅ Cache optimized! Freed {} MB",
+                        report.freed_memory / (1024 * 1024)
+                    ));
+                }
                 "index" => {
                     Style::info("📇 Optimizing file index...");
                     let report = optimizer.optimize_repo_loading(&repo_path).await?;
-                    Style::success(&format!("✅ Index optimized! Scanned {} directories in {:?}", 
-                        report.scanned_directories, report.total_time));
-                },
+                    Style::success(&format!(
+                        "✅ Index optimized! Scanned {} directories in {:?}",
+                        report.scanned_directories, report.total_time
+                    ));
+                }
                 "objects" => {
                     Style::info("🗃️  Optimizing object storage...");
                     Style::success("✅ Object storage optimized!");
-                },
+                }
                 "all" | _ => {
                     Style::info("🔄 Performing full optimization...");
                     let load_report = optimizer.optimize_repo_loading(&repo_path).await?;
                     let memory_report = optimizer.optimize_memory().await?;
-                    
+
                     Style::success("✅ Full optimization completed!");
                     println!("📊 Results:");
-                    println!("  • Directories scanned: {}", load_report.scanned_directories);
+                    println!(
+                        "  • Directories scanned: {}",
+                        load_report.scanned_directories
+                    );
                     println!("  • Files indexed: {}", load_report.indexed_files);
-                    println!("  • Memory freed: {} MB", memory_report.freed_memory / (1024 * 1024));
-                    println!("  • Compression savings: {} MB", memory_report.compression_savings / (1024 * 1024));
+                    println!(
+                        "  • Memory freed: {} MB",
+                        memory_report.freed_memory / (1024 * 1024)
+                    );
+                    println!(
+                        "  • Compression savings: {} MB",
+                        memory_report.compression_savings / (1024 * 1024)
+                    );
                     println!("  • Total time: {:?}", load_report.total_time);
                 }
             }
-        },
-        PerformanceCommand::Monitor { duration, detailed, realtime, export } => {
+        }
+        PerformanceCommand::Monitor {
+            duration,
+            detailed,
+            realtime,
+            export,
+        } => {
             Style::section_header("📊 Repository Performance Monitoring");
-            
+
             let config = LargeRepoConfig::default();
             let optimizer = LargeRepoOptimizer::new(config);
-            
+
             let duration = duration.unwrap_or(60);
-            Style::info(&format!("🔍 Monitoring performance for {} seconds...", duration));
-            
+            Style::info(&format!(
+                "🔍 Monitoring performance for {} seconds...",
+                duration
+            ));
+
             // Simulate monitoring
             for i in 0..duration {
                 if realtime {
                     let metrics = optimizer.get_performance_metrics().await;
-                    print!("\r🔄 [{:02}s] Memory: {} MB | Cache Hit: {:.1}% | Objects: {}", 
+                    print!(
+                        "\r🔄 [{:02}s] Memory: {} MB | Cache Hit: {:.1}% | Objects: {}",
                         i + 1,
                         metrics.memory_usage / (1024 * 1024),
                         metrics.cache_hit_ratio * 100.0,
@@ -7927,39 +8710,59 @@ async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::
                 }
                 tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
             }
-            
+
             if realtime {
                 println!(); // New line after progress
             }
-            
+
             let final_metrics = optimizer.get_performance_metrics().await;
-            
+
             Style::success("✅ Monitoring completed!");
             if detailed {
                 println!("📈 Detailed Performance Metrics:");
-                println!("  • Cache hit ratio: {:.1}%", final_metrics.cache_hit_ratio * 100.0);
-                println!("  • Memory usage: {} MB", final_metrics.memory_usage / (1024 * 1024));
-                println!("  • Peak memory: {} MB", final_metrics.peak_memory / (1024 * 1024));
+                println!(
+                    "  • Cache hit ratio: {:.1}%",
+                    final_metrics.cache_hit_ratio * 100.0
+                );
+                println!(
+                    "  • Memory usage: {} MB",
+                    final_metrics.memory_usage / (1024 * 1024)
+                );
+                println!(
+                    "  • Peak memory: {} MB",
+                    final_metrics.peak_memory / (1024 * 1024)
+                );
                 println!("  • Cached objects: {}", final_metrics.cached_objects);
                 println!("  • Indexed files: {}", final_metrics.indexed_files);
-                println!("  • Compression ratio: {:.1}%", final_metrics.compression_ratio * 100.0);
+                println!(
+                    "  • Compression ratio: {:.1}%",
+                    final_metrics.compression_ratio * 100.0
+                );
             }
-            
+
             if let Some(export_path) = export {
                 Style::info(&format!("💾 Exporting metrics to {}", export_path));
                 // TODO: Implement metrics export
                 Style::success("✅ Metrics exported!");
             }
-        },
-        PerformanceCommand::Benchmark { operations, iterations, baseline, export } => {
+        }
+        PerformanceCommand::Benchmark {
+            operations,
+            iterations,
+            baseline,
+            export,
+        } => {
             Style::section_header("🏁 Repository Performance Benchmarks");
-            
+
             let iterations = iterations.unwrap_or(10);
-            Style::info(&format!("🔬 Running {} iterations of each benchmark...", iterations));
-            
+            Style::info(&format!(
+                "🔬 Running {} iterations of each benchmark...",
+                iterations
+            ));
+
             for operation in &operations {
                 Style::info(&format!("⚡ Benchmarking '{}'...", operation));
-                
+
                 let start = std::time::Instant::now();
                 for _i in 0..iterations {
                     // Simulate operation
@@ -7967,47 +8770,60 @@ async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::
                 }
                 let duration = start.elapsed();
                 let avg_time = duration / iterations;
-                
+
                 println!("  • Average time: {:?}", avg_time);
                 println!("  • Total time: {:?}", duration);
-                println!("  • Operations/sec: {:.1}", 1000.0 / avg_time.as_millis() as f64);
+                println!(
+                    "  • Operations/sec: {:.1}",
+                    1000.0 / avg_time.as_millis() as f64
+                );
             }
-            
+
             if baseline {
                 Style::info("📊 Comparing with baseline performance...");
                 println!("  • Performance improvement: +15% faster");
                 println!("  • Memory usage: -8% reduction");
             }
-            
+
             if let Some(export_path) = export {
-                Style::info(&format!("💾 Exporting benchmark results to {}", export_path));
+                Style::info(&format!(
+                    "💾 Exporting benchmark results to {}",
+                    export_path
+                ));
                 Style::success("✅ Results exported!");
             }
-        },
-        PerformanceCommand::Analyze { lfs, objects, cache, cleanup } => {
+        }
+        PerformanceCommand::Analyze {
+            lfs,
+            objects,
+            cache,
+            cleanup,
+        } => {
             Style::section_header("🔍 Repository Performance Analysis");
-            
+
             let store = get_store_for_current_dir()?;
             let repo_path = std::env::current_dir()?;
-            
+
             // Basic repository analysis
             Style::info("📊 Analyzing repository structure...");
-            
+
             let mut total_size = 0u64;
             let mut file_count = 0usize;
             let mut dir_count = 0usize;
-            
+
             fn analyze_dir(path: &std::path::Path) -> std::io::Result<(u64, usize, usize)> {
                 let mut size = 0u64;
                 let mut files = 0usize;
                 let mut dirs = 0usize;
-                
+
                 if path.is_dir() {
                     dirs += 1;
                     for entry in std::fs::read_dir(path)? {
                         let entry = entry?;
                         let path = entry.path();
-                        if path.is_dir() && !path.file_name().unwrap().to_str().unwrap().starts_with('.') {
+                        if path.is_dir()
+                            && !path.file_name().unwrap().to_str().unwrap().starts_with('.')
+                        {
                             let (sub_size, sub_files, sub_dirs) = analyze_dir(&path)?;
                             size += sub_size;
                             files += sub_files;
@@ -8020,45 +8836,55 @@ async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::
                 }
                 Ok((size, files, dirs))
             }
-            
+
             if let Ok((size, files, dirs)) = analyze_dir(&repo_path) {
                 total_size = size;
                 file_count = files;
                 dir_count = dirs;
             }
-            
+
             println!("📈 Repository Analysis Results:");
             println!("  • Total size: {} MB", total_size / (1024 * 1024));
             println!("  • File count: {}", file_count);
             println!("  • Directory count: {}", dir_count);
-            println!("  • Average file size: {} KB", (total_size / file_count.max(1) as u64) / 1024);
-            
+            println!(
+                "  • Average file size: {} KB",
+                (total_size / file_count.max(1) as u64) / 1024
+            );
+
             if lfs {
                 Style::info("🗃️  Analyzing LFS usage...");
                 println!("  • LFS tracked files: 0"); // TODO: Implement LFS analysis
                 println!("  • LFS storage used: 0 MB");
             }
-            
+
             if objects {
                 Style::info("📦 Analyzing object storage...");
                 println!("  • Total objects: ~{}", file_count * 2); // Rough estimate
                 println!("  • Object storage efficiency: 85%");
             }
-            
+
             if cache {
                 let config = LargeRepoConfig::default();
                 let optimizer = LargeRepoOptimizer::new(config);
                 let metrics = optimizer.get_performance_metrics().await;
-                
+
                 Style::info("🗂️  Analyzing cache performance...");
-                println!("  • Cache hit ratio: {:.1}%", metrics.cache_hit_ratio * 100.0);
+                println!(
+                    "  • Cache hit ratio: {:.1}%",
+                    metrics.cache_hit_ratio * 100.0
+                );
                 println!("  • Cached objects: {}", metrics.cached_objects);
-                println!("  • Memory usage: {} MB", metrics.memory_usage / (1024 * 1024));
+                println!(
+                    "  • Memory usage: {} MB",
+                    metrics.memory_usage / (1024 * 1024)
+                );
             }
-            
+
             if cleanup {
                 Style::info("🧹 Cleanup suggestions:");
-                if total_size > 100 * 1024 * 1024 { // > 100MB
+                if total_size > 100 * 1024 * 1024 {
+                    // > 100MB
                     println!("  • Consider enabling compression for large files");
                 }
                 if file_count > 10000 {
@@ -8067,10 +8893,15 @@ async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::
                 println!("  • Run 'rune performance gc' to clean up unused objects");
                 println!("  • Run 'rune performance optimize' to improve performance");
             }
-        },
-        PerformanceCommand::Gc { aggressive, prune, optimize, dry_run } => {
+        }
+        PerformanceCommand::Gc {
+            aggressive,
+            prune,
+            optimize,
+            dry_run,
+        } => {
             Style::section_header("🧹 Repository Garbage Collection");
-            
+
             if dry_run {
                 Style::info("🔍 Dry run - showing what would be cleaned:");
                 println!("  • 15 unreachable objects (2.3 MB)");
@@ -8079,64 +8910,76 @@ async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::
                 println!("📊 Total space that would be freed: 3.9 MB");
                 return Ok(());
             }
-            
+
             Style::info("🔄 Starting garbage collection...");
-            
+
             let config = LargeRepoConfig::default();
             let optimizer = LargeRepoOptimizer::new(config);
-            
+
             let mut freed_space = 0u64;
-            
+
             if prune {
                 Style::info("🗑️  Pruning unreachable objects...");
                 // Simulate object pruning
                 freed_space += 2 * 1024 * 1024; // 2MB
                 println!("  ✅ Pruned 15 unreachable objects");
             }
-            
+
             if optimize {
                 Style::info("⚡ Optimizing object database...");
                 let memory_report = optimizer.optimize_memory().await?;
                 freed_space += memory_report.freed_memory;
                 println!("  ✅ Optimized object storage");
             }
-            
+
             if aggressive {
                 Style::info("🔥 Aggressive cleanup mode...");
                 freed_space += 1024 * 1024; // Additional 1MB
                 println!("  ✅ Deep cleaned cache and temporary files");
             }
-            
-            Style::success(&format!("✅ Garbage collection completed! Freed {} MB", freed_space / (1024 * 1024)));
-        },
-        PerformanceCommand::Config { cache_size, workers, chunk_size, progressive, gc_threshold } => {
+
+            Style::success(&format!(
+                "✅ Garbage collection completed! Freed {} MB",
+                freed_space / (1024 * 1024)
+            ));
+        }
+        PerformanceCommand::Config {
+            cache_size,
+            workers,
+            chunk_size,
+            progressive,
+            gc_threshold,
+        } => {
             Style::section_header("⚙️  Performance Configuration");
-            
+
             // TODO: Store configuration in Rune config file
             if let Some(size) = cache_size {
                 Style::info(&format!("💾 Cache size set to {} MB", size));
             }
-            
+
             if let Some(w) = workers {
                 Style::info(&format!("⚡ Parallel workers set to {}", w));
             }
-            
+
             if let Some(chunk) = chunk_size {
                 Style::info(&format!("📦 Chunk size set to {} KB", chunk));
             }
-            
+
             if let Some(prog) = progressive {
-                Style::info(&format!("🔄 Progressive loading: {}", if prog { "enabled" } else { "disabled" }));
+                Style::info(&format!(
+                    "🔄 Progressive loading: {}",
+                    if prog { "enabled" } else { "disabled" }
+                ));
             }
-            
+
             if let Some(gc) = gc_threshold {
                 Style::info(&format!("🗑️  GC threshold set to {} MB", gc));
             }
-            
+
             Style::success("✅ Performance configuration updated!");
             println!("💡 Run 'rune performance optimize' to apply new settings");
         }
     }
-    
+
     Ok(())
 }

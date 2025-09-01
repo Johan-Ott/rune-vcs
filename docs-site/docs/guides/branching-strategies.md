@@ -9,12 +9,14 @@ Learn effective branching strategies for different team sizes and project types.
 ## Git Flow vs Rune Flow
 
 ### Traditional Git Flow Problems
+
 - Complex branch naming conventions
 - Difficult merge conflicts
 - Confusing for new team members
 - Manual conflict resolution
 
 ### Rune Flow Advantages
+
 - Natural language branch creation
 - AI-powered conflict resolution
 - Visual branch management
@@ -40,11 +42,13 @@ rune merge --smart feature/user-profiles
 ```
 
 **Pros:**
+
 - Simple and fast
 - AI handles most conflicts
 - Good for rapid development
 
 **Cons:**
+
 - Less testing isolation
 - Direct production deployments
 
@@ -69,11 +73,13 @@ rune merge --smart develop  # After testing
 ```
 
 **Pros:**
+
 - Good testing isolation
 - Stable main branch
 - Clear feature separation
 
 **Cons:**
+
 - More complex than simple flow
 - Potential integration conflicts
 
@@ -101,17 +107,20 @@ rune merge --smart hotfix/login-bug
 ```
 
 **Pros:**
+
 - Excellent for large teams
 - Stable releases
 - Clear separation of concerns
 
 **Cons:**
+
 - Most complex strategy
 - Requires discipline
 
 ## Natural Language Branching
 
 ### Creating Branches
+
 ```bash
 # Instead of: git checkout -b feature/JIRA-123-user-authentication
 rune "create a branch for user authentication"
@@ -120,6 +129,7 @@ rune "create a feature branch from the develop branch"
 ```
 
 ### Switching Branches
+
 ```bash
 # Instead of: git checkout feature/very-long-branch-name
 rune "switch to the authentication branch"
@@ -128,6 +138,7 @@ rune "switch to main"
 ```
 
 ### Merging Branches
+
 ```bash
 # Instead of: git merge feature/branch-name
 rune "merge the authentication feature"
@@ -138,6 +149,7 @@ rune "intelligently merge and resolve conflicts"
 ## Branch Management
 
 ### Listing Branches
+
 ```bash
 # Traditional
 rune branch
@@ -151,6 +163,7 @@ rune "list my recent branches"
 ```
 
 ### Cleaning Up
+
 ```bash
 # Delete merged branches
 rune branch -d feature/completed-feature
@@ -164,6 +177,7 @@ rune "clean up old feature branches"
 ```
 
 ### Branch Information
+
 ```bash
 # See branch history
 rune log --graph
@@ -179,6 +193,7 @@ rune "how far behind is this branch?"
 ## AI-Powered Features
 
 ### Smart Branch Creation
+
 ```bash
 # AI suggests branch names based on recent commits or file changes
 rune "create a branch for this work"
@@ -186,6 +201,7 @@ rune "suggest a branch name for my changes"
 ```
 
 ### Intelligent Merging
+
 ```bash
 # AI resolves simple conflicts automatically
 rune merge --smart feature/user-auth
@@ -196,6 +212,7 @@ rune "what conflicts will this merge cause?"
 ```
 
 ### Predictive Conflict Detection
+
 ```bash
 # Before merging, check for potential issues
 rune predict-conflicts feature/auth
@@ -208,6 +225,7 @@ rune "check if my branch will have merge issues"
 ## Team Collaboration
 
 ### Branch Naming Conventions
+
 While Rune supports natural language, some teams prefer conventions:
 
 ```bash
@@ -230,6 +248,7 @@ rune "create a feature branch for user authentication"
 ```
 
 ### Pull Request Workflow
+
 ```bash
 # Create feature branch
 rune "create a branch for the new dashboard"
@@ -249,6 +268,7 @@ rune push origin main
 ```
 
 ### Code Review Integration
+
 ```bash
 # Before creating PR
 rune "show me what I've changed"
@@ -262,6 +282,7 @@ rune "generate commit message for these changes"
 ## Advanced Patterns
 
 ### Parallel Development
+
 ```bash
 # Multiple developers on same feature
 rune "create a branch for user-auth backend from feature/user-auth"
@@ -274,6 +295,7 @@ rune merge --smart feature/user-auth-frontend
 ```
 
 ### Release Branches
+
 ```bash
 # Prepare release
 rune "create a release branch for version 2.1.0"
@@ -288,6 +310,7 @@ rune merge --smart release/v2.1.0
 ```
 
 ### Emergency Hotfixes
+
 ```bash
 # Quick fix workflow
 rune "create a hotfix branch for the payment bug"
@@ -302,6 +325,7 @@ rune push --tags
 ## Best Practices
 
 ### Do's
+
 - Use descriptive branch names
 - Merge frequently to avoid conflicts
 - Let AI help with conflict resolution
@@ -309,6 +333,7 @@ rune push --tags
 - Delete merged branches regularly
 
 ### Don'ts
+
 - Don't work directly on main
 - Don't create overly complex branch hierarchies
 - Don't ignore AI conflict warnings
@@ -318,6 +343,7 @@ rune push --tags
 ## Troubleshooting
 
 ### Common Issues
+
 ```bash
 # Branch doesn't exist
 rune "show me all available branches"

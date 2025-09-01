@@ -9,7 +9,9 @@ Complete guide to configuring Rune for your workflow and team needs.
 ## Configuration Levels
 
 ### Global Configuration
+
 Applied to all repositories for the current user:
+
 ```bash
 rune config --global user.name "Your Name"
 rune config --global user.email "your.email@example.com"
@@ -17,7 +19,9 @@ rune config --global ai.enabled true
 ```
 
 ### Repository Configuration
+
 Applied only to the current repository:
+
 ```bash
 rune config team.name "Frontend Team"
 rune config hooks.pre-commit "npm test"
@@ -25,6 +29,7 @@ rune config merge.strategy smart
 ```
 
 ### View Configuration
+
 ```bash
 # List all configuration
 rune config --list
@@ -39,6 +44,7 @@ rune config --show-origin user.name
 ## User Settings
 
 ### Identity
+
 ```bash
 # Required for commits
 rune config --global user.name "John Doe"
@@ -50,6 +56,7 @@ rune config --global user.timezone "America/New_York"
 ```
 
 ### Editor and Tools
+
 ```bash
 # Default editor for commit messages
 rune config --global core.editor "code --wait"
@@ -67,6 +74,7 @@ rune config --global tool.models "blender"
 ## AI Configuration
 
 ### Core AI Settings
+
 ```bash
 # Enable/disable AI features
 rune config ai.enabled true
@@ -78,6 +86,7 @@ rune config ai.fallback-model "gpt-3.5-turbo"
 ```
 
 ### Commit Message AI
+
 ```bash
 # Automatic commit message generation
 rune config ai.auto-commit-messages true
@@ -89,6 +98,7 @@ rune config ai.commit-detail-level "medium"  # brief, medium, detailed
 ```
 
 ### Conflict Resolution AI
+
 ```bash
 # Automatic conflict resolution
 rune config ai.auto-resolve "simple"  # none, simple, moderate, aggressive
@@ -99,6 +109,7 @@ rune config ai.backup-conflicts true  # Create backups of conflicted files
 ```
 
 ### AI Learning and Feedback
+
 ```bash
 # Learning from user behavior
 rune config ai.learn-preferences true
@@ -112,6 +123,7 @@ rune config ai.share-improvements false
 ## Branch Configuration
 
 ### Default Branch Settings
+
 ```bash
 # Default branch name for new repositories
 rune config init.defaultBranch "main"
@@ -122,6 +134,7 @@ rune config branch.auto-prefix true  # Auto-add prefixes
 ```
 
 ### Branch Protection
+
 ```bash
 # Protect main branch
 rune config branch.main.protected true
@@ -134,6 +147,7 @@ rune config branch.main.override-users "alice,bob"
 ```
 
 ### Merge Settings
+
 ```bash
 # Default merge strategy
 rune config merge.strategy "smart"  # smart, traditional, fast-forward
@@ -146,6 +160,7 @@ rune config merge.message-template "Merge {branch} into {target}"
 ## Performance Configuration
 
 ### Network Settings
+
 ```bash
 # Optimize for slow connections
 rune config network.compression true
@@ -158,6 +173,7 @@ rune config network.binary-threshold "10MB"
 ```
 
 ### Caching
+
 ```bash
 # Local cache settings
 rune config cache.enabled true
@@ -171,6 +187,7 @@ rune config cache.binary.auto-cleanup true
 ```
 
 ### Repository Optimization
+
 ```bash
 # Automatic garbage collection
 rune config gc.auto true
@@ -186,6 +203,7 @@ rune config lfs.compression true
 ## Security Configuration
 
 ### Authentication
+
 ```bash
 # Credential storage
 rune config credential.helper "store"  # store, cache, manager
@@ -197,6 +215,7 @@ rune config ssh.verify-host true
 ```
 
 ### Security Policies
+
 ```bash
 # Prevent sensitive data commits
 rune config security.scan-commits true
@@ -210,6 +229,7 @@ rune config audit.level "detailed"  # basic, detailed, verbose
 ```
 
 ### Encryption
+
 ```bash
 # Repository encryption
 rune config encryption.enabled false
@@ -224,6 +244,7 @@ rune config network.tls-version "1.3"
 ## Team Configuration
 
 ### Team Settings
+
 ```bash
 # Team identification
 rune config team.name "Frontend Development"
@@ -237,6 +258,7 @@ rune config team.parallel-work-detection true
 ```
 
 ### Workflow Configuration
+
 ```bash
 # Review requirements
 rune config workflow.require-review true
@@ -250,6 +272,7 @@ rune config ci.required-checks "tests,lint,security"
 ```
 
 ### Communication
+
 ```bash
 # Notification channels
 rune config notify.slack.webhook "https://hooks.slack.com/..."
@@ -264,6 +287,7 @@ rune config notify.include-diff false
 ## Development Configuration
 
 ### File Handling
+
 ```bash
 # File type associations
 rune config filetype.*.js "javascript"
@@ -277,6 +301,7 @@ rune config binary.documents.text-extraction true
 ```
 
 ### Hooks and Automation
+
 ```bash
 # Git hooks
 rune config hooks.pre-commit "npm test"
@@ -290,6 +315,7 @@ rune config auto.push-on-commit false
 ```
 
 ### Development Tools
+
 ```bash
 # IDE integration
 rune config ide.vscode.enabled true
@@ -305,6 +331,7 @@ rune config lsp.rust.enabled false
 ## Advanced Configuration
 
 ### Custom Workflows
+
 ```bash
 # Define custom workflows
 rune config workflow.feature-complete "test && lint && review"
@@ -317,6 +344,7 @@ rune config trigger.hotfix "branch.prefix == 'hotfix/'"
 ```
 
 ### Plugins and Extensions
+
 ```bash
 # Enable community plugins
 rune config plugins.enabled true
@@ -330,6 +358,7 @@ rune config alias.praise "blame"
 ```
 
 ### Experimental Features
+
 ```bash
 # Beta features
 rune config experimental.ai-v2 false
@@ -345,6 +374,7 @@ rune config features.predictive-merge true
 ## Configuration Templates
 
 ### Team Templates
+
 ```bash
 # Apply team configuration template
 rune config --template team-frontend
@@ -356,6 +386,7 @@ rune config --save-template my-team-config
 ```
 
 ### Project Templates
+
 ```bash
 # Project-specific configurations
 rune config --template web-app
@@ -367,6 +398,7 @@ rune config --template open-source
 ## Configuration Management
 
 ### Backup and Restore
+
 ```bash
 # Backup configuration
 rune config --backup config-backup-2024-01-15.json
@@ -380,6 +412,7 @@ rune config --import team-config.json
 ```
 
 ### Version Control
+
 ```bash
 # Track configuration changes
 rune config --history
@@ -393,6 +426,7 @@ rune config --reset ai.*  # Reset only AI settings
 ## Troubleshooting Configuration
 
 ### Common Issues
+
 ```bash
 # Invalid configuration values
 rune config --validate
@@ -408,6 +442,7 @@ rune config --resolve-conflicts
 ```
 
 ### Debugging
+
 ```bash
 # Debug configuration loading
 rune config --debug
@@ -421,16 +456,19 @@ rune config --source-map
 ## Configuration Reference
 
 ### File Locations
+
 - Global: `~/.runeconfig`
 - Repository: `.rune/config`
 - System: `/etc/rune/config`
 
 ### Environment Variables
+
 - `RUNE_CONFIG_HOME` - Override config directory
 - `RUNE_AI_ENABLED` - Override AI settings
 - `RUNE_DEBUG` - Enable debug mode
 
 ### Configuration Precedence
+
 1. Command line options
 2. Environment variables
 3. Repository configuration

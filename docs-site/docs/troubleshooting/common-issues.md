@@ -9,12 +9,14 @@ Common issues and solutions when using Rune.
 ## Installation Issues
 
 ### Command Not Found
+
 ```bash
 $ rune --version
 rune: command not found
 ```
 
 **Solutions:**
+
 ```bash
 # Check if installed
 which rune
@@ -30,12 +32,14 @@ export PATH="/usr/local/bin:$PATH"
 ```
 
 ### Permission Denied
+
 ```bash
 $ rune init
 Permission denied
 ```
 
 **Solutions:**
+
 ```bash
 # Fix permissions
 sudo chown -R $(whoami) ~/.rune
@@ -48,12 +52,14 @@ curl -L https://github.com/rune-vcs/rune/releases/latest/download/rune-install.s
 ## Repository Issues
 
 ### Repository Not Found
+
 ```bash
 $ rune status
 fatal: not a rune repository
 ```
 
 **Solutions:**
+
 ```bash
 # Initialize repository
 rune init
@@ -67,12 +73,14 @@ cd path/to/your/project
 ```
 
 ### Corrupted Repository
+
 ```bash
 $ rune status
 error: repository appears to be corrupted
 ```
 
 **Solutions:**
+
 ```bash
 # Verify repository integrity
 rune verify
@@ -92,12 +100,14 @@ rune clone <remote-url> project-recovered
 ## AI Features Issues
 
 ### AI Not Working
+
 ```bash
 $ rune commit --smart
 AI features are not available
 ```
 
 **Solutions:**
+
 ```bash
 # Check AI configuration
 rune config ai.enabled
@@ -115,12 +125,14 @@ rune ai update
 ```
 
 ### Poor AI Suggestions
+
 ```bash
 $ rune commit --smart
 # Generates: "Update files"
 ```
 
 **Solutions:**
+
 ```bash
 # Provide more context
 rune add . --verbose
@@ -139,12 +151,14 @@ rune config ai.commit-style descriptive
 ## Network and Remote Issues
 
 ### Connection Timeout
+
 ```bash
 $ rune push origin main
 Connection timeout
 ```
 
 **Solutions:**
+
 ```bash
 # Check network settings
 rune config network.timeout 60
@@ -159,12 +173,14 @@ rune remote set-url origin <correct-url>
 ```
 
 ### Authentication Failed
+
 ```bash
 $ rune push origin main
 Authentication failed
 ```
 
 **Solutions:**
+
 ```bash
 # Check credentials
 rune config credential.helper store
@@ -180,12 +196,14 @@ rune config credential.username your-username
 ```
 
 ### Large File Issues
+
 ```bash
 $ rune push origin main
 error: file too large (2.1 GB)
 ```
 
 **Solutions:**
+
 ```bash
 # Enable large file support
 rune config lfs.enabled true
@@ -201,12 +219,14 @@ rune config binary.compression true
 ## Performance Issues
 
 ### Slow Operations
+
 ```bash
 $ rune status
 # Takes 30+ seconds
 ```
 
 **Solutions:**
+
 ```bash
 # Enable caching
 rune config cache.enabled true
@@ -223,12 +243,14 @@ rune clean --large-files
 ```
 
 ### High Memory Usage
+
 ```bash
 $ rune diff
 # Uses excessive RAM
 ```
 
 **Solutions:**
+
 ```bash
 # Limit memory usage
 rune config performance.max-memory "2GB"
@@ -242,12 +264,14 @@ rune config diff.max-files 100
 ## Merge and Conflict Issues
 
 ### Merge Conflicts
+
 ```bash
 $ rune merge feature/auth
 CONFLICT (content): Merge conflict in src/auth.js
 ```
 
 **Solutions:**
+
 ```bash
 # Use AI resolution
 rune merge --smart feature/auth
@@ -264,12 +288,14 @@ rune commit
 ```
 
 ### Complex Conflicts
+
 ```bash
 $ rune merge --smart feature/auth
 Unable to auto-resolve complex conflicts
 ```
 
 **Solutions:**
+
 ```bash
 # Get detailed analysis
 rune analyze conflicts
@@ -286,12 +312,14 @@ rune mergetool
 ## File and Content Issues
 
 ### Binary File Problems
+
 ```bash
 $ rune diff image.png
 Binary file changed (no details)
 ```
 
 **Solutions:**
+
 ```bash
 # Enable smart binary analysis
 rune config binary.analysis true
@@ -305,12 +333,14 @@ rune diff --force-text config.bin
 ```
 
 ### Encoding Issues
+
 ```bash
 $ rune diff source.py
 warning: invalid UTF-8 sequence
 ```
 
 **Solutions:**
+
 ```bash
 # Check file encoding
 file source.py
@@ -327,12 +357,14 @@ rune config core.autocrlf input
 ## Configuration Issues
 
 ### Invalid Configuration
+
 ```bash
 $ rune status
 error: invalid configuration value
 ```
 
 **Solutions:**
+
 ```bash
 # Validate configuration
 rune config --validate
@@ -348,12 +380,14 @@ rune config --check ai.enabled
 ```
 
 ### Missing Configuration
+
 ```bash
 $ rune commit
 error: user.name not set
 ```
 
 **Solutions:**
+
 ```bash
 # Set required configuration
 rune config user.name "Your Name"
@@ -367,12 +401,14 @@ rune config --global user.email "your.email@example.com"
 ## Team Collaboration Issues
 
 ### Sync Problems
+
 ```bash
 $ rune pull
 Your branch has diverged from origin/main
 ```
 
 **Solutions:**
+
 ```bash
 # Smart sync
 rune pull --smart
@@ -387,12 +423,14 @@ rune merge origin/main
 ```
 
 ### Access Denied
+
 ```bash
 $ rune push origin main
 Permission denied (protected branch)
 ```
 
 **Solutions:**
+
 ```bash
 # Check branch protection
 rune config branch.main.protected
@@ -409,11 +447,13 @@ rune push --emergency-override
 ## Recovery Procedures
 
 ### Lost Commits
+
 ```bash
 # Accidentally deleted commits
 ```
 
 **Solutions:**
+
 ```bash
 # Find lost commits
 rune reflog
@@ -428,11 +468,13 @@ rune branch recovery-branch <commit-hash>
 ```
 
 ### Corrupted Working Directory
+
 ```bash
 # Working directory in bad state
 ```
 
 **Solutions:**
+
 ```bash
 # Save current work
 rune stash push "emergency backup"
@@ -449,11 +491,13 @@ rune stash pop
 ```
 
 ### Emergency Backup
+
 ```bash
 # Repository appears corrupted
 ```
 
 **Solutions:**
+
 ```bash
 # Create emergency backup
 rune backup --emergency backup-$(date +%Y%m%d)
@@ -468,6 +512,7 @@ rune verify --backup backup-$(date +%Y%m%d)
 ## Diagnostic Commands
 
 ### Health Check
+
 ```bash
 # Complete system check
 rune doctor
@@ -479,6 +524,7 @@ rune doctor --repository
 ```
 
 ### Debug Information
+
 ```bash
 # Generate debug report
 rune debug --report debug-info.txt
@@ -491,6 +537,7 @@ rune profile --operation merge
 ```
 
 ### System Information
+
 ```bash
 # System info
 rune version --verbose
@@ -505,6 +552,7 @@ rune analyze --comprehensive
 ## Getting Help
 
 ### Built-in Help
+
 ```bash
 # Command help
 rune help
@@ -517,12 +565,14 @@ rune "help with merge conflicts"
 ```
 
 ### Community Support
+
 - GitHub Issues: https://github.com/rune-vcs/rune/issues
 - Discord Community: https://discord.gg/rune-vcs
 - Stack Overflow: Tag `rune-vcs`
 - Documentation: https://docs.rune-vcs.com
 
 ### Professional Support
+
 - Enterprise Support: support@rune-vcs.com
 - Training: training@rune-vcs.com
 - Consulting: consulting@rune-vcs.com
@@ -530,6 +580,7 @@ rune "help with merge conflicts"
 ## Preventive Measures
 
 ### Regular Maintenance
+
 ```bash
 # Weekly maintenance
 rune gc
@@ -543,6 +594,7 @@ rune backup --rotate
 ```
 
 ### Monitoring
+
 ```bash
 # Set up monitoring
 rune config monitoring.enabled true
@@ -553,6 +605,7 @@ rune cron add "0 0 * * * rune doctor --quiet"
 ```
 
 ### Backup Strategy
+
 ```bash
 # Automated backups
 rune config backup.auto true

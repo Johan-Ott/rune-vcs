@@ -3,22 +3,22 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub mod analysis;
-pub mod predictions;
 pub mod automation;
-pub mod conflict_resolution;
 pub mod branching_strategies;
+pub mod conflict_resolution;
+pub mod predictions;
 
 pub use analysis::{CodeAnalysis, CodeAnalyzer, RepositorySummary};
-pub use predictions::{PredictionResult, PredictiveEngine};
-pub use automation::{AutomationEngine, AutomationTask, AutomationSuggestion};
-pub use conflict_resolution::{
-    ConflictResolver, ConflictResolverConfig, MergeConflict, ConflictRegion, 
-    ResolutionSuggestion, ResolutionStrategy, parse_conflict_file
-};
+pub use automation::{AutomationEngine, AutomationSuggestion, AutomationTask};
 pub use branching_strategies::{
-    RuneBranchingEngine, BranchingConfig, BranchingStrategy, StrategyTemplate,
-    BranchType, AutomationContext, AutomationResult, ProjectType, TeamSize
+    AutomationContext, AutomationResult, BranchType, BranchingConfig, BranchingStrategy,
+    ProjectType, RuneBranchingEngine, StrategyTemplate, TeamSize,
 };
+pub use conflict_resolution::{
+    parse_conflict_file, ConflictRegion, ConflictResolver, ConflictResolverConfig, MergeConflict,
+    ResolutionStrategy, ResolutionSuggestion,
+};
+pub use predictions::{PredictionResult, PredictiveEngine};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AIConfig {
@@ -103,7 +103,11 @@ impl AIEngine {
         Ok(insights)
     }
 
-    pub fn predict_merge_conflicts(&self, _branch1: &str, _branch2: &str) -> Result<predictions::MergeConflictPrediction> {
+    pub fn predict_merge_conflicts(
+        &self,
+        _branch1: &str,
+        _branch2: &str,
+    ) -> Result<predictions::MergeConflictPrediction> {
         // Placeholder implementation
         let prediction = predictions::MergeConflictPrediction {
             files_at_risk: vec!["src/main.rs".to_string()],
@@ -126,7 +130,10 @@ impl AIEngine {
             "Add/update tests".to_string()
         } else if changes.iter().any(|c| c.contains("doc")) {
             "Update documentation".to_string()
-        } else if changes.iter().any(|c| c.contains("fix") || c.contains("bug")) {
+        } else if changes
+            .iter()
+            .any(|c| c.contains("fix") || c.contains("bug"))
+        {
             "Fix bugs and issues".to_string()
         } else {
             format!("Update {} files", changes.len())
@@ -135,7 +142,11 @@ impl AIEngine {
         Ok(message)
     }
 
-    pub fn detect_code_patterns(&self, file_content: &str, language: &str) -> Result<Vec<CodePattern>> {
+    pub fn detect_code_patterns(
+        &self,
+        file_content: &str,
+        language: &str,
+    ) -> Result<Vec<CodePattern>> {
         let mut patterns = Vec::new();
 
         // TODO: Implement tree-sitter based pattern detection
@@ -194,9 +205,7 @@ impl AIEngine {
             description: "Based on current patterns, velocity is expected to increase".to_string(),
             confidence: 0.72,
             impact: ImpactLevel::Informational,
-            recommendations: vec![
-                "Continue current development practices".to_string(),
-            ],
+            recommendations: vec!["Continue current development practices".to_string()],
             data: HashMap::new(),
         });
 
@@ -322,7 +331,7 @@ mod tests {
     fn test_commit_message_suggestion() {
         let config = AIConfig::default();
         let engine = AIEngine::new(config);
-        
+
         let changes = vec!["src/main.rs".to_string()];
         let message = engine.suggest_commit_message(&changes).unwrap();
         assert!(!message.is_empty());
@@ -332,7 +341,7 @@ mod tests {
     fn test_rust_pattern_detection() {
         let config = AIConfig::default();
         let engine = AIEngine::new(config);
-        
+
         let code = "fn main() { let x = some_option.unwrap(); }";
         let patterns = engine.detect_rust_patterns(code).unwrap();
         assert!(!patterns.is_empty());

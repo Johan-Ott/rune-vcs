@@ -1,0 +1,167 @@
+import React from 'react';
+import Link from '@docusaurus/Link';
+import Layout from '@theme/Layout';
+
+import styles from './index.module.css';
+
+function HeroSection() {
+  return (
+    <section className={styles.hero}>
+      <div className="container">
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>
+            Version control, finally simplified.
+          </h1>
+          <p className={styles.heroSubtitle}>
+            Rune-VCS brings history, branches, and teams into a tool anyone can use.
+          </p>
+          <div className={styles.heroButtons}>
+            <Link
+              className={`button button--primary button--lg ${styles.downloadButton}`}
+              to="/docs/installation/quick-start">
+              Download Rune
+            </Link>
+            <Link
+              className={`button button--secondary button--lg ${styles.docsButton}`}
+              to="/docs/overview">
+              Get Started with Docs
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeaturesSection() {
+  const features = [
+    {
+      title: 'Unified Explorer',
+      description: 'All files, local & remote in one place.',
+      icon: '🗂️',
+    },
+    {
+      title: 'Project History',
+      description: 'See your project\'s timeline at a glance.',
+      icon: '📊',
+    },
+    {
+      title: 'Branches & Streams',
+      description: 'Workflows that make sense for teams.',
+      icon: '🌿',
+    },
+    {
+      title: 'Simplified Remote',
+      description: 'Remote that looks like local.',
+      icon: '☁️',
+    },
+  ];
+
+  return (
+    <section className={styles.features}>
+      <div className="container">
+        <h2 className={styles.sectionTitle}>
+          Built for modern development
+        </h2>
+        <div className={styles.featuresGrid}>
+          {features.map((feature, idx) => (
+            <div key={idx} className={styles.featureCard}>
+              <div className={styles.featureIcon}>{feature.icon}</div>
+              <h3 className={styles.featureTitle}>
+                {feature.title}
+              </h3>
+              <p className={styles.featureDescription}>
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyRuneSection() {
+  return (
+    <section className={styles.whyRune}>
+      <div className="container">
+        <div className={styles.whyRuneContent}>
+          <h2 className={styles.whyRuneTitle}>
+            Why Rune?
+          </h2>
+          <p className={styles.whyRuneText}>
+            Git and Perforce are powerful but complex. Rune-VCS takes the best of both worlds 
+            and makes version control human-friendly. No more cryptic commands, no more lost work, 
+            no more team confusion.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CommunitySection() {
+  const userTypes = [
+    { name: 'Game Studios', description: 'Managing large assets and team workflows' },
+    { name: 'Indie Developers', description: 'Simple version control without the complexity' },
+    { name: 'Small Teams', description: 'Collaborative development made easy' },
+  ];
+
+  return (
+    <section className={styles.community}>
+      <div className="container">
+        <h2 className={styles.sectionTitle}>
+          Built for teams of all sizes
+        </h2>
+        <div className={styles.userTypesGrid}>
+          {userTypes.map((userType, idx) => (
+            <div key={idx} className={styles.userTypeCard}>
+              <h3 className={styles.userTypeName}>
+                {userType.name}
+              </h3>
+              <p className={styles.userTypeDescription}>
+                {userType.description}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className={styles.testimonialPlaceholder}>
+          <p>Future testimonials will go here</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DocsCTASection() {
+  return (
+    <section className={styles.docsCTA}>
+      <div className="container">
+        <div className={styles.docsCTAContent}>
+          <h2 className={styles.docsCTATitle}>
+            Ready to dive in?
+          </h2>
+          <Link
+            className={`button button--primary button--lg ${styles.docsCTAButton}`}
+            to="/docs/overview">
+            See the Docs →
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function Home() {
+  return (
+    <Layout
+      title="Rune VCS"
+      description="Version control, finally simplified. Rune-VCS brings history, branches, and teams into a tool anyone can use.">
+      <HeroSection />
+      <FeaturesSection />
+      <WhyRuneSection />
+      <CommunitySection />
+      <DocsCTASection />
+    </Layout>
+  );
+}

@@ -74,12 +74,12 @@ pub enum RemoteCommand {
 
 pub async fn handle_remote_command(args: RemoteArgs) -> Result<()> {
     let current_dir = std::env::current_dir()?;
-    
+
     // Check if we're in a Rune repository
     if !current_dir.join(".rune").exists() {
         anyhow::bail!("Not in a Rune repository. Use 'rune init' to create one.");
     }
-    
+
     match args.command {
         RemoteCommand::Add { name, url, token } => {
             RemoteCommands::add(&current_dir, &name, &url, token)?;
@@ -109,13 +109,13 @@ pub async fn handle_remote_command(args: RemoteArgs) -> Result<()> {
             update_all_remotes(&current_dir, prune).await?;
         }
     }
-    
+
     Ok(())
 }
 
 fn prune_remote_branches(repo_path: &Path, remote_name: &str, dry_run: bool) -> Result<()> {
     let manager = RemoteManager::new(repo_path)?;
-    
+
     if manager.get_remote(remote_name).is_none() {
         anyhow::bail!("Remote '{}' not found", remote_name);
     }
@@ -127,22 +127,35 @@ fn prune_remote_branches(repo_path: &Path, remote_name: &str, dry_run: bool) -> 
     ];
 
     if stale_branches.is_empty() {
-        println!("No stale remote-tracking branches found for '{}'", remote_name);
+        println!(
+            "No stale remote-tracking branches found for '{}'",
+            remote_name
+        );
         return Ok(());
     }
 
     if dry_run {
-        println!("Would prune {} stale remote-tracking branches:", stale_branches.len());
+        println!(
+            "Would prune {} stale remote-tracking branches:",
+            stale_branches.len()
+        );
         for branch in &stale_branches {
             println!("  - {}", branch);
         }
     } else {
-        println!("Pruning {} stale remote-tracking branches:", stale_branches.len());
+        println!(
+            "Pruning {} stale remote-tracking branches:",
+            stale_branches.len()
+        );
         for branch in &stale_branches {
             println!("  - {}", branch);
             // In real implementation: remove the branch reference
         }
-        println!("Pruned {} stale branches from '{}'", stale_branches.len(), remote_name);
+        println!(
+            "Pruned {} stale branches from '{}'",
+            stale_branches.len(),
+            remote_name
+        );
     }
 
     Ok(())
@@ -158,18 +171,18 @@ async fn update_all_remotes(repo_path: &Path, prune: bool) -> Result<()> {
     }
 
     println!("Updating {} remotes...", remotes.len());
-    
+
     for remote in &remotes {
         println!("\nFetching from '{}'...", remote.name);
-        
+
         // For demonstration - in real implementation, this would fetch from each remote
         println!("  Fetching refs from {}", remote.url);
-        
+
         if prune {
             println!("  Pruning stale branches for '{}'...", remote.name);
             prune_remote_branches(repo_path, &remote.name, false)?;
         }
-        
+
         println!("  ✓ Updated '{}'", remote.name);
     }
 
@@ -179,7 +192,7 @@ async fn update_all_remotes(repo_path: &Path, prune: bool) -> Result<()> {
 
 fn show_remote_info(repo_path: &Path, name: &str) -> Result<()> {
     let manager = RemoteManager::new(repo_path)?;
-    
+
     match manager.get_remote(name) {
         Some(remote) => {
             println!("Remote: {}", remote.name);
@@ -188,7 +201,14 @@ fn show_remote_info(repo_path: &Path, name: &str) -> Result<()> {
                 println!("  Push URL: {}", push_url);
             }
             println!("  Default: {}", if remote.default { "yes" } else { "no" });
-            println!("  Authentication: {}", if remote.token.is_some() { "configured" } else { "none" });
+            println!(
+                "  Authentication: {}",
+                if remote.token.is_some() {
+                    "configured"
+                } else {
+                    "none"
+                }
+            );
             println!("  Fetch refs:");
             for ref_spec in &remote.fetch_refs {
                 println!("    {}", ref_spec);
@@ -202,6 +222,6 @@ fn show_remote_info(repo_path: &Path, name: &str) -> Result<()> {
             anyhow::bail!("Remote '{}' not found", name);
         }
     }
-    
+
     Ok(())
 }
