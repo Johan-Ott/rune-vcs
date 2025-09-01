@@ -35,6 +35,7 @@ rune-performance = { path = "../rune-performance" }
 rune-workspace = { path = "../rune-workspace" }
 rune-draft = { path = "../rune-draft" }
 rune-planning = { path = "../rune-planning" }
+rune-ai = { path = "../rune-ai" }
 axum = { workspace = true }
 tower-http = { workspace = true }
 

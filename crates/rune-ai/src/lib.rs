@@ -5,10 +5,20 @@ use std::collections::HashMap;
 pub mod analysis;
 pub mod predictions;
 pub mod automation;
+pub mod conflict_resolution;
+pub mod branching_strategies;
 
 pub use analysis::{CodeAnalysis, CodeAnalyzer, RepositorySummary};
 pub use predictions::{PredictionResult, PredictiveEngine};
 pub use automation::{AutomationEngine, AutomationTask, AutomationSuggestion};
+pub use conflict_resolution::{
+    ConflictResolver, ConflictResolverConfig, MergeConflict, ConflictRegion, 
+    ResolutionSuggestion, ResolutionStrategy, parse_conflict_file
+};
+pub use branching_strategies::{
+    RuneBranchingEngine, BranchingConfig, BranchingStrategy, StrategyTemplate,
+    BranchType, AutomationContext, AutomationResult, ProjectType, TeamSize
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AIConfig {

@@ -1,2 +1,1 @@
-0624add63970ca95be9008196d55f335fdd4c96821180f23cc4e4f96b9842017  rune-0.3.0-alpha.3-aarch64-apple-darwin.tar.gz
-6cfba1555031c0878da37de294a07b1bf16188a09122f57f08c27ef14dde8cbf  rune-0.3.0-alpha.3-x86_64-apple-darwin.tar.gz
+254abe43d404ad0de4e89f3b5da5661a1e323b34670e4c9aee8ecf14e093aeb6  rune-0.3.2-alpha.6-aarch64-apple-darwin.tar.gz

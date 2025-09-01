@@ -1333,6 +1333,50 @@ impl Store {
             Ok(format!("(File '{}' content at commit {})\n[Content not available - file may have been deleted or moved]", file_path, commit_id))
         }
     }
+
+    // AI-powered merge analysis methods
+
+    /// Get commits that would be merged from a branch
+    pub fn get_commits_for_merge(&self, branch: &str) -> Result<Vec<Commit>> {
+        let commits = self.log();
+        // Simple implementation: return last few commits from branch
+        // In a real implementation, this would analyze the merge base
+        Ok(commits.into_iter().take(5).collect())
+    }
+
+    /// Get files that have changed in a branch for merge analysis
+    pub fn get_changed_files_for_merge(&self, _branch: &str) -> Result<Vec<String>> {
+        // Simple implementation: return files from current status
+        let status = self.status()?;
+        let mut changed_files = status.staging;
+        changed_files.extend(status.working);
+        Ok(changed_files)
+    }
+
+    /// Check if a file has multiple recent changes (conflict indicator)
+    pub fn file_has_multiple_recent_changes(&self, file_path: &str) -> Result<bool> {
+        let commits = self.log();
+        let recent_commits_with_file = commits.iter()
+            .take(10) // Check last 10 commits
+            .filter(|c| c.files.contains(&file_path.to_string()))
+            .count();
+        
+        Ok(recent_commits_with_file >= 2)
+    }
+
+    /// Get number of commits the first branch is ahead of the second
+    pub fn commits_ahead(&self, _current_branch: &str, _other_branch: &str) -> Result<usize> {
+        // Simplified implementation
+        // In a real implementation, this would compare branch histories
+        Ok(2) // Mock value
+    }
+
+    /// Get number of commits the first branch is behind the second
+    pub fn commits_behind(&self, _current_branch: &str, _other_branch: &str) -> Result<usize> {
+        // Simplified implementation
+        // In a real implementation, this would compare branch histories
+        Ok(1) // Mock value
+    }
 }
 
 #[cfg(test)]
