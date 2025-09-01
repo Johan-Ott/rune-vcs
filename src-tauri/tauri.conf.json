@@ -1,14 +1,12 @@
 {
+  "productName": "Rune VCS Visual Client",
+  "version": "0.3.2-alpha.6",
   "identifier": "com.runevcs.visual-client",
-  "package": {
-    "productName": "Rune VCS Visual Client",
-    "version": "0.3.2-alpha.6"
-  },
   "build": {
     "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "",
+    "beforeDevCommand": "npm run dev",
     "frontendDist": "../dist",
-    "devUrl": "http://localhost:3001"
+    "devUrl": "http://localhost:3002"
   },
   "app": {
     "withGlobalTauri": true,
