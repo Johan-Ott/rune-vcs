@@ -2,21 +2,81 @@
 set -e
 
 # Colors for output
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}🍺 Automated Homebrew Tap Update Script${NC}"
-echo -e "${YELLOW}📦 Version: v0.3.2-alpha.6${NC}"
+echo -e "${GREEN}🍺 Updating Homebrew Tap Repository${NC}"
 
-# Check if we're in the right directory
-if [ ! -f "homebrew_formula_v0.3.2-alpha.6.rb" ]; then
-    echo -e "${RED}❌ Error: homebrew_formula_v0.3.2-alpha.6.rb not found${NC}"
-    echo "Please run this script from the rune-vcs directory"
-    exit 1
-fi
+# Variables
+HOMEBREW_REPO="https://github.com/Johan-Ott/homebrew-rune-vcs.git"
+TEMP_DIR="/tmp/homebrew-rune-vcs-update"
+VERSION="0.3.2-alpha.6"
+
+# Clean up any existing temp directory
+rm -rf "$TEMP_DIR"
+
+echo -e "${YELLOW}📦 Cloning Homebrew tap repository...${NC}"
+git clone "$HOMEBREW_REPO" "$TEMP_DIR"
+
+cd "$TEMP_DIR"
+
+echo -e "${YELLOW}� Updating Formula/rune-vcs.rb...${NC}"
+
+# Create the updated formula content
+cat > Formula/rune-vcs.rb << 'EOF'
+class RuneVcs < Formula
+  desc "Modern, intelligent version control system"
+  homepage "https://github.com/Johan-Ott/rune-vcs"
+  url "https://github.com/Johan-Ott/rune-vcs/releases/download/v0.3.2-alpha.6/rune-0.3.2-alpha.6-aarch64-apple-darwin.tar.gz"
+  sha256 "287ca9250b499f7aac37b1f866136e7663bd66e26b708bd751fa56363b114377"
+  license "Apache-2.0"
+  version "0.3.2-alpha.6"
+
+  # Currently only supports Apple Silicon Macs due to build constraints
+  depends_on arch: :arm64
+
+  def install
+    bin.install "rune" => "rune-vcs"
+  end
+
+  test do
+    system "#{bin}/rune-vcs", "--version"
+    assert_match "rune #{version}", shell_output("#{bin}/rune-vcs --version")
+  end
+end
+EOF
+
+echo -e "${YELLOW}📝 Committing changes...${NC}"
+git add Formula/rune-vcs.rb
+git commit -m "Update rune-vcs to v${VERSION}
+
+- Updated to version ${VERSION}
+- Added ARM64 macOS binary support
+- Updated checksums and URLs
+- Documentation overhaul release
+
+Features in this release:
+- Complete documentation site redesign with Raycast-inspired aesthetic
+- Professional branding update from 'Rune VCS' to 'Rune'
+- Comprehensive user guides and developer documentation
+- Clean, modern design with glassmorphism effects"
+
+echo -e "${YELLOW}🚀 Pushing to origin...${NC}"
+git push origin master
+
+echo -e "${GREEN}✅ Homebrew tap successfully updated!${NC}"
+echo -e "${BLUE}Users can now install with:${NC}"
+echo -e "${BLUE}  brew tap johan-ott/rune-vcs${NC}"
+echo -e "${BLUE}  brew install rune-vcs${NC}"
+
+# Clean up
+cd /
+rm -rf "$TEMP_DIR"
+
+echo -e "${GREEN}🎉 All done!${NC}"
 
 echo -e "${BLUE}📥 Cloning Homebrew tap repository...${NC}"
 cd ..
