@@ -162,15 +162,53 @@ export const FileExplorerBridge: React.FC<FileExplorerBridgeProps> = (props) => 
       await fileSystemUseCase.createDirectory(currentPath, name);
     },
     onDeleteItems: async (items: FileItem[]) => {
-      const domainItems = items.map(item => ({
-        id: item.path,
-        name: item.name,
-        path: item.path,
-        type: item.isDirectory ? 'directory' as const : 'file' as const,
-        size: item.size,
-        lastModified: item.modified || new Date(),
-      }));
-      await fileSystemUseCase.deleteItems(domainItems);
+      try {
+        for (const item of items) {
+          await fileSystemUseCase['fileSystemService'].deleteItem(item.path);
+        }
+        await fileSystemUseCase.refreshCurrentDirectory();
+      } catch (error) {
+        console.error('Failed to delete items:', error);
+        throw error;
+      }
+    },
+    onRenameItem: async (item: FileItem, newName: string) => {
+      try {
+        const pathParts = item.path.split(/[/\\]/);
+        pathParts[pathParts.length - 1] = newName;
+        const newPath = pathParts.join('/');
+        await fileSystemUseCase['fileSystemService'].renameItem(item.path, newPath);
+        await fileSystemUseCase.refreshCurrentDirectory();
+      } catch (error) {
+        console.error('Failed to rename item:', error);
+        throw error;
+      }
+    },
+    onCopyItem: async (item: FileItem, destinationPath: string) => {
+      try {
+        await fileSystemUseCase['fileSystemService'].copyItem(item.path, destinationPath);
+        await fileSystemUseCase.refreshCurrentDirectory();
+      } catch (error) {
+        console.error('Failed to copy item:', error);
+        throw error;
+      }
+    },
+    onMoveItem: async (item: FileItem, destinationPath: string) => {
+      try {
+        await fileSystemUseCase['fileSystemService'].moveItem(item.path, destinationPath);
+        await fileSystemUseCase.refreshCurrentDirectory();
+      } catch (error) {
+        console.error('Failed to move item:', error);
+        throw error;
+      }
+    },
+    onGetItemInfo: async (path: string) => {
+      try {
+        return await fileSystemUseCase['fileSystemService'].getItemInfo(path);
+      } catch (error) {
+        console.error('Failed to get item info:', error);
+        throw error;
+      }
     }
   };
 

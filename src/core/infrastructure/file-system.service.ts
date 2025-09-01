@@ -55,7 +55,7 @@ export class TauriFileSystemService implements IFileSystemService {
 
   async deleteItem(path: string): Promise<void> {
     try {
-      await invoke('delete_item', { path });
+      await invoke('delete_file', { path });
     } catch (error) {
       console.error('Failed to delete item:', error);
       throw new Error(`Failed to delete item: ${error}`);
@@ -64,7 +64,7 @@ export class TauriFileSystemService implements IFileSystemService {
 
   async renameItem(oldPath: string, newPath: string): Promise<FileSystemItem> {
     try {
-      await invoke('rename_item', { oldPath, newPath });
+      await invoke('rename_file', { oldPath, newPath });
       return this.getItemInfo(newPath);
     } catch (error) {
       console.error('Failed to rename item:', error);
@@ -74,7 +74,7 @@ export class TauriFileSystemService implements IFileSystemService {
 
   async copyItem(sourcePath: string, destinationPath: string): Promise<FileSystemItem> {
     try {
-      await invoke('copy_item', { sourcePath, destinationPath });
+      await invoke('copy_file', { src: sourcePath, dest: destinationPath });
       return this.getItemInfo(destinationPath);
     } catch (error) {
       console.error('Failed to copy item:', error);
@@ -94,7 +94,7 @@ export class TauriFileSystemService implements IFileSystemService {
 
   async exists(path: string): Promise<boolean> {
     try {
-      return await invoke<boolean>('path_exists', { path });
+      return await invoke<boolean>('file_exists', { path });
     } catch (error) {
       console.error('Failed to check path existence:', error);
       return false;
@@ -103,8 +103,8 @@ export class TauriFileSystemService implements IFileSystemService {
 
   async getItemInfo(path: string): Promise<FileSystemItem> {
     try {
-      const item = await invoke<any>('get_item_info', { path });
-      return this.mapToFileSystemItem(item);
+      const metadata = await invoke<any>('get_file_metadata', { path });
+      return this.mapMetadataToFileSystemItem(metadata);
     } catch (error) {
       console.error('Failed to get item info:', error);
       throw new Error(`Failed to get item info: ${error}`);
@@ -130,15 +130,36 @@ export class TauriFileSystemService implements IFileSystemService {
       id: item.path || crypto.randomUUID(),
       name: item.name,
       path: item.path,
-      type: item.is_dir ? 'directory' : 'file',
+      type: item.is_directory ? 'directory' : 'file',
       size: item.size,
-      lastModified: new Date(item.modified * 1000), // Convert from timestamp
+      lastModified: item.modified_at ? new Date(parseInt(item.modified_at) * 1000) : new Date(),
       permissions: {
-        readable: item.permissions?.readable ?? true,
-        writable: item.permissions?.writable ?? false,
-        executable: item.permissions?.executable ?? false,
+        readable: true,
+        writable: true,
+        executable: false,
       },
-      children: item.is_dir ? [] : undefined,
+      children: item.is_directory ? [] : undefined,
+      isExpanded: false,
+    };
+  }
+
+  private mapMetadataToFileSystemItem(metadata: any): FileSystemItem {
+    const pathParts = metadata.path.split(/[/\\]/);
+    const name = pathParts[pathParts.length - 1] || metadata.path;
+    
+    return {
+      id: metadata.path || crypto.randomUUID(),
+      name,
+      path: metadata.path,
+      type: metadata.is_directory ? 'directory' : 'file',
+      size: metadata.size,
+      lastModified: metadata.modified_at ? new Date(parseInt(metadata.modified_at) * 1000) : new Date(),
+      permissions: {
+        readable: true,
+        writable: !metadata.is_readonly,
+        executable: false,
+      },
+      children: metadata.is_directory ? [] : undefined,
       isExpanded: false,
     };
   }
