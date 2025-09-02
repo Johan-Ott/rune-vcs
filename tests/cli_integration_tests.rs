@@ -4,10 +4,10 @@ use tempfile::TempDir;
 use std::path::Path;
 
 fn get_rune_binary() -> String {
-    // Get the workspace root from the tests directory
+    // Get the workspace root from the tests directory  
     let manifest_dir = env!("CARGO_MANIFEST_DIR"); // This will be the tests directory
     let workspace_dir = std::path::Path::new(manifest_dir)
-        .parent() // workspace root
+        .parent() // Go up one level to workspace root
         .unwrap();
     
     let binary_path = workspace_dir.join("target/debug/rune");
@@ -31,11 +31,8 @@ fn get_rune_binary() -> String {
 
 fn run_rune_command(args: &[&str], working_dir: &Path) -> std::process::Output {
     let rune_binary = get_rune_binary();
-    let absolute_binary = std::path::Path::new(&rune_binary)
-        .canonicalize()
-        .expect("Failed to resolve rune binary path");
     
-    Command::new(absolute_binary)
+    Command::new(&rune_binary)
         .args(args)
         .current_dir(working_dir)
         .output()

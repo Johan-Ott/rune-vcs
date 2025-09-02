@@ -1,8 +1,23 @@
 name: CI
 
 on:
-  push:
-    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      run_tests:
+        description: 'Run test suite'
+        required: false
+        default: true
+        type: boolean
+      run_coverage:
+        description: 'Run code coverage'
+        required: false
+        default: true
+        type: boolean
+      run_audit:
+        description: 'Run security audit'
+        required: false
+        default: true
+        type: boolean
   pull_request:
     branches: [main]
 
@@ -13,6 +28,7 @@ jobs:
   test:
     name: Test Suite
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_tests == 'true')
     steps:
       - uses: actions/checkout@v4
 
@@ -60,6 +76,7 @@ jobs:
   coverage:
     name: Code Coverage
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_coverage == 'true')
     steps:
       - uses: actions/checkout@v4
 
@@ -83,6 +100,7 @@ jobs:
   security_audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_audit == 'true')
     steps:
       - uses: actions/checkout@v4
 

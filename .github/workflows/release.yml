@@ -1,6 +1,27 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Type of release'
+        required: true
+        default: 'alpha'
+        type: choice
+        options:
+        - alpha
+        - beta
+        - stable
+      platforms:
+        description: 'Platforms to build for'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - linux-only
+        - macos-only
+        - windows-only
   push:
     tags:
       - "v*.*.*"
