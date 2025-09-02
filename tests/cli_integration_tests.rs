@@ -4,11 +4,9 @@ use tempfile::TempDir;
 use std::path::Path;
 
 fn get_rune_binary() -> String {
-    // Get the workspace root (two levels up from the crates/rune-cli directory)
-    let manifest_dir = env!("CARGO_MANIFEST_DIR"); // This will be crates/rune-cli
+    // Get the workspace root from the tests directory
+    let manifest_dir = env!("CARGO_MANIFEST_DIR"); // This will be the tests directory
     let workspace_dir = std::path::Path::new(manifest_dir)
-        .parent() // crates/
-        .unwrap()
         .parent() // workspace root
         .unwrap();
     
@@ -33,7 +31,11 @@ fn get_rune_binary() -> String {
 
 fn run_rune_command(args: &[&str], working_dir: &Path) -> std::process::Output {
     let rune_binary = get_rune_binary();
-    Command::new(rune_binary)
+    let absolute_binary = std::path::Path::new(&rune_binary)
+        .canonicalize()
+        .expect("Failed to resolve rune binary path");
+    
+    Command::new(absolute_binary)
         .args(args)
         .current_dir(working_dir)
         .output()
@@ -122,5 +124,5 @@ fn test_help_and_version() {
     let output = run_rune_command(&["--version"], temp_dir.path());
     assert!(output.status.success(), "Version command should succeed. stderr: {}", String::from_utf8_lossy(&output.stderr));
     let version_text = String::from_utf8_lossy(&output.stdout);
-    assert!(version_text.contains("0.3.0-alpha.4"), "Version should contain version number");
+    assert!(version_text.contains("0.3.2-alpha.6"), "Version should contain version number");
 }

@@ -472,7 +472,24 @@ impl ConflictResolver {
     fn normalize_whitespace(&self, content: &str) -> String {
         content
             .lines()
-            .map(|line| line.trim())
+            .map(|line| {
+                // Normalize spaces around common operators
+                line.trim()
+                    .replace(" =", "=")
+                    .replace("= ", "=")
+                    .replace(" ==", "==")
+                    .replace("== ", "==")
+                    .replace(" !=", "!=")
+                    .replace("!= ", "!=")
+                    .replace(" +", "+")
+                    .replace("+ ", "+")
+                    .replace(" -", "-")
+                    .replace("- ", "-")
+                    .replace(" *", "*")
+                    .replace("* ", "*")
+                    .replace(" /", "/")
+                    .replace("/ ", "/")
+            })
             .filter(|line| !line.is_empty())
             .collect::<Vec<_>>()
             .join("\n")
