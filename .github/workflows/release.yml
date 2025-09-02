@@ -147,11 +147,6 @@ jobs:
             Get-ChildItem target/${{ matrix.target }}/release/ -ErrorAction SilentlyContinue
             exit 1
           }
-              echo "Directory contents:"
-              ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
-              exit 1
-            fi
-          fi
 
       - name: Package Release (Unix)
         if: runner.os != 'Windows'
