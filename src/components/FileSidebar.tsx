@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Clock,
   Star,
@@ -9,8 +9,13 @@ import {
   Cloud,
   ChevronRight,
   ChevronDown,
+  Home,
+  FileImage,
+  Music,
+  Video,
 } from 'lucide-react';
 import { Button } from './ui/button';
+import { TauriFileSystemService } from '../core/infrastructure/file-system.service';
 
 interface SidebarItem {
   id: string;
@@ -32,23 +37,148 @@ export const FileSidebar: React.FC<FileSidebarProps> = ({
   currentPath 
 }) => {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['quick-access', 'favorites', 'this-pc']));
+  const [systemDirectories, setSystemDirectories] = useState<{
+    home: string;
+    desktop?: string;
+    documents?: string;
+    downloads?: string;
+    pictures?: string;
+    videos?: string;
+    music?: string;
+  } | null>(null);
+  const [starredPaths, setStarredPaths] = useState<string[]>([]);
 
+  useEffect(() => {
+    // Subscribe to favorites store if available (lazy import to avoid cycles)
+    let unsub: (() => void) | undefined;
+    try {
+      // dynamic import to avoid circular import during module load
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { favoritesStore } = require('../core/infrastructure/favorites.store');
+      unsub = favoritesStore.subscribe((list: string[]) => setStarredPaths(list));
+    } catch (e) {
+      // ignore
+    }
+    return () => { if (unsub) unsub(); };
+  }, []);
+
+  const fileSystemService = new TauriFileSystemService();
+
+  useEffect(() => {
+    const loadSystemDirectories = async () => {
+      try {
+        const dirs = await fileSystemService.getSystemDirectories();
+
+        // Verify downloads actually exists on disk; if not, do not expose it
+        if (dirs.downloads) {
+          try {
+            const exists = await fileSystemService.exists(dirs.downloads);
+            if (!exists) {
+              dirs.downloads = undefined;
+            }
+          } catch (e) {
+            // If the exists check fails for any reason, hide downloads to be safe
+            dirs.downloads = undefined;
+          }
+        }
+
+        setSystemDirectories(dirs);
+      } catch (error) {
+        console.error('Failed to load system directories:', error);
+        // Fallback to mock directories
+        setSystemDirectories({
+          home: '/Users/' + (process.env.USER || 'user'),
+          desktop: undefined,
+          documents: undefined,
+          downloads: undefined,
+          pictures: undefined,
+          videos: undefined,
+          music: undefined,
+        });
+      }
+    };
+
+    loadSystemDirectories();
+  }, []);
+
+  // Use virtual paths for special/aggregate views so the explorer can handle them
   const quickAccessItems: SidebarItem[] = [
-    { id: 'recent', name: 'Recent files', icon: Clock, path: 'recent' },
-    { id: 'starred', name: 'Starred', icon: Star, path: 'starred' },
-    { id: 'shared', name: 'Shared with me', icon: Share2, path: 'shared' },
+    { id: 'recent', name: 'Recent files', icon: Clock, path: 'virtual:recent' },
+    { id: 'starred', name: 'Starred', icon: Star, path: 'virtual:starred' },
+    { id: 'shared', name: 'Shared with me', icon: Share2, path: 'virtual:shared' },
   ];
 
-  const favoritesItems: SidebarItem[] = [
-    { id: 'desktop', name: 'Desktop', icon: HardDrive, path: 'Desktop' },
-    { id: 'documents', name: 'Documents', icon: Folder, path: 'Documents' },
-    { id: 'downloads', name: 'Downloads', icon: Download, path: 'Downloads' },
-  ];
+  // Build favorites items dynamically based on available system directories
+  const getFavoritesItems = (): SidebarItem[] => {
+    if (!systemDirectories) return [];
 
-  const thisPCItems: SidebarItem[] = [
-    { id: 'local-disk-c', name: 'Local Disk (C:)', icon: HardDrive, path: 'C:' },
-    { id: 'data-disk-d', name: 'Data (D:)', icon: HardDrive, path: 'D:' },
-  ];
+    const items: SidebarItem[] = [];
+
+    // Prepend user-starred favorites (persisted)
+    for (const path of starredPaths) {
+      const short = path.split(/[\/]/).pop() || path;
+      items.push({ id: `fav-${short}-${path}`, name: short, icon: Folder, path });
+    }
+
+    if (systemDirectories.home) {
+      items.push({ id: 'home', name: 'Home', icon: Home, path: systemDirectories.home });
+    }
+
+    if (systemDirectories.desktop) {
+      items.push({ id: 'desktop', name: 'Desktop', icon: HardDrive, path: systemDirectories.desktop });
+    }
+
+    if (systemDirectories.documents) {
+      items.push({ id: 'documents', name: 'Documents', icon: Folder, path: systemDirectories.documents });
+    }
+
+    // Provide a sensible Downloads fallback using home directory if missing
+    const downloadsPath = systemDirectories.downloads || (systemDirectories.home ? `${systemDirectories.home}/Downloads` : undefined);
+    if (downloadsPath) {
+      items.push({ id: 'downloads', name: 'Downloads', icon: Download, path: downloadsPath });
+    }
+
+    if (systemDirectories.pictures) {
+      items.push({ id: 'pictures', name: 'Pictures', icon: FileImage, path: systemDirectories.pictures });
+    }
+
+    if (systemDirectories.videos) {
+      items.push({ id: 'videos', name: 'Videos', icon: Video, path: systemDirectories.videos });
+    }
+
+    if (systemDirectories.music) {
+      items.push({ id: 'music', name: 'Music', icon: Music, path: systemDirectories.music });
+    }
+
+    return items;
+  };
+
+  // Get platform-specific disk items
+  const getThisPCItems = (): SidebarItem[] => {
+    const platform = navigator.platform.toLowerCase();
+    
+    if (platform.includes('win')) {
+      // Windows drives
+      return [
+        { id: 'local-disk-c', name: 'Local Disk (C:)', icon: HardDrive, path: 'C:\\' },
+        { id: 'data-disk-d', name: 'Data (D:)', icon: HardDrive, path: 'D:\\' },
+      ];
+    } else if (platform.includes('mac')) {
+      // macOS volumes
+      return [
+        { id: 'macintosh-hd', name: 'Macintosh HD', icon: HardDrive, path: '/' },
+        { id: 'volumes', name: 'Volumes', icon: HardDrive, path: '/Volumes' },
+      ];
+    } else {
+      // Linux filesystems
+      return [
+        { id: 'root', name: 'Root (/)', icon: HardDrive, path: '/' },
+        { id: 'home', name: 'Home', icon: Folder, path: '/home' },
+        { id: 'media', name: 'Media', icon: HardDrive, path: '/media' },
+        { id: 'mnt', name: 'Mount', icon: HardDrive, path: '/mnt' },
+      ];
+    }
+  };
 
   const networkItems: SidebarItem[] = [
     { id: 'onedrive', name: 'OneDrive', icon: Cloud, path: 'onedrive' },
@@ -149,10 +279,10 @@ export const FileSidebar: React.FC<FileSidebarProps> = ({
         {renderSection('quick-access', 'Quick access', quickAccessItems)}
         
         {/* Favorites */}
-        {renderSection('favorites', 'Favorites', favoritesItems)}
+        {renderSection('favorites', 'Favorites', getFavoritesItems())}
         
         {/* This PC */}
-        {renderSection('this-pc', 'This PC', thisPCItems)}
+        {renderSection('this-pc', 'This PC', getThisPCItems())}
         
         {/* Progress bars for drives */}
         {expandedSections.has('this-pc') && (

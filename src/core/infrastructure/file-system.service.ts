@@ -125,6 +125,23 @@ export class TauriFileSystemService implements IFileSystemService {
     }
   }
 
+  async getSystemDirectories(): Promise<{
+    home: string;
+    desktop?: string;
+    documents?: string;
+    downloads?: string;
+    pictures?: string;
+    videos?: string;
+    music?: string;
+  }> {
+    try {
+      return await invoke('get_system_directories');
+    } catch (error) {
+      console.error('Failed to get system directories:', error);
+      throw new Error(`Failed to get system directories: ${error}`);
+    }
+  }
+
   private mapToFileSystemItem(item: any): FileSystemItem {
     return {
       id: item.path || crypto.randomUUID(),
@@ -293,6 +310,27 @@ export class MockFileSystemService implements IFileSystemService {
   async watchDirectory(path: string, callback: (event: any) => void): Promise<() => void> {
     // Mock implementation - return a no-op unsubscribe function
     return () => {};
+  }
+
+  async getSystemDirectories(): Promise<{
+    home: string;
+    desktop?: string;
+    documents?: string;
+    downloads?: string;
+    pictures?: string;
+    videos?: string;
+    music?: string;
+  }> {
+    // Mock system directories for development
+    return {
+      home: '/home/user',
+      desktop: '/home/user/Desktop',
+      documents: '/home/user/Documents',
+      downloads: '/home/user/Downloads',
+      pictures: '/home/user/Pictures',
+      videos: '/home/user/Videos',
+      music: '/home/user/Music',
+    };
   }
 
   private findItemByPath(path: string): FileSystemItem | null {

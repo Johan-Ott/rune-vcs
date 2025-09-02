@@ -1,6 +1,7 @@
 use std::fs;
 use std::path::Path;
 use serde::{Deserialize, Serialize};
+use base64;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileEntry {
@@ -20,6 +21,50 @@ pub struct FileMetadata {
     created_at: Option<String>,
     modified_at: Option<String>,
     accessed_at: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SystemDirectory {
+    id: String,
+    name: String,
+    path: String,
+    icon: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SystemDirectories {
+    home: String,
+    desktop: Option<String>,
+    documents: Option<String>,
+    downloads: Option<String>,
+    pictures: Option<String>,
+    videos: Option<String>,
+    music: Option<String>,
+}
+
+#[tauri::command]
+async fn get_system_directories() -> Result<SystemDirectories, String> {
+    let home = dirs::home_dir()
+        .ok_or("Could not get home directory")?
+        .to_string_lossy()
+        .to_string();
+    
+    let desktop = dirs::desktop_dir().map(|p| p.to_string_lossy().to_string());
+    let documents = dirs::document_dir().map(|p| p.to_string_lossy().to_string());
+    let downloads = dirs::download_dir().map(|p| p.to_string_lossy().to_string());
+    let pictures = dirs::picture_dir().map(|p| p.to_string_lossy().to_string());
+    let videos = dirs::video_dir().map(|p| p.to_string_lossy().to_string());
+    let music = dirs::audio_dir().map(|p| p.to_string_lossy().to_string());
+    
+    Ok(SystemDirectories {
+        home,
+        desktop,
+        documents,
+        downloads,
+        pictures,
+        videos,
+        music,
+    })
 }
 
 #[tauri::command]
@@ -209,6 +254,36 @@ async fn get_file_metadata(path: String) -> Result<FileMetadata, String> {
     }
 }
 
+#[tauri::command]
+async fn open_with_default(path: String) -> Result<bool, String> {
+    // Use the `open` crate to open with system default application
+    match open::that(path.clone()) {
+        Ok(_) => Ok(true),
+        Err(e) => Err(format!("Failed to open {}: {}", path, e)),
+    }
+}
+
+#[tauri::command]
+async fn read_file_dataurl(path: String) -> Result<String, String> {
+    use std::fs::File;
+    use std::io::Read;
+
+    let path_obj = Path::new(&path);
+    if !path_obj.exists() {
+        return Err(format!("Path does not exist: {}", path));
+    }
+
+    let mut file = File::open(path_obj).map_err(|e| format!("Failed to open file {}: {}", path, e))?;
+    let mut buf = Vec::new();
+    file.read_to_end(&mut buf).map_err(|e| format!("Failed to read file {}: {}", path, e))?;
+
+    // Guess mime
+    let mime = mime_guess::from_path(path_obj).first_or_octet_stream();
+    let b64 = base64::encode(&buf);
+    let data_url = format!("data:{};base64,{}", mime.essence_str(), b64);
+    Ok(data_url)
+}
+
 // Helper function to copy directories recursively
 fn copy_dir_all(src: &Path, dest: &Path) -> std::io::Result<()> {
     fs::create_dir_all(dest)?;
@@ -241,7 +316,10 @@ pub fn run() {
         delete_file,
         rename_file,
         copy_file,
-        get_file_metadata
+        get_file_metadata,
+        get_system_directories,
+        open_with_default,
+        read_file_dataurl
     ])
     .setup(|app| {
       if cfg!(debug_assertions) {

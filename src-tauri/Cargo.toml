@@ -24,3 +24,6 @@ log = "0.4"
 tauri = { version = "2.8.4", features = [] }
 tauri-plugin-log = "2"
 dirs = "5.0"
+open = "3"
+base64 = "0.21"
+mime_guess = "2"

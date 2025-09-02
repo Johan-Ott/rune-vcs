@@ -81,6 +81,30 @@ export class TauriFileService {
   }
 
   /**
+   * Read binary file and return a data URL (base64) for previews
+   */
+  async readFileDataUrl(path: string): Promise<string> {
+    try {
+      return await invoke('read_file_dataurl', { path });
+    } catch (error) {
+      console.error('Failed to read file dataurl:', error);
+      throw new Error(`Failed to read file dataurl: ${error}`);
+    }
+  }
+
+  /**
+   * Open a file with the system default application
+   */
+  async openWithDefault(path: string): Promise<boolean> {
+    try {
+      return await invoke('open_with_default', { path });
+    } catch (error) {
+      console.error('Failed to open with default:', error);
+      return false;
+    }
+  }
+
+  /**
    * Write file contents
    */
   async writeFile(path: string, contents: string): Promise<void> {

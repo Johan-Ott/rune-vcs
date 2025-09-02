@@ -15,7 +15,6 @@ members = [
     "crates/rune-planning",
     "crates/rune-security",
     "crates/rune-ai",
-    "src-tauri",
     "tests",
 ]
 

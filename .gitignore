@@ -81,4 +81,4 @@ node_modules/
 
 # Build output
 target/
-releases/
+build/
