@@ -81,6 +81,14 @@ jobs:
       #     echo "PKG_CONFIG_ALLOW_CROSS=1" >> $GITHUB_ENV
       #     echo "PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig" >> $GITHUB_ENV
 
+      - name: Setup Windows Build Environment
+        if: runner.os == 'Windows'
+        run: |
+          # Ensure Visual Studio components are available
+          echo "Setting up Windows build environment..."
+          # Set Windows-specific environment variables
+          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=link.exe" >> $env:GITHUB_ENV
+
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
         with:
@@ -98,37 +106,55 @@ jobs:
         run: |
           # Build the rune binary from the workspace
           cargo build --release --target ${{ matrix.target }} --bin rune
-          
-          # List contents to debug
+
+      - name: List Build Output (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          echo "Contents of target/${{ matrix.target }}/release/:"
+          dir target/${{ matrix.target }}/release/ || echo "Release directory not found"
+
+      - name: List Build Output (Unix)
+        if: runner.os != 'Windows'  
+        run: |
           echo "Contents of target/${{ matrix.target }}/release/:"
           ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
 
-      - name: Verify Build
+      - name: Verify Build (Unix)
+        if: runner.os != 'Windows'
         run: |
           echo "Build completed. Checking for binary..."
-          if [[ "${{ matrix.archive }}" == "tar.gz" ]]; then
-            if [[ -f "target/${{ matrix.target }}/release/rune" ]]; then
-              echo "✓ Binary found: target/${{ matrix.target }}/release/rune"
-              ls -la target/${{ matrix.target }}/release/rune
-            else
-              echo "❌ Binary not found!"
-              echo "Directory contents:"
-              ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
-              exit 1
-            fi
+          if [[ -f "target/${{ matrix.target }}/release/rune" ]]; then
+            echo "✓ Binary found: target/${{ matrix.target }}/release/rune"
+            ls -la target/${{ matrix.target }}/release/rune
           else
-            if [[ -f "target/${{ matrix.target }}/release/rune.exe" ]]; then
-              echo "✓ Windows binary found: target/${{ matrix.target }}/release/rune.exe"
-              ls -la target/${{ matrix.target }}/release/rune.exe
-            else
-              echo "❌ Windows binary not found!"
+            echo "❌ Binary not found!"
+            echo "Directory contents:"
+            ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
+            exit 1
+          fi
+
+      - name: Verify Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          echo "Build completed. Checking for Windows binary..."
+          if (Test-Path "target/${{ matrix.target }}/release/rune.exe") {
+            echo "✓ Windows binary found: target/${{ matrix.target }}/release/rune.exe"
+            Get-ChildItem target/${{ matrix.target }}/release/rune.exe
+          } else {
+            echo "❌ Windows binary not found!"
+            echo "Directory contents:"
+            Get-ChildItem target/${{ matrix.target }}/release/ -ErrorAction SilentlyContinue
+            exit 1
+          }
               echo "Directory contents:"
               ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
               exit 1
             fi
           fi
 
-      - name: Package Release
+      - name: Package Release (Unix)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           VERSION="${{ github.ref_name }}"
@@ -141,43 +167,50 @@ jobs:
           echo "Contents of target/${{ matrix.target }}/release/:"
           ls -la target/${{ matrix.target }}/release/ || echo "Directory not found"
 
-          if [[ "${{ matrix.archive }}" == "tar.gz" ]]; then
-            if [[ -f "target/${{ matrix.target }}/release/rune" ]]; then
-              echo "✓ Binary found, creating tar.gz"
-              tar -czf dist/${NAME}.tar.gz -C target/${{ matrix.target }}/release rune
-              # Generate checksum for this file
-              cd dist
-              if [[ "${{ runner.os }}" == "macOS" ]]; then
-                shasum -a 256 ${NAME}.tar.gz > ${NAME}.tar.gz.sha256
-              else
-                sha256sum ${NAME}.tar.gz > ${NAME}.tar.gz.sha256
-              fi
-              cd ..
+          if [[ -f "target/${{ matrix.target }}/release/rune" ]]; then
+            echo "✓ Binary found, creating tar.gz"
+            tar -czf dist/${NAME}.tar.gz -C target/${{ matrix.target }}/release rune
+            # Generate checksum for this file
+            cd dist
+            if [[ "${{ runner.os }}" == "macOS" ]]; then
+              shasum -a 256 ${NAME}.tar.gz > ${NAME}.tar.gz.sha256
             else
-              echo "❌ Binary not found at target/${{ matrix.target }}/release/rune"
-              echo "Available files:"
-              find target -name "rune*" -type f 2>/dev/null || echo "No rune binary found"
-              exit 1
+              sha256sum ${NAME}.tar.gz > ${NAME}.tar.gz.sha256
             fi
+            cd ..
           else
-            # For Windows
-            if [[ -f "target/${{ matrix.target }}/release/rune.exe" ]]; then
-              echo "✓ Windows binary found, creating zip"
-              cd target/${{ matrix.target }}/release
-              7z a ../../../dist/${NAME}.zip rune.exe
-              cd ../../../dist
-              if [[ "${{ runner.os }}" == "macOS" ]]; then
-                shasum -a 256 ${NAME}.zip > ${NAME}.zip.sha256
-              else
-                sha256sum ${NAME}.zip > ${NAME}.zip.sha256
-              fi
-            else
-              echo "❌ Windows binary not found at target/${{ matrix.target }}/release/rune.exe"
-              echo "Available files:"
-              find target -name "rune*" -type f 2>/dev/null || echo "No rune binary found"
-              exit 1
-            fi
+            echo "❌ Binary not found at target/${{ matrix.target }}/release/rune"
+            echo "Available files:"
+            find target -name "rune*" -type f 2>/dev/null || echo "No rune binary found"
+            exit 1
           fi
+
+      - name: Package Release (Windows)  
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $VERSION = "${{ github.ref_name }}"
+          $NAME = "rune-${VERSION}-${{ matrix.target }}"
+
+          # Create the package directory
+          New-Item -ItemType Directory -Force -Path dist
+
+          # Debug: List the target directory  
+          echo "Contents of target/${{ matrix.target }}/release/:"
+          Get-ChildItem target/${{ matrix.target }}/release/ -ErrorAction SilentlyContinue
+
+          if (Test-Path "target/${{ matrix.target }}/release/rune.exe") {
+            echo "✓ Creating zip package"
+            Compress-Archive -Path "target/${{ matrix.target }}/release/rune.exe" -DestinationPath "dist/${NAME}.zip"
+            Set-Location dist
+            Get-FileHash "${NAME}.zip" -Algorithm SHA256 | Select-Object Hash | Out-File "${NAME}.zip.sha256" -Encoding ASCII
+            Set-Location ..
+          } else {
+            echo "❌ Windows binary not found at target/${{ matrix.target }}/release/rune.exe"
+            echo "Available files:"
+            Get-ChildItem target -Recurse -Name "rune*" -ErrorAction SilentlyContinue
+            exit 1
+          }
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
