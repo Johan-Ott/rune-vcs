@@ -6,7 +6,7 @@ use rune_store::Store;
 pub mod commands;
 mod style;
 use anyhow::Context;
-use colored::{Color, ColoredString, Colorize}; // Import specific items to avoid Style conflict
+use colored::Colorize; // Import specific items to avoid Style conflict
 use rune_core::ignore::{IgnoreEngine, IgnoreRule, RuleType};
 use rune_docs::DocsEngine;
 use rune_performance::{
@@ -4808,7 +4808,7 @@ fn display_commit_graph(
     // Build a simple parent-child relationship map
     let mut children: std::collections::HashMap<String, Vec<String>> =
         std::collections::HashMap::new();
-    let commit_map: std::collections::HashMap<String, &rune_core::Commit> =
+    let _commit_map: std::collections::HashMap<String, &rune_core::Commit> =
         commits.iter().map(|c| (c.id.clone(), c)).collect();
 
     // Build children map (reverse of parent relationship)
@@ -5533,7 +5533,7 @@ fn get_store_for_current_dir() -> anyhow::Result<Store> {
 
 /// Handle branch commands
 fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow::Result<()> {
-    let store = Store::discover(std::env::current_dir()?)?;
+    _store = Store::discover(std::env::current_dir()?)?;
 
     match command {
         Some(BranchCommand::Create {
@@ -5681,7 +5681,7 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
 
 /// Handle tag commands
 fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
-    let store = Store::discover(std::env::current_dir()?)?;
+    _store = Store::discover(std::env::current_dir()?)?;
 
     match command {
         Some(TagCommand::Create {
@@ -5785,7 +5785,7 @@ fn handle_checkout_command(
     force: bool,
     files: &[std::path::PathBuf],
 ) -> anyhow::Result<()> {
-    let store = Store::discover(std::env::current_dir()?)?;
+    _store = Store::discover(std::env::current_dir()?)?;
 
     if !files.is_empty() {
         // File restoration mode: checkout specific files from target commit/branch
@@ -7329,7 +7329,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
             }
 
             // Check if branch exists first
-            let store = get_store_for_current_dir()?;
+            _store = get_store_for_current_dir()?;
             if !store.branch_exists(&branch) {
                 Style::error(&format!("Branch '{}' does not exist", branch));
                 Style::info("Use 'rune smart branch list' to see available branches");
@@ -8801,7 +8801,7 @@ async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::
         } => {
             Style::section_header("🔍 Repository Performance Analysis");
 
-            let store = get_store_for_current_dir()?;
+            _store = get_store_for_current_dir()?;
             let repo_path = std::env::current_dir()?;
 
             // Basic repository analysis

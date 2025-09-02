@@ -11,6 +11,7 @@ use flate2::{Compression, write::GzEncoder};
 use tokio::io::{AsyncRead, AsyncWrite, AsyncReadExt, AsyncWriteExt};
 
 /// Network and storage optimization engine
+#[allow(dead_code)] // Network storage structures in development
 pub struct NetworkStorageEngine {
     /// Compression settings
     compression_level: Compression,

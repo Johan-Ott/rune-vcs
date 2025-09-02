@@ -460,7 +460,7 @@ impl ConflictResolver {
     pub fn learn_from_decision(
         &mut self,
         conflict: &MergeConflict,
-        chosen_suggestion: &ResolutionSuggestion,
+        _chosen_suggestion: &ResolutionSuggestion,
         success: bool,
     ) -> Result<()> {
         if !self.config.learn_from_decisions {
@@ -668,7 +668,7 @@ pub fn parse_conflict_file(file_path: &Path, content: &str) -> Result<MergeConfl
 
             in_conflict = false;
         } else if in_conflict {
-            if let Some((_, ref mut current, ref mut incoming)) = current_conflict {
+            if let Some((_, ref mut current, ref _incoming)) = current_conflict {
                 if line.starts_with("=======") {
                     // We're in the incoming section now
                 } else if line.contains("=======") {

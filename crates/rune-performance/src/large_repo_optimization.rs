@@ -5,8 +5,12 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use serde::{Deserialize, Serialize};
 
-/// Large repository performance optimization system
+/// Large Repository Optimization Module
+// Provides advanced techniques for handling repositories with millions of files
+// and optimizing performance for large-scale development workflows
+
 #[derive(Debug)]
+#[allow(dead_code)] // Large repo optimization is in development
 pub struct LargeRepoOptimizer {
     /// Configuration for large repo handling
     config: LargeRepoConfig,
@@ -38,7 +42,8 @@ pub struct LargeRepoConfig {
     pub enable_compression: bool,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
+#[allow(dead_code)] // Caching structures in development
 struct CachedObject {
     /// Object ID
     id: String,
@@ -53,6 +58,7 @@ struct CachedObject {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)] // File indexing structures in development
 struct FileIndex {
     /// Path to object ID mapping
     path_index: HashMap<PathBuf, String>,
@@ -63,6 +69,7 @@ struct FileIndex {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // File metadata structures in development
 struct FileMetadata {
     /// File size in bytes
     size: u64,
@@ -75,6 +82,7 @@ struct FileMetadata {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // File type enum in development
 enum FileType {
     Text,
     Binary,
@@ -85,6 +93,7 @@ enum FileType {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)] // Directory node structures in development
 struct DirectoryNode {
     /// Directory name
     name: String,
@@ -97,6 +106,7 @@ struct DirectoryNode {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)] // Chunk processor structures in development
 struct ChunkProcessor {
     /// Worker pool for parallel processing
     worker_pool: Vec<tokio::task::JoinHandle<()>>,
@@ -107,6 +117,7 @@ struct ChunkProcessor {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)] // Memory monitoring structures in development
 struct MemoryMonitor {
     /// Current memory usage in bytes
     current_usage: u64,
@@ -117,6 +128,7 @@ struct MemoryMonitor {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Memory snapshot structures in development
 struct MemorySnapshot {
     /// Timestamp of snapshot
     timestamp: chrono::DateTime<chrono::Utc>,
@@ -269,19 +281,19 @@ impl LargeRepoOptimizer {
 
     // Private implementation methods
 
-    async fn progressive_directory_scan(&self, path: &Path, report: &mut LoadingReport) -> Result<()> {
+    async fn progressive_directory_scan(&self, _path: &Path, report: &mut LoadingReport) -> Result<()> {
         // Implement progressive scanning with lazy loading
         report.scanned_directories += 1;
         Ok(())
     }
 
-    async fn full_directory_scan(&self, path: &Path, report: &mut LoadingReport) -> Result<()> {
+    async fn full_directory_scan(&self, _path: &Path, report: &mut LoadingReport) -> Result<()> {
         // Implement full directory scan
         report.scanned_directories += 1;
         Ok(())
     }
 
-    async fn build_file_index(&self, path: &Path, report: &mut LoadingReport) -> Result<()> {
+    async fn build_file_index(&self, _path: &Path, report: &mut LoadingReport) -> Result<()> {
         // Build efficient file index
         report.indexed_files += 1;
         Ok(())
@@ -293,7 +305,7 @@ impl LargeRepoOptimizer {
         Ok(())
     }
 
-    async fn chunked_file_processing(&self, file_path: &Path) -> Result<ProcessingResult> {
+    async fn chunked_file_processing(&self, _file_path: &Path) -> Result<ProcessingResult> {
         Ok(ProcessingResult {
             processed_bytes: 0,
             processing_time: std::time::Duration::default(),
@@ -301,7 +313,7 @@ impl LargeRepoOptimizer {
         })
     }
 
-    async fn normal_file_processing(&self, file_path: &Path) -> Result<ProcessingResult> {
+    async fn normal_file_processing(&self, _file_path: &Path) -> Result<ProcessingResult> {
         Ok(ProcessingResult {
             processed_bytes: 0,
             processing_time: std::time::Duration::default(),
@@ -309,7 +321,7 @@ impl LargeRepoOptimizer {
         })
     }
 
-    async fn load_object_from_storage(&self, object_id: &str) -> Result<Vec<u8>> {
+    async fn load_object_from_storage(&self, _object_id: &str) -> Result<Vec<u8>> {
         // Load object from Rune storage
         Ok(Vec::new())
     }
@@ -367,7 +379,7 @@ impl LargeRepoOptimizer {
         }
     }
 
-    async fn process_object_async(&self, object_id: String) -> Result<ProcessingResult> {
+    async fn process_object_async(&self, _object_id: String) -> Result<ProcessingResult> {
         Ok(ProcessingResult {
             processed_bytes: 0,
             processing_time: std::time::Duration::default(),

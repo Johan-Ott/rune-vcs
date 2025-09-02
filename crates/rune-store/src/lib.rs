@@ -1337,7 +1337,7 @@ impl Store {
     // AI-powered merge analysis methods
 
     /// Get commits that would be merged from a branch
-    pub fn get_commits_for_merge(&self, branch: &str) -> Result<Vec<Commit>> {
+    pub fn get_commits_for_merge(&self, _branch: &str) -> Result<Vec<Commit>> {
         let commits = self.log();
         // Simple implementation: return last few commits from branch
         // In a real implementation, this would analyze the merge base

@@ -4,6 +4,8 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use serde::{Deserialize, Serialize};
 
 /// Comprehensive performance monitoring system
+#[derive(Debug, Clone)]
+#[allow(dead_code)] // Performance monitoring is in development
 pub struct PerformanceMonitor {
     metrics: Arc<RwLock<PerformanceMetrics>>,
     history: Arc<Mutex<VecDeque<MetricSnapshot>>>,
@@ -144,6 +146,7 @@ pub enum BottleneckSeverity {
 
 /// Performance regression detection
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Regression detection structures in development
 pub struct RegressionDetector {
     baseline: HashMap<String, f64>,
     threshold: f64,

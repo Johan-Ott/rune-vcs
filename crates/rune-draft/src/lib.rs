@@ -390,6 +390,7 @@ impl DraftManager {
         Ok(files)
     }
 
+    #[allow(dead_code)] // Platform-specific file mode utility in development
     fn get_file_mode(metadata: &fs::Metadata) -> u32 {
         #[cfg(unix)]
         {

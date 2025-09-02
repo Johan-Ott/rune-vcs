@@ -8,6 +8,7 @@ use flume::{Receiver, Sender};
 use tracing::{debug, info, warn};
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Parallel processing config in development
 pub struct ParallelConfig {
     pub max_threads: usize,
     pub chunk_size: usize,
