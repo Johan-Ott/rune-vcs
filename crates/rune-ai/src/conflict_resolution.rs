@@ -221,13 +221,20 @@ impl ConflictResolver {
     }
 
     /// Analyze a merge conflict and provide AI-powered resolution suggestions
-    pub async fn resolve_conflict(&mut self, conflict: &MergeConflict) -> Result<Vec<ResolutionSuggestion>> {
+    pub async fn resolve_conflict(
+        &mut self,
+        conflict: &MergeConflict,
+    ) -> Result<Vec<ResolutionSuggestion>> {
         if !self.config.enabled {
             return Ok(vec![]);
         }
 
         // Check if file type is supported
-        if !self.config.supported_file_types.contains(&conflict.file_info.extension) {
+        if !self
+            .config
+            .supported_file_types
+            .contains(&conflict.file_info.extension)
+        {
             return Ok(vec![]);
         }
 
@@ -245,7 +252,11 @@ impl ConflictResolver {
         }
 
         // Sort suggestions by confidence
-        suggestions.sort_by(|a, b| b.confidence.partial_cmp(&a.confidence).unwrap_or(std::cmp::Ordering::Equal));
+        suggestions.sort_by(|a, b| {
+            b.confidence
+                .partial_cmp(&a.confidence)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         Ok(suggestions)
     }
@@ -289,7 +300,7 @@ impl ConflictResolver {
     ) -> Result<Option<ResolutionSuggestion>> {
         // Generate pattern signature for this conflict
         let pattern_signature = self.generate_pattern_signature(region);
-        
+
         // Check if we have a successful pattern for this type of conflict
         if let Some(pattern) = self.pattern_cache.get(&pattern_signature) {
             if pattern.success_rate > 0.7 {
@@ -327,7 +338,10 @@ impl ConflictResolver {
     }
 
     /// Resolve Rust-specific conflicts
-    async fn resolve_rust_conflict(&self, region: &ConflictRegion) -> Result<Option<ResolutionSuggestion>> {
+    async fn resolve_rust_conflict(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<Option<ResolutionSuggestion>> {
         // Check for common Rust conflict patterns
         if self.is_rust_import_conflict(region) {
             return Ok(Some(self.create_import_merge_suggestion(region)?));
@@ -341,9 +355,13 @@ impl ConflictResolver {
     }
 
     /// Resolve Python-specific conflicts
-    async fn resolve_python_conflict(&self, region: &ConflictRegion) -> Result<Option<ResolutionSuggestion>> {
+    async fn resolve_python_conflict(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<Option<ResolutionSuggestion>> {
         // Python-specific conflict resolution logic
-        if region.current_content.contains("import ") && region.incoming_content.contains("import ") {
+        if region.current_content.contains("import ") && region.incoming_content.contains("import ")
+        {
             return Ok(Some(self.create_python_import_suggestion(region)?));
         }
 
@@ -351,9 +369,13 @@ impl ConflictResolver {
     }
 
     /// Resolve JavaScript/TypeScript conflicts
-    async fn resolve_js_conflict(&self, region: &ConflictRegion) -> Result<Option<ResolutionSuggestion>> {
+    async fn resolve_js_conflict(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<Option<ResolutionSuggestion>> {
         // JS/TS-specific conflict resolution logic
-        if region.current_content.contains("require(") || region.current_content.contains("import ") {
+        if region.current_content.contains("require(") || region.current_content.contains("import ")
+        {
             return Ok(Some(self.create_js_import_suggestion(region)?));
         }
 
@@ -361,7 +383,10 @@ impl ConflictResolver {
     }
 
     /// Try formatting-based resolution for whitespace conflicts
-    fn try_formatting_resolution(&self, region: &ConflictRegion) -> Result<Option<ResolutionSuggestion>> {
+    fn try_formatting_resolution(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<Option<ResolutionSuggestion>> {
         // Check if the conflict is purely whitespace/formatting
         let current_normalized = self.normalize_whitespace(&region.current_content);
         let incoming_normalized = self.normalize_whitespace(&region.incoming_content);
@@ -382,16 +407,21 @@ impl ConflictResolver {
     }
 
     /// Try import/dependency resolution
-    fn try_import_resolution(&self, region: &ConflictRegion) -> Result<Option<ResolutionSuggestion>> {
+    fn try_import_resolution(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<Option<ResolutionSuggestion>> {
         if self.is_import_conflict(region) {
-            let merged_imports = self.merge_imports(&region.current_content, &region.incoming_content)?;
-            
+            let merged_imports =
+                self.merge_imports(&region.current_content, &region.incoming_content)?;
+
             return Ok(Some(ResolutionSuggestion {
                 id: format!("import_{}", uuid::Uuid::new_v4()),
                 confidence: 0.85,
                 strategy: ResolutionStrategy::SmartMerge,
                 resolved_content: merged_imports,
-                explanation: "Automatically merged import statements from both branches.".to_string(),
+                explanation: "Automatically merged import statements from both branches."
+                    .to_string(),
                 alternatives: vec![],
                 auto_applicable: true,
             }));
@@ -401,9 +431,16 @@ impl ConflictResolver {
     }
 
     /// Apply a learned resolution pattern
-    fn apply_pattern_resolution(&self, region: &ConflictRegion, _pattern: &ResolutionPattern) -> Result<String> {
+    fn apply_pattern_resolution(
+        &self,
+        region: &ConflictRegion,
+        _pattern: &ResolutionPattern,
+    ) -> Result<String> {
         // For now, implement a simple smart merge
-        Ok(format!("{}\n{}", region.current_content, region.incoming_content))
+        Ok(format!(
+            "{}\n{}",
+            region.current_content, region.incoming_content
+        ))
     }
 
     /// Generate a pattern signature for learning
@@ -415,12 +452,17 @@ impl ConflictResolver {
         region.conflict_type.hash(&mut hasher);
         region.current_content.lines().count().hash(&mut hasher);
         region.incoming_content.lines().count().hash(&mut hasher);
-        
+
         format!("pattern_{:x}", hasher.finish())
     }
 
     /// Learn from user decision to improve future suggestions
-    pub fn learn_from_decision(&mut self, conflict: &MergeConflict, chosen_suggestion: &ResolutionSuggestion, success: bool) -> Result<()> {
+    pub fn learn_from_decision(
+        &mut self,
+        conflict: &MergeConflict,
+        chosen_suggestion: &ResolutionSuggestion,
+        success: bool,
+    ) -> Result<()> {
         if !self.config.learn_from_decisions {
             return Ok(());
         }
@@ -429,13 +471,16 @@ impl ConflictResolver {
         for region in &conflict.conflict_regions {
             let pattern_signature = self.generate_pattern_signature(region);
             let pattern_signature_clone = pattern_signature.clone();
-            
-            let pattern = self.pattern_cache.entry(pattern_signature).or_insert(ResolutionPattern {
-                signature: pattern_signature_clone,
-                success_rate: 0.5,
-                usage_count: 0,
-                last_used: chrono::Utc::now(),
-            });
+
+            let pattern =
+                self.pattern_cache
+                    .entry(pattern_signature)
+                    .or_insert(ResolutionPattern {
+                        signature: pattern_signature_clone,
+                        success_rate: 0.5,
+                        usage_count: 0,
+                        last_used: chrono::Utc::now(),
+                    });
 
             // Update success rate using weighted average
             let weight = 0.1; // Learning rate
@@ -444,7 +489,7 @@ impl ConflictResolver {
             } else {
                 pattern.success_rate = pattern.success_rate * (1.0 - weight);
             }
-            
+
             pattern.usage_count += 1;
             pattern.last_used = chrono::Utc::now();
         }
@@ -463,7 +508,7 @@ impl ConflictResolver {
 
     fn is_import_conflict(&self, region: &ConflictRegion) -> bool {
         let import_keywords = ["import ", "use ", "require(", "from ", "#include"];
-        
+
         import_keywords.iter().any(|keyword| {
             region.current_content.contains(keyword) && region.incoming_content.contains(keyword)
         })
@@ -506,7 +551,7 @@ impl ConflictResolver {
 
     fn merge_imports(&self, current: &str, incoming: &str) -> Result<String> {
         let mut imports = std::collections::BTreeSet::new();
-        
+
         // Extract imports from both versions
         for line in current.lines().chain(incoming.lines()) {
             let trimmed = line.trim();
@@ -514,42 +559,61 @@ impl ConflictResolver {
                 imports.insert(trimmed.to_string());
             }
         }
-        
+
         Ok(imports.into_iter().collect::<Vec<_>>().join("\n"))
     }
 
-    fn create_import_merge_suggestion(&self, region: &ConflictRegion) -> Result<ResolutionSuggestion> {
+    fn create_import_merge_suggestion(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<ResolutionSuggestion> {
         Ok(ResolutionSuggestion {
             id: format!("rust_import_{}", uuid::Uuid::new_v4()),
             confidence: 0.90,
             strategy: ResolutionStrategy::SmartMerge,
-            resolved_content: self.merge_imports(&region.current_content, &region.incoming_content)?,
-            explanation: "Merged Rust import statements from both branches, removing duplicates.".to_string(),
+            resolved_content: self
+                .merge_imports(&region.current_content, &region.incoming_content)?,
+            explanation: "Merged Rust import statements from both branches, removing duplicates."
+                .to_string(),
             alternatives: vec![],
             auto_applicable: true,
         })
     }
 
-    fn create_function_merge_suggestion(&self, region: &ConflictRegion) -> Result<ResolutionSuggestion> {
+    fn create_function_merge_suggestion(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<ResolutionSuggestion> {
         Ok(ResolutionSuggestion {
             id: format!("rust_function_{}", uuid::Uuid::new_v4()),
             confidence: 0.75,
             strategy: ResolutionStrategy::ManualResolution,
-            resolved_content: format!("// Both function versions:\n{}\n// ---\n{}", 
-                region.current_content, region.incoming_content),
-            explanation: "Function signature conflict detected. Manual review recommended.".to_string(),
-            alternatives: vec![region.current_content.clone(), region.incoming_content.clone()],
+            resolved_content: format!(
+                "// Both function versions:\n{}\n// ---\n{}",
+                region.current_content, region.incoming_content
+            ),
+            explanation: "Function signature conflict detected. Manual review recommended."
+                .to_string(),
+            alternatives: vec![
+                region.current_content.clone(),
+                region.incoming_content.clone(),
+            ],
             auto_applicable: false,
         })
     }
 
-    fn create_python_import_suggestion(&self, region: &ConflictRegion) -> Result<ResolutionSuggestion> {
+    fn create_python_import_suggestion(
+        &self,
+        region: &ConflictRegion,
+    ) -> Result<ResolutionSuggestion> {
         Ok(ResolutionSuggestion {
             id: format!("python_import_{}", uuid::Uuid::new_v4()),
             confidence: 0.88,
             strategy: ResolutionStrategy::SmartMerge,
-            resolved_content: self.merge_imports(&region.current_content, &region.incoming_content)?,
-            explanation: "Merged Python import statements, maintaining proper import order.".to_string(),
+            resolved_content: self
+                .merge_imports(&region.current_content, &region.incoming_content)?,
+            explanation: "Merged Python import statements, maintaining proper import order."
+                .to_string(),
             alternatives: vec![],
             auto_applicable: true,
         })
@@ -560,7 +624,8 @@ impl ConflictResolver {
             id: format!("js_import_{}", uuid::Uuid::new_v4()),
             confidence: 0.87,
             strategy: ResolutionStrategy::SmartMerge,
-            resolved_content: self.merge_imports(&region.current_content, &region.incoming_content)?,
+            resolved_content: self
+                .merge_imports(&region.current_content, &region.incoming_content)?,
             explanation: "Merged JavaScript/TypeScript import statements.".to_string(),
             alternatives: vec![],
             auto_applicable: true,
@@ -573,7 +638,7 @@ pub fn parse_conflict_file(file_path: &Path, content: &str) -> Result<MergeConfl
     let mut conflict_regions = Vec::new();
     let mut current_conflict: Option<(usize, String, String)> = None;
     let mut in_conflict = false;
-    
+
     for (line_num, line) in content.lines().enumerate() {
         if line.starts_with("<<<<<<<") {
             if in_conflict {
@@ -590,7 +655,7 @@ pub fn parse_conflict_file(file_path: &Path, content: &str) -> Result<MergeConfl
             if !in_conflict {
                 return Err(anyhow!("Unexpected conflict end marker"));
             }
-            
+
             if let Some((start_line, current_content, incoming_content)) = current_conflict.take() {
                 conflict_regions.push(ConflictRegion {
                     start_line,
@@ -600,7 +665,7 @@ pub fn parse_conflict_file(file_path: &Path, content: &str) -> Result<MergeConfl
                     conflict_type: ConflictType::ContentConflict,
                 });
             }
-            
+
             in_conflict = false;
         } else if in_conflict {
             if let Some((_, ref mut current, ref mut incoming)) = current_conflict {
@@ -620,7 +685,8 @@ pub fn parse_conflict_file(file_path: &Path, content: &str) -> Result<MergeConfl
 
     let file_info = FileInfo {
         language: detect_language(file_path)?,
-        extension: file_path.extension()
+        extension: file_path
+            .extension()
             .and_then(|ext| ext.to_str())
             .unwrap_or("")
             .to_string(),

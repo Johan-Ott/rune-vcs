@@ -1,122 +1,164 @@
 #!/bin/bash
-# Rune VCS Release Automation Script
 
-set -euo pipefail
+# Automated Release Script for Rune VCS
+# This script handles the complete release process:
+# 1. Updates version in Cargo.toml
+# 2. Commits changes
+# 3. Creates git tag
+# 4. Triggers GitHub Actions release
+# 5. Updates Homebrew tap
 
-# Configuration
-CURRENT_VERSION=${1:-}
-TARGET=${2:-"patch"} # patch, minor, major
-DRY_RUN=${3:-"false"}
+set -e
 
-if [ -z "$CURRENT_VERSION" ]; then
-    echo "Usage: $0 <current_version> [patch|minor|major] [dry_run]"
-    echo "Example: $0 0.0.2 patch false"
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+print_status() {
+    echo -e "${GREEN}✅ $1${NC}"
+}
+
+print_info() {
+    echo -e "${BLUE}ℹ️  $1${NC}"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠️  $1${NC}"
+}
+
+print_error() {
+    echo -e "${RED}❌ $1${NC}"
+}
+
+echo -e "${GREEN}🚀 Rune VCS Automated Release Pipeline${NC}"
+echo "====================================="
+
+# Check if version argument is provided
+if [ -z "$1" ]; then
+    print_error "Usage: $0 <version>"
+    print_info "Example: $0 0.3.4-alpha.1"
     exit 1
 fi
 
-# Parse current version
-IFS='.' read -r -a version_parts <<< "${CURRENT_VERSION}"
-major=${version_parts[0]}
-minor=${version_parts[1]}
-patch=${version_parts[2]}
+NEW_VERSION="$1"
+print_info "Target version: $NEW_VERSION"
 
-# Calculate next version
-case "$TARGET" in
-    "patch")
-        patch=$((patch + 1))
-        ;;
-    "minor")
-        minor=$((minor + 1))
-        patch=0
-        ;;
-    "major")
-        major=$((major + 1))
-        minor=0
-        patch=0
-        ;;
-    *)
-        echo "Error: Invalid target. Use patch, minor, or major"
-        exit 1
-        ;;
-esac
-
-NEW_VERSION="${major}.${minor}.${patch}"
-
-echo "🚀 Rune VCS Release Automation"
-echo "Current Version: ${CURRENT_VERSION}"
-echo "New Version: ${NEW_VERSION}"
-echo "Release Type: ${TARGET}"
-echo "Dry Run: ${DRY_RUN}"
-echo ""
-
-if [ "$DRY_RUN" = "true" ]; then
-    echo "🔍 DRY RUN MODE - No changes will be made"
-    echo ""
+# Validate version format (basic check)
+if ! [[ "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[0-9]+)?)?$ ]]; then
+    print_error "Invalid version format. Use semantic versioning (e.g., 0.3.4-alpha.1)"
+    exit 1
 fi
 
-# Function to run commands based on dry run mode
-run_command() {
-    echo "➤ $1"
-    if [ "$DRY_RUN" = "false" ]; then
-        eval "$1"
+# Check if we're in the right directory and navigate to project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+cd "$PROJECT_ROOT"
+
+if [ ! -f "Cargo.toml" ]; then
+    print_error "Cargo.toml not found. Cannot locate project root."
+    exit 1
+fi
+
+print_info "Working from project root: $PROJECT_ROOT"
+
+# Check for uncommitted changes
+if ! git diff --quiet || ! git diff --cached --quiet; then
+    print_warning "You have uncommitted changes. Please commit or stash them first."
+    git status --porcelain
+    exit 1
+fi
+
+print_status "Pre-flight checks passed"
+
+# Step 1: Update version in Cargo.toml
+print_info "Updating version in Cargo.toml..."
+sed -i.bak "s/^version = \".*\"$/version = \"$NEW_VERSION\"/" Cargo.toml
+rm Cargo.toml.bak
+
+# Verify the change
+UPDATED_VERSION=$(grep '^version = ' Cargo.toml | cut -d'"' -f2)
+if [ "$UPDATED_VERSION" != "$NEW_VERSION" ]; then
+    print_error "Failed to update version in Cargo.toml"
+    exit 1
+fi
+print_status "Updated Cargo.toml version to $NEW_VERSION"
+
+# Step 2: Commit the version change
+print_info "Committing version update..."
+git add Cargo.toml
+git commit -m "Release v$NEW_VERSION
+
+- Update workspace version to $NEW_VERSION
+- Automated release pipeline execution"
+
+print_status "Version update committed"
+
+# Step 3: Create and push git tag
+print_info "Creating git tag v$NEW_VERSION..."
+git tag "v$NEW_VERSION"
+git push origin main
+git push origin "v$NEW_VERSION"
+print_status "Git tag created and pushed"
+
+# Step 4: Trigger GitHub Actions release workflow
+print_info "Triggering GitHub Actions release workflow..."
+if command -v gh &> /dev/null; then
+    gh workflow run release.yml --ref "v$NEW_VERSION"
+    print_status "GitHub Actions release workflow triggered"
+else
+    print_warning "GitHub CLI not found. Please manually trigger the release workflow."
+    print_info "Go to: https://github.com/Johan-Ott/rune-vcs/actions/workflows/release.yml"
+    print_info "Click 'Run workflow' and select tag: v$NEW_VERSION"
+fi
+
+# Step 5: Wait for release to be created (optional)
+print_info "Waiting for GitHub release to be created..."
+TIMEOUT=300  # 5 minutes
+ELAPSED=0
+INTERVAL=10
+
+while [ $ELAPSED -lt $TIMEOUT ]; do
+    if command -v gh &> /dev/null; then
+        if gh release view "v$NEW_VERSION" --repo Johan-Ott/rune-vcs &>/dev/null; then
+            print_status "Release v$NEW_VERSION is available!"
+            break
+        fi
     else
-        echo "  [DRY RUN] Would execute: $1"
+        # Manual check suggestion
+        print_info "Check if release is ready: https://github.com/Johan-Ott/rune-vcs/releases/tag/v$NEW_VERSION"
+        read -p "Is the release ready with all assets? (y/n): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            break
+        fi
     fi
-}
+    
+    sleep $INTERVAL
+    ELAPSED=$((ELAPSED + INTERVAL))
+    print_info "Still waiting for release... (${ELAPSED}s/${TIMEOUT}s)"
+done
 
-echo "📋 Release Checklist:"
-echo ""
-
-echo "1. 🧪 Running Tests..."
-run_command "cargo test --all"
-
-echo ""
-echo "2. 🔨 Building Release Binary..."
-run_command "cargo build --release"
-
-echo ""
-echo "3. 📝 Updating Version Numbers..."
-run_command "sed -i '' 's/version = \"${CURRENT_VERSION}\"/version = \"${NEW_VERSION}\"/g' Cargo.toml"
-run_command "sed -i '' 's/version = \"${CURRENT_VERSION}\"/version = \"${NEW_VERSION}\"/g' crates/*/Cargo.toml"
-run_command "sed -i '' 's/version = \"v${CURRENT_VERSION}\"/version = \"v${NEW_VERSION}\"/g' scoop_template/bucket/rune.json"
-run_command "sed -i '' 's/version \"v${CURRENT_VERSION}\"/version \"v${NEW_VERSION}\"/g' tap_template/Formula/rune.rb"
-run_command "sed -i '' 's/version = \"${CURRENT_VERSION}\"/version = \"${NEW_VERSION}\"/g' crates/rune-cli/src/main.rs"
-
-echo ""
-echo "4. 📦 Building Packages..."
-if command -v dpkg-deb >/dev/null 2>&1; then
-    run_command "./packaging/build-deb.sh ${NEW_VERSION}"
-else
-    echo "  ⚠️  dpkg-deb not available, skipping Debian package"
+if [ $ELAPSED -ge $TIMEOUT ]; then
+    print_warning "Timeout waiting for release. Please check manually and run homebrew update separately."
+    print_info "Once release is ready, run: $SCRIPT_DIR/update_homebrew_for_release.sh v$NEW_VERSION"
+    exit 0
 fi
 
-if command -v rpmbuild >/dev/null 2>&1; then
-    run_command "./packaging/build-rpm.sh ${NEW_VERSION}"
-else
-    echo "  ⚠️  rpmbuild not available, skipping RPM package"
-fi
+# Step 6: Update Homebrew tap
+print_info "Updating Homebrew tap..."
+"$SCRIPT_DIR/update_homebrew_for_release.sh" "v$NEW_VERSION"
 
+print_status "🎉 Release v$NEW_VERSION completed successfully!"
 echo ""
-echo "5. 🏷️  Creating Git Tag..."
-run_command "git add ."
-run_command "git commit -m \"Release v${NEW_VERSION}\""
-run_command "git tag -a \"v${NEW_VERSION}\" -m \"Release v${NEW_VERSION}\""
-
+print_info "Summary:"
+echo "  📦 Version: $NEW_VERSION"
+echo "  🏷️  Git tag: v$NEW_VERSION" 
+echo "  🚀 GitHub release: https://github.com/Johan-Ott/rune-vcs/releases/tag/v$NEW_VERSION"
+echo "  🍺 Homebrew: brew install johan-ott/rune-vcs/rune-vcs"
 echo ""
-echo "6. 📤 Pushing to Repository..."
-run_command "git push origin main"
-run_command "git push origin \"v${NEW_VERSION}\""
-
-echo ""
-if [ "$DRY_RUN" = "false" ]; then
-    echo "✅ Release v${NEW_VERSION} completed successfully!"
-    echo ""
-    echo "📋 Next Steps:"
-    echo "  • Create GitHub Release at: https://github.com/CaptainOtto/rune-vcs/releases/new?tag=v${NEW_VERSION}"
-    echo "  • Upload release binaries and packages"
-    echo "  • Update package repositories (Homebrew tap, Scoop bucket)"
-    echo "  • Announce release on social media and community channels"
-else
-    echo "🔍 Dry run completed. Review the planned changes above."
-    echo "Run with 'false' as third argument to execute the release."
-fi
+print_info "Users can now install the latest version with:"
+echo "  brew upgrade rune-vcs"

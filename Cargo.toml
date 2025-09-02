@@ -24,7 +24,7 @@ exclude = [
 [workspace.package]
 edition = "2021"
 license = "Apache-2.0"
-version = "0.3.2-alpha.6"
+version = "0.3.3-alpha.1"
 authors = ["Rune Maintainers <dev@example.invalid>"]
 description = "Rune - A modern, intelligent version control system"
 homepage = "https://github.com/CaptainOtto/rune-vcs"

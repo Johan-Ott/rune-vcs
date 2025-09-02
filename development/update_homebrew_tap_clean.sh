@@ -1,7 +1,35 @@
 #!/bin/bash
 set -e
 
-# Colors foecho -e "${YELLOW}📝 Updating Formula/rune-vcs.rb...${NC}"
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${GREEN}🍺 Updating Homebrew Tap Repository${NC}"
+
+# Variables
+HOMEBREW_REPO="https://github.com/Johan-Ott/homebrew-rune-vcs.git"
+TEMP_DIR="/tmp/homebrew-rune-vcs-update"
+
+# Get the latest version from git tags
+echo -e "${BLUE}🔍 Finding latest version...${NC}"
+VERSION=$(git tag --sort=-version:refname | head -1 | sed 's/^v//')
+if [ -z "$VERSION" ]; then
+    echo -e "${RED}❌ Could not find any git tags${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✅ Latest version: ${VERSION}${NC}"
+
+# Clean up any existing temp directory
+rm -rf "$TEMP_DIR"
+
+echo -e "${YELLOW}📦 Cloning Homebrew tap repository...${NC}"
+git clone "$HOMEBREW_REPO" "$TEMP_DIR"
+
+cd "$TEMP_DIR"
 
 # Download and calculate checksums for both architectures
 echo -e "${BLUE}📥 Downloading release assets for checksum calculation...${NC}"
@@ -35,9 +63,12 @@ else
     exit 1
 fi
 
-cd "${TEMP_DIR}"
+# Go back to tap repository
+cd "$TEMP_DIR"
 
-# Create the updated formula content with both architectures
+echo -e "${YELLOW}📝 Updating Formula/rune-vcs.rb...${NC}"
+
+# Create the updated formula content
 cat > Formula/rune-vcs.rb << EOF
 class RuneVcs < Formula
   desc "Modern, intelligent version control system"
@@ -50,7 +81,7 @@ class RuneVcs < Formula
       url "${ARM64_URL}"
       sha256 "${ARM64_SHA256}"
     end
-    
+
     if Hardware::CPU.intel?
       url "${INTEL_URL}"
       sha256 "${INTEL_SHA256}"
@@ -58,68 +89,6 @@ class RuneVcs < Formula
   end
 
   depends_on "git"
-
-  def install
-    bin.install "rune" => "rune-vcs"
-    
-    # Generate shell completions if available
-    if bin.exist?("rune-vcs")
-      bash_completion.install_if_exists "completions/rune.bash" => "rune-vcs"
-      zsh_completion.install_if_exists "completions/_rune" => "_rune-vcs"
-      fish_completion.install_if_exists "completions/rune.fish" => "rune-vcs.fish"
-    end
-  end
-
-  test do
-    system "#{bin}/rune-vcs", "--version"
-    assert_match "${VERSION}", shell_output("#{bin}/rune-vcs --version 2>&1")
-    
-    # Test basic functionality
-    system "#{bin}/rune-vcs", "--help"
-  end
-end
-EOF output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-echo -e "${GREEN}🍺 Updating Homebrew Tap Repository${NC}"
-
-# Variables
-HOMEBREW_REPO="https://github.com/Johan-Ott/homebrew-rune-vcs.git"
-TEMP_DIR="/tmp/homebrew-rune-vcs-update"
-
-# Get the latest release tag automatically
-echo -e "${BLUE}🔍 Fetching latest release information...${NC}"
-LATEST_TAG=$(git tag --sort=-version:refname | head -1)
-VERSION=${LATEST_TAG#v}  # Remove 'v' prefix
-
-echo -e "${GREEN}📋 Using version: ${VERSION} (tag: ${LATEST_TAG})${NC}"
-
-# Clean up any existing temp directory
-rm -rf "$TEMP_DIR"
-
-echo -e "${YELLOW}📦 Cloning Homebrew tap repository...${NC}"
-git clone "$HOMEBREW_REPO" "$TEMP_DIR"
-
-cd "$TEMP_DIR"
-
-echo -e "${YELLOW}� Updating Formula/rune-vcs.rb...${NC}"
-
-# Create the updated formula content
-cat > Formula/rune-vcs.rb << 'EOF'
-class RuneVcs < Formula
-  desc "Modern, intelligent version control system"
-  homepage "https://github.com/Johan-Ott/rune-vcs"
-  url "https://github.com/Johan-Ott/rune-vcs/releases/download/v0.3.2-alpha.6/rune-0.3.2-alpha.6-aarch64-apple-darwin.tar.gz"
-  sha256 "287ca9250b499f7aac37b1f866136e7663bd66e26b708bd751fa56363b114377"
-  license "Apache-2.0"
-  version "0.3.2-alpha.6"
-
-  # Currently only supports Apple Silicon Macs due to build constraints
-  depends_on arch: :arm64
 
   def install
     bin.install "rune" => "rune-vcs"
@@ -132,18 +101,19 @@ class RuneVcs < Formula
 end
 EOF
 
+echo -e "${GREEN}✅ Formula updated successfully${NC}"
+
 echo -e "${YELLOW}📝 Committing changes...${NC}"
 git add Formula/rune-vcs.rb
 git commit -m "Update rune-vcs to v${VERSION}
 
 - Updated to version ${VERSION}
 - Added support for both ARM64 and Intel macOS
-- Automatic checksum calculation from GitHub releases
-- Updated URLs and checksums for both architectures
+- Updated checksums and URLs
+- ARM64 SHA256: ${ARM64_SHA256}
+- Intel SHA256: ${INTEL_SHA256}
 
-Release: https://github.com/Johan-Ott/rune-vcs/releases/tag/v${VERSION}
-ARM64 SHA256: ${ARM64_SHA256}
-Intel SHA256: ${INTEL_SHA256}"
+Release: https://github.com/Johan-Ott/rune-vcs/releases/tag/v${VERSION}"
 
 echo -e "${YELLOW}🚀 Pushing to origin...${NC}"
 git push origin master

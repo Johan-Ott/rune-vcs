@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Practical Cross-Platform Testing Guide for Rune VCS
+
 # ===================================================
 
 echo "🌍 Practical Cross-Platform Testing Options for Rune VCS"
@@ -8,22 +9,23 @@ echo "======================================================="
 echo ""
 
 # Colors
+
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
 print_section() {
-    echo -e "${BLUE}$1${NC}"
-    echo "$(printf '%.0s-' {1..50})"
+echo -e "${BLUE}$1${NC}"
+echo "$(printf '%.0s-' {1..50})"
 }
 
 print_status() {
-    echo -e "${GREEN}✅ $1${NC}"
+echo -e "${GREEN}✅ $1${NC}"
 }
 
 print_info() {
-    echo -e "${YELLOW}ℹ️  $1${NC}"
+echo -e "${YELLOW}ℹ️  $1${NC}"
 }
 
 print_section "OPTION 1: GitHub Actions (Recommended)"
@@ -72,7 +74,7 @@ echo ""
 
 print_section "OPTION 4: Docker Testing (Partial)"
 echo ""
-print_info "⚠️  Currently blocked by dependency version conflicts"
+print_info "⚠️ Currently blocked by dependency version conflicts"
 echo ""
 echo "Issues to resolve:"
 echo "- Some dependencies require Rust edition 2024"
@@ -90,17 +92,17 @@ echo ""
 echo "Alternative services for multi-platform testing:"
 echo ""
 echo "🔹 GitHub Codespaces (Linux environment)"
-echo "   - Free tier available"
-echo "   - Full Ubuntu environment"
-echo "   - Test Linux builds directly"
+echo " - Free tier available"
+echo " - Full Ubuntu environment"
+echo " - Test Linux builds directly"
 echo ""
 echo "🔹 Docker Desktop (if you have it)"
-echo "   - Run Linux containers locally"
-echo "   - Test basic functionality"
+echo " - Run Linux containers locally"
+echo " - Test basic functionality"
 echo ""
 echo "🔹 VM or Parallels (if available)"
-echo "   - Run Windows/Linux VMs"
-echo "   - Direct testing on target OS"
+echo " - Run Windows/Linux VMs"
+echo " - Direct testing on target OS"
 echo ""
 
 print_section "RECOMMENDED WORKFLOW"
@@ -122,9 +124,9 @@ print_status "✅ Local macOS builds: Working perfectly"
 print_status "✅ Release packaging: Working perfectly"
 print_status "✅ GitHub Actions setup: Ready for manual testing"
 print_status "✅ Integration tests: Fixed and working"
-print_info "⚠️  Docker cross-compilation: Needs dependency updates"
-print_info "⚠️  Local Linux/Windows: Requires proper toolchain setup"
+print_info "⚠️ Docker cross-compilation: Needs dependency updates"
+print_info "⚠️ Local Linux/Windows: Requires proper toolchain setup"
 echo ""
 
 echo "🎯 NEXT STEP: Commit your changes and test via GitHub Actions!"
-echo "   This gives you the most reliable cross-platform testing."
+echo " This gives you the most reliable cross-platform testing."
