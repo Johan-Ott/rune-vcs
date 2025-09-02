@@ -1,8 +1,8 @@
 # Rune VCS Docker Image
 # Multi-stage build for optimal image size
 
-# Build stage
-FROM rust:1.82-slim AS builder
+# Build stage - Using nightly for edition2024 support
+FROM rustlang/rust:nightly-slim AS builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
