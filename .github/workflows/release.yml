@@ -44,8 +44,60 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
+      - name: Install cross-compilation dependencies
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+          # Set up the linker for cross-compilation
+          echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.target }}-cargo-
+
       - name: Build Release Binary
-        run: cargo build --release --target ${{ matrix.target }} --bin rune
+        run: |
+          # Build the rune binary from the workspace
+          cargo build --release --target ${{ matrix.target }} --bin rune
+          
+          # List contents to debug
+          echo "Contents of target/${{ matrix.target }}/release/:"
+          ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
+
+      - name: Verify Build
+        run: |
+          echo "Build completed. Checking for binary..."
+          if [[ "${{ matrix.archive }}" == "tar.gz" ]]; then
+            if [[ -f "target/${{ matrix.target }}/release/rune" ]]; then
+              echo "✓ Binary found: target/${{ matrix.target }}/release/rune"
+              ls -la target/${{ matrix.target }}/release/rune
+            else
+              echo "❌ Binary not found!"
+              echo "Directory contents:"
+              ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
+              exit 1
+            fi
+          else
+            if [[ -f "target/${{ matrix.target }}/release/rune.exe" ]]; then
+              echo "✓ Windows binary found: target/${{ matrix.target }}/release/rune.exe"
+              ls -la target/${{ matrix.target }}/release/rune.exe
+            else
+              echo "❌ Windows binary not found!"
+              echo "Directory contents:"
+              ls -la target/${{ matrix.target }}/release/ || echo "Release directory not found"
+              exit 1
+            fi
+          fi
 
       - name: Package Release
         shell: bash
@@ -56,8 +108,13 @@ jobs:
           # Create the package
           mkdir -p dist
 
+          # Debug: List the target directory
+          echo "Contents of target/${{ matrix.target }}/release/:"
+          ls -la target/${{ matrix.target }}/release/ || echo "Directory not found"
+
           if [[ "${{ matrix.archive }}" == "tar.gz" ]]; then
             if [[ -f "target/${{ matrix.target }}/release/rune" ]]; then
+              echo "✓ Binary found, creating tar.gz"
               tar -czf dist/${NAME}.tar.gz -C target/${{ matrix.target }}/release rune
               # Generate checksum for this file
               cd dist
@@ -68,13 +125,15 @@ jobs:
               fi
               cd ..
             else
-              echo "Binary not found at target/${{ matrix.target }}/release/rune"
-              ls -la target/${{ matrix.target }}/release/
+              echo "❌ Binary not found at target/${{ matrix.target }}/release/rune"
+              echo "Available files:"
+              find target -name "rune*" -type f 2>/dev/null || echo "No rune binary found"
               exit 1
             fi
           else
-            # For Windows (if we enable it later)
+            # For Windows
             if [[ -f "target/${{ matrix.target }}/release/rune.exe" ]]; then
+              echo "✓ Windows binary found, creating zip"
               cd target/${{ matrix.target }}/release
               7z a ../../../dist/${NAME}.zip rune.exe
               cd ../../../dist
@@ -84,7 +143,9 @@ jobs:
                 sha256sum ${NAME}.zip > ${NAME}.zip.sha256
               fi
             else
-              echo "Binary not found at target/${{ matrix.target }}/release/rune.exe"
+              echo "❌ Windows binary not found at target/${{ matrix.target }}/release/rune.exe"
+              echo "Available files:"
+              find target -name "rune*" -type f 2>/dev/null || echo "No rune binary found"
               exit 1
             fi
           fi

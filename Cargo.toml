@@ -17,6 +17,9 @@ members = [
     "crates/rune-ai",
     "tests",
 ]
+exclude = [
+    "src-tauri",
+]
 
 [workspace.package]
 edition = "2021"
