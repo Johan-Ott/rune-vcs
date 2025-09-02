@@ -251,6 +251,7 @@ pub enum EffortLevel {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Predictive model in development
 pub struct PredictiveModel {
     cache_predictions: HashMap<String, CachePrediction>,
     access_patterns: HashMap<String, AccessPattern>,

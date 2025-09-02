@@ -121,6 +121,7 @@ pub enum ResolutionStrategy {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Conflict resolution model in development
 struct ConflictResolutionModel {
     /// Model for analyzing code patterns
     pattern_analyzer: PatternAnalyzer,
@@ -129,12 +130,14 @@ struct ConflictResolutionModel {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Pattern analyzer in development
 struct PatternAnalyzer {
     /// Patterns learned from previous resolutions
     learned_patterns: HashMap<String, f64>,
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Strategy predictor in development
 struct StrategyPredictor {
     /// Weights for different resolution strategies
     strategy_weights: HashMap<ResolutionStrategy, f64>,

@@ -68,18 +68,22 @@ impl Style {
         "+".green().bold()
     }
 
+    #[allow(dead_code)] // Status formatting utilities in development
     pub fn status_modified() -> ColoredString {
         "M".yellow().bold()
     }
 
+    #[allow(dead_code)] // Status formatting utilities in development
     pub fn status_deleted() -> ColoredString {
         "-".red().bold()
     }
 
+    #[allow(dead_code)] // Status formatting utilities in development
     pub fn status_renamed() -> ColoredString {
         "R".blue().bold()
     }
 
+    #[allow(dead_code)] // Status formatting utilities in development
     pub fn status_untracked() -> ColoredString {
         "?".magenta().bold()
     }
@@ -95,6 +99,7 @@ impl Style {
     }
 
     /// Print a table-like row
+    #[allow(dead_code)] // Table formatting utility in development
     pub fn table_row(col1: &str, col2: &str, col3: &str) {
         println!(
             "{:<12} {:<10} {}",
@@ -105,6 +110,7 @@ impl Style {
     }
 
     /// Print a summary line
+    #[allow(dead_code)] // Summary formatting utility in development
     pub fn summary(items: usize, item_type: &str) {
         if items == 0 {
             println!("{}", format!("No {} found", item_type).dimmed());
@@ -130,6 +136,7 @@ pub fn init_colors() {
 }
 
 /// Format file size nicely
+#[allow(dead_code)] // Size formatting utility in development
 pub fn format_size(bytes: u64) -> String {
     const UNITS: &[&str] = &["B", "KB", "MB", "GB", "TB"];
     let mut size = bytes as f64;

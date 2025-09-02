@@ -106,6 +106,7 @@ pub enum RefactoringPriority {
     Deferred,
 }
 
+#[allow(dead_code)] // Predictive engine in development
 pub struct PredictiveEngine {
     historical_data: HashMap<String, Vec<HistoricalEvent>>,
     patterns: Vec<Pattern>,
@@ -113,6 +114,7 @@ pub struct PredictiveEngine {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Historical event tracking in development
 struct HistoricalEvent {
     event_type: EventType,
     timestamp: chrono::DateTime<chrono::Utc>,
@@ -121,6 +123,7 @@ struct HistoricalEvent {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Event type enum in development
 enum EventType {
     Commit,
     Merge,
@@ -131,6 +134,7 @@ enum EventType {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Event context tracking in development
 struct EventContext {
     files_changed: Vec<String>,
     lines_added: usize,
@@ -141,6 +145,7 @@ struct EventContext {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Event outcome tracking in development
 enum EventOutcome {
     Success,
     Failure { reason: String },
@@ -149,6 +154,7 @@ enum EventOutcome {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Pattern matching in development
 struct Pattern {
     pattern_type: PatternType,
     conditions: Vec<Condition>,
@@ -157,6 +163,7 @@ struct Pattern {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Pattern type enum in development
 enum PatternType {
     Sequential,
     Temporal,
@@ -165,6 +172,7 @@ enum PatternType {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Condition matching in development
 struct Condition {
     field: String,
     operator: ComparisonOperator,
@@ -172,6 +180,7 @@ struct Condition {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Comparison operators in development
 enum ComparisonOperator {
     Equals,
     GreaterThan,
@@ -181,6 +190,7 @@ enum ComparisonOperator {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Condition values in development
 enum ConditionValue {
     String(String),
     Number(f64),
@@ -189,6 +199,7 @@ enum ConditionValue {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Prediction thresholds in development
 struct PredictionThresholds {
     merge_conflict_threshold: f64,
     build_failure_threshold: f64,

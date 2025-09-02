@@ -2050,6 +2050,7 @@ fn print_version_info() {
 }
 
 /// Clone a remote repository
+#[allow(dead_code)] // Remote cloning functionality in development
 async fn clone_repository(
     url: &str,
     directory: Option<&std::path::PathBuf>,
@@ -2115,6 +2116,7 @@ async fn clone_repository(
 }
 
 /// Clone a local repository (file:// or local path)
+#[allow(dead_code)] // Local cloning functionality in development
 async fn clone_local_repository(
     source: &str,
     target: &std::path::PathBuf,
@@ -2201,6 +2203,7 @@ async fn clone_local_repository(
 }
 
 /// Helper function to recursively copy directories
+#[allow(dead_code)] // Directory copying utility in development
 fn copy_dir_all(src: &std::path::Path, dst: &std::path::Path) -> anyhow::Result<()> {
     std::fs::create_dir_all(dst)?;
     for entry in std::fs::read_dir(src)? {
@@ -4799,6 +4802,7 @@ fn display_commit_graph(
     show_graph: bool,
     oneline: bool,
 ) -> anyhow::Result<()> {
+    #[allow(unused_imports)] // Used for future graph formatting features
     use colored::*;
 
     if commits.is_empty() {
@@ -5533,13 +5537,13 @@ fn get_store_for_current_dir() -> anyhow::Result<Store> {
 
 /// Handle branch commands
 fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow::Result<()> {
-    _store = Store::discover(std::env::current_dir()?)?;
+    let store = Store::discover(std::env::current_dir()?)?;
 
     match command {
         Some(BranchCommand::Create {
             name,
-            start_point,
-            track,
+            start_point: _start_point,
+            track: _track,
         }) => {
             if store.branch_exists(&name) {
                 return Err(anyhow::anyhow!("Branch '{}' already exists", name));
@@ -5549,7 +5553,7 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
             store.create_branch(&name)?;
             println!("Created branch '{}'", Style::branch_name(&name));
 
-            if track {
+            if _track {
                 // TODO: Set up tracking information
                 println!("Tracking set up for branch '{}'", name);
             }
@@ -5606,10 +5610,10 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
         }
         Some(BranchCommand::List {
             remotes,
-            all,
+            all: _all,
             merged,
             no_merged,
-            verbose,
+            verbose: _verbose,
         }) => {
             let branches = store.list_branches()?;
             let current_branch = store.current_branch().unwrap_or_else(|| "main".to_string());
@@ -5620,7 +5624,7 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
             }
 
             // TODO: Add remote branches if requested
-            if remotes || all {
+            if remotes || _all {
                 println!("Remote branch listing not implemented yet");
             }
 
@@ -5633,9 +5637,9 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
                     })
                 );
             } else {
-                for branch in branches {
-                    if branch == current_branch {
-                        println!("* {}", Style::branch_name(&branch));
+                for branch in &branches {
+                    if branch == &current_branch {
+                        println!("* {}", Style::branch_name(branch));
                     } else {
                         println!("  {}", branch);
                     }
@@ -5665,9 +5669,9 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
                     })
                 );
             } else {
-                for branch in branches {
-                    if branch == current_branch {
-                        println!("* {}", Style::branch_name(&branch));
+                for branch in &branches {
+                    if branch == &current_branch {
+                        println!("* {}", Style::branch_name(branch));
                     } else {
                         println!("  {}", branch);
                     }
@@ -5681,7 +5685,7 @@ fn handle_branch_command(command: Option<BranchCommand>, format: &str) -> anyhow
 
 /// Handle tag commands
 fn handle_tag_command(command: Option<TagCommand>) -> anyhow::Result<()> {
-    _store = Store::discover(std::env::current_dir()?)?;
+    let store = Store::discover(std::env::current_dir()?)?;
 
     match command {
         Some(TagCommand::Create {
@@ -5785,7 +5789,7 @@ fn handle_checkout_command(
     force: bool,
     files: &[std::path::PathBuf],
 ) -> anyhow::Result<()> {
-    _store = Store::discover(std::env::current_dir()?)?;
+    let store = Store::discover(std::env::current_dir()?)?;
 
     if !files.is_empty() {
         // File restoration mode: checkout specific files from target commit/branch
@@ -7329,7 +7333,7 @@ async fn handle_smart_branch_command(cmd: Option<SmartBranchCommand>) -> anyhow:
             }
 
             // Check if branch exists first
-            _store = get_store_for_current_dir()?;
+            let store = get_store_for_current_dir()?;
             if !store.branch_exists(&branch) {
                 Style::error(&format!("Branch '{}' does not exist", branch));
                 Style::info("Use 'rune smart branch list' to see available branches");
@@ -8801,7 +8805,7 @@ async fn handle_performance_command(cmd: Option<PerformanceCommand>) -> anyhow::
         } => {
             Style::section_header("🔍 Repository Performance Analysis");
 
-            _store = get_store_for_current_dir()?;
+            let _store = get_store_for_current_dir()?;
             let repo_path = std::env::current_dir()?;
 
             // Basic repository analysis

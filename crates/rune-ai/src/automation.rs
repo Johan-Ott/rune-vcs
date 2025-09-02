@@ -141,11 +141,13 @@ pub enum EffortLevel {
 pub struct AutomationEngine {
     predictive_engine: PredictiveEngine,
     tasks: HashMap<String, AutomationTask>,
+    #[allow(dead_code)] // Execution queue in development
     execution_queue: Vec<String>,
     metrics_collector: MetricsCollector,
 }
 
 #[derive(Debug)]
+#[allow(dead_code)] // Metrics collection in development
 struct MetricsCollector {
     execution_times: HashMap<String, Vec<u64>>,
     success_rates: HashMap<String, f64>,
@@ -153,6 +155,7 @@ struct MetricsCollector {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Resource metrics in development
 struct ResourceMetrics {
     cpu_usage: f64,
     memory_usage: f64,

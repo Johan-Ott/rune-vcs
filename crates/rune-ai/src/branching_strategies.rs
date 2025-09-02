@@ -4,6 +4,7 @@ use std::collections::HashMap;
 
 /// Advanced Rune VCS branching strategies system
 #[derive(Debug)]
+#[allow(dead_code)] // Branching engine in development
 pub struct RuneBranchingEngine {
     /// Configuration for branching strategies
     config: BranchingConfig,

@@ -499,6 +499,7 @@ async fn file_tree() -> Json<serde_json::Value> {
     Json(tree)
 }
 
+#[allow(dead_code)] // Web UI function in development
 async fn web_ui() -> Html<String> {
     Html(r#"
 <!DOCTYPE html>

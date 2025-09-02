@@ -94,6 +94,7 @@ pub struct CodeAnalyzer {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // Language configuration in development
 struct LanguageConfig {
     file_extensions: Vec<String>,
     complexity_threshold: usize,
