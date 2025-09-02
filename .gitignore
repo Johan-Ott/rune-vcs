@@ -2,8 +2,7 @@
 /target
 **/*.rs.bk
 
-# Cargo lock for libs (optional keep for apps)
-Cargo.lock
+# Cargo lock removed - tracking for reproducible app builds
 
 # Test files and temp directories
 /test_files/
