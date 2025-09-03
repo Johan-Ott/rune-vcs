@@ -23,7 +23,8 @@ rand = "0.8"
 chrono = { version = "0.4", features = ["serde"] }
 totp-rs = "5.0"
 qrcode = "0.14"
-webauthn-rs = "0.4"
+# Temporarily disable webauthn-rs for better cross-compilation support
+# webauthn-rs = "0.4"
 jsonwebtoken = "9.0"
 rune-core = { path = "../rune-core" }
 
