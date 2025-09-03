@@ -32,8 +32,8 @@ RUN if [ -f ./target/release/rune ]; then \
         mkdir -p /completions && touch /completions/rune.bash /completions/_rune /completions/rune.fish; \
     fi
 
-# Runtime stage
-FROM debian:bookworm-slim
+# Runtime stage - Using newer base for GLIBC compatibility
+FROM debian:trixie-slim
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
