@@ -1,9 +1,9 @@
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use serde::{Deserialize, Serialize};
 
 /// Large Repository Optimization Module
 // Provides advanced techniques for handling repositories with millions of files
@@ -143,7 +143,7 @@ impl Default for LargeRepoConfig {
         Self {
             max_cache_objects: 10_000,
             max_cache_size_bytes: 512 * 1024 * 1024, // 512MB
-            chunk_size_bytes: 64 * 1024, // 64KB chunks
+            chunk_size_bytes: 64 * 1024,             // 64KB chunks
             parallel_workers: num_cpus::get(),
             progressive_loading: true,
             gc_memory_threshold: 1024 * 1024 * 1024, // 1GB
@@ -171,7 +171,8 @@ impl LargeRepoOptimizer {
 
         // Progressive directory scanning
         if self.config.progressive_loading {
-            self.progressive_directory_scan(repo_path, &mut report).await?;
+            self.progressive_directory_scan(repo_path, &mut report)
+                .await?;
         } else {
             self.full_directory_scan(repo_path, &mut report).await?;
         }
@@ -189,7 +190,7 @@ impl LargeRepoOptimizer {
     /// Process large files with chunking
     pub async fn process_large_file(&self, file_path: &Path) -> Result<ProcessingResult> {
         let file_size = std::fs::metadata(file_path)?.len();
-        
+
         if file_size > self.config.chunk_size_bytes as u64 * 10 {
             // Use chunked processing for very large files
             self.chunked_file_processing(file_path).await
@@ -215,17 +216,17 @@ impl LargeRepoOptimizer {
 
         // Load from storage
         let data = self.load_object_from_storage(object_id).await?;
-        
+
         // Add to cache
         self.cache_object(object_id, &data).await?;
-        
+
         Ok(data)
     }
 
     /// Optimize memory usage
     pub async fn optimize_memory(&self) -> Result<MemoryOptimizationReport> {
         let mut report = MemoryOptimizationReport::new();
-        
+
         // Check current memory usage
         let current_usage = self.memory_monitor.current_usage;
         report.initial_memory = current_usage;
@@ -245,15 +246,19 @@ impl LargeRepoOptimizer {
     }
 
     /// Parallel object processing
-    pub async fn parallel_object_processing(&self, object_ids: Vec<String>) -> Result<Vec<ProcessingResult>> {
+    pub async fn parallel_object_processing(
+        &self,
+        object_ids: Vec<String>,
+    ) -> Result<Vec<ProcessingResult>> {
         use futures::future::try_join_all;
-        
+
         // Split into chunks for parallel processing
         let chunk_size = self.config.parallel_workers;
         let mut results = Vec::new();
 
         for chunk in object_ids.chunks(chunk_size) {
-            let futures: Vec<_> = chunk.iter()
+            let futures: Vec<_> = chunk
+                .iter()
                 .map(|id| self.process_object_async(id.clone()))
                 .collect();
 
@@ -281,7 +286,11 @@ impl LargeRepoOptimizer {
 
     // Private implementation methods
 
-    async fn progressive_directory_scan(&self, _path: &Path, report: &mut LoadingReport) -> Result<()> {
+    async fn progressive_directory_scan(
+        &self,
+        _path: &Path,
+        report: &mut LoadingReport,
+    ) -> Result<()> {
         // Implement progressive scanning with lazy loading
         report.scanned_directories += 1;
         Ok(())
@@ -328,19 +337,22 @@ impl LargeRepoOptimizer {
 
     async fn cache_object(&self, object_id: &str, data: &[u8]) -> Result<()> {
         let mut cache = self.object_cache.write().await;
-        
+
         // Check cache size limits
         if cache.len() >= self.config.max_cache_objects {
             self.evict_least_used(&mut cache).await;
         }
 
-        cache.insert(object_id.to_string(), CachedObject {
-            id: object_id.to_string(),
-            data: data.to_vec(),
-            last_accessed: chrono::Utc::now(),
-            access_count: 1,
-            compressed_size: None,
-        });
+        cache.insert(
+            object_id.to_string(),
+            CachedObject {
+                id: object_id.to_string(),
+                data: data.to_vec(),
+                last_accessed: chrono::Utc::now(),
+                access_count: 1,
+                compressed_size: None,
+            },
+        );
 
         Ok(())
     }
@@ -356,11 +368,11 @@ impl LargeRepoOptimizer {
     async fn garbage_collect_cache(&self) -> Result<u64> {
         let mut cache = self.object_cache.write().await;
         let initial_size = cache.len();
-        
+
         // Remove least recently used objects
         let cutoff = chrono::Utc::now() - chrono::Duration::hours(1);
         cache.retain(|_, obj| obj.last_accessed > cutoff);
-        
+
         let freed = initial_size - cache.len();
         Ok(freed as u64 * 1024) // Approximate bytes freed
     }
@@ -371,7 +383,8 @@ impl LargeRepoOptimizer {
     }
 
     async fn evict_least_used(&self, cache: &mut HashMap<String, CachedObject>) {
-        if let Some((id, _)) = cache.iter()
+        if let Some((id, _)) = cache
+            .iter()
             .min_by_key(|(_, obj)| (obj.access_count, obj.last_accessed))
             .map(|(k, v)| (k.clone(), v.clone()))
         {

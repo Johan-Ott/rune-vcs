@@ -157,9 +157,10 @@ impl Store {
     /// Create a new branch pointing to the current HEAD
     pub fn create_branch(&self, name: &str) -> Result<()> {
         let current_head = self.head_ref();
-        let current_commit_id = self.read_ref(&current_head)
+        let current_commit_id = self
+            .read_ref(&current_head)
             .ok_or_else(|| anyhow::anyhow!("Current branch has no commits"))?;
-        
+
         let branch_ref = format!("refs/heads/{}", name);
         self.write_ref(&branch_ref, &current_commit_id)?;
         Ok(())
@@ -169,7 +170,7 @@ impl Store {
     pub fn list_branches(&self) -> Result<Vec<String>> {
         let mut branches = Vec::new();
         let heads_dir = self.rune_dir.join("refs/heads");
-        
+
         if heads_dir.exists() {
             for entry in walkdir::WalkDir::new(&heads_dir) {
                 let entry = entry?;
@@ -181,7 +182,7 @@ impl Store {
                 }
             }
         }
-        
+
         Ok(branches)
     }
 
@@ -194,12 +195,12 @@ impl Store {
     /// Checkout (switch to) a branch
     pub fn checkout_branch(&self, name: &str) -> Result<()> {
         let branch_ref = format!("refs/heads/{}", name);
-        
+
         // Check if branch exists
         if !self.branch_exists(name) {
             return Err(anyhow::anyhow!("Branch '{}' does not exist", name));
         }
-        
+
         // Set HEAD to point to the new branch
         self.set_head(&branch_ref)?;
         Ok(())
@@ -220,12 +221,12 @@ impl Store {
         let index = self.read_index().unwrap_or_default();
         let mut staging = Vec::new();
         let mut working = Vec::new();
-        
+
         // Check staged files
         for (path, _) in &index.entries {
             staging.push(path.clone());
         }
-        
+
         // Check working directory for modifications
         // This is a simplified implementation
         for entry in walkdir::WalkDir::new(&self.root) {
@@ -234,12 +235,12 @@ impl Store {
                 let file_path = entry.path();
                 if let Ok(relative_path) = file_path.strip_prefix(&self.root) {
                     let relative_str = relative_path.to_string_lossy().to_string();
-                    
+
                     // Skip .rune directory
                     if relative_str.starts_with(".rune") {
                         continue;
                     }
-                    
+
                     // Check if file is modified but not staged
                     if !staging.contains(&relative_str) {
                         working.push(relative_str);
@@ -247,24 +248,32 @@ impl Store {
                 }
             }
         }
-        
+
         Ok(Status { staging, working })
     }
 
     /// Merge a branch into the current branch
-    pub fn merge_branch(&self, branch_name: &str, no_ff: bool, strategy: Option<&str>) -> Result<MergeResult> {
-        let current_branch = self.current_branch()
+    pub fn merge_branch(
+        &self,
+        branch_name: &str,
+        no_ff: bool,
+        strategy: Option<&str>,
+    ) -> Result<MergeResult> {
+        let current_branch = self
+            .current_branch()
             .ok_or_else(|| anyhow::anyhow!("Not on a branch"))?;
-        
-        let current_commit_id = self.read_ref(&format!("refs/heads/{}", current_branch))
+
+        let current_commit_id = self
+            .read_ref(&format!("refs/heads/{}", current_branch))
             .ok_or_else(|| anyhow::anyhow!("Current branch has no commits"))?;
-        
-        let merge_commit_id = self.read_ref(&format!("refs/heads/{}", branch_name))
+
+        let merge_commit_id = self
+            .read_ref(&format!("refs/heads/{}", branch_name))
             .ok_or_else(|| anyhow::anyhow!("Branch '{}' has no commits", branch_name))?;
-        
+
         // Check if this is a fast-forward merge (merge commit is ahead of current)
         let is_fast_forward = self.is_ancestor(&current_commit_id, &merge_commit_id)?;
-        
+
         // Check for uncommitted changes
         let status = self.status()?;
         if !status.working.is_empty() || !status.staging.is_empty() {
@@ -272,7 +281,7 @@ impl Store {
                 "Please commit or stash your changes before merging.\nUncommitted changes in working directory"
             ));
         }
-        
+
         if is_fast_forward && !no_ff {
             // Fast-forward merge: just update the current branch to point to the merge commit
             self.write_ref(&format!("refs/heads/{}", current_branch), &merge_commit_id)?;
@@ -280,7 +289,7 @@ impl Store {
         } else {
             // Check for potential conflicts before starting merge
             let conflicts = self.detect_merge_conflicts(&current_commit_id, &merge_commit_id)?;
-            
+
             if !conflicts.is_empty() {
                 // Save merge state for abort/continue
                 self.save_merge_state(branch_name, &current_commit_id, &merge_commit_id, strategy)?;
@@ -288,14 +297,15 @@ impl Store {
                 self.apply_merge_conflicts(&conflicts)?;
                 return Ok(MergeResult::Conflicts(conflicts));
             }
-            
+
             // Create a merge commit (no conflicts)
             let mut message = format!("Merge branch '{}' into {}", branch_name, current_branch);
             if let Some(strat) = strategy {
                 message.push_str(&format!(" (strategy: {})", strat));
             }
-            
-            let merge_commit = self.create_merge_commit(&current_commit_id, &merge_commit_id, &message)?;
+
+            let merge_commit =
+                self.create_merge_commit(&current_commit_id, &merge_commit_id, &message)?;
             self.write_ref(&format!("refs/heads/{}", current_branch), &merge_commit)?;
             return Ok(MergeResult::Success);
         }
@@ -312,17 +322,17 @@ impl Store {
     fn create_merge_commit(&self, parent1: &str, _parent2: &str, message: &str) -> Result<String> {
         use chrono::Utc;
         use std::io::Write;
-        
+
         // Get current index (staged files) - for merge, we'll use current files
         let index = self.read_index().unwrap_or_default();
         let current_branch = self.current_branch().unwrap_or_else(|| "main".to_string());
-        
+
         // Create a simple author (in a real implementation, this would come from config)
         let author = Author {
             name: "Rune User".to_string(),
             email: "user@example.com".to_string(),
         };
-        
+
         let files = index.entries.keys().cloned().collect::<Vec<_>>();
         let hash = blake3::hash(
             format!(
@@ -335,7 +345,7 @@ impl Store {
             .as_bytes(),
         );
         let id = hex::encode(hash.as_bytes());
-        
+
         // Create commit with the merge parent (parent1 is current, parent2 is merged branch)
         // Note: The current Commit struct only supports one parent, so we'll use parent1
         // and record the merge in the message. TODO: Extend Commit to support multiple parents
@@ -348,14 +358,14 @@ impl Store {
             files,
             branch: format!("refs/heads/{}", current_branch),
         };
-        
+
         // Write commit to log
         let mut f = fs::OpenOptions::new()
             .create(true)
             .append(true)
             .open(self.rune_dir.join("log.jsonl"))?;
         writeln!(f, "{}", serde_json::to_string(&c)?)?;
-        
+
         Ok(id)
     }
 
@@ -363,11 +373,11 @@ impl Store {
     pub fn delete_branch(&self, name: &str) -> Result<()> {
         let branch_ref = format!("refs/heads/{}", name);
         let branch_file = self.rune_dir.join(&branch_ref);
-        
+
         if !branch_file.exists() {
             return Err(anyhow::anyhow!("Branch '{}' does not exist", name));
         }
-        
+
         std::fs::remove_file(branch_file)?;
         Ok(())
     }
@@ -378,27 +388,27 @@ impl Store {
         let new_ref = format!("refs/heads/{}", new_name);
         let old_file = self.rune_dir.join(&old_ref);
         let new_file = self.rune_dir.join(&new_ref);
-        
+
         if !old_file.exists() {
             return Err(anyhow::anyhow!("Branch '{}' does not exist", old_name));
         }
-        
+
         // Ensure directory exists for new branch
         if let Some(parent) = new_file.parent() {
             std::fs::create_dir_all(parent)?;
         }
-        
+
         // Copy the branch reference
         std::fs::copy(&old_file, &new_file)?;
         std::fs::remove_file(old_file)?;
-        
+
         // Update HEAD if we're renaming the current branch
         if let Some(current) = self.current_branch() {
             if current == old_name {
                 self.set_head(&new_ref)?;
             }
         }
-        
+
         Ok(())
     }
 
@@ -418,7 +428,7 @@ impl Store {
     pub fn create_lightweight_tag(&self, name: &str, commit: &str) -> Result<()> {
         let tags_dir = self.rune_dir.join("refs/tags");
         std::fs::create_dir_all(&tags_dir)?;
-        
+
         let tag_file = tags_dir.join(name);
         std::fs::write(tag_file, commit)?;
         Ok(())
@@ -428,7 +438,7 @@ impl Store {
     pub fn create_annotated_tag(&self, name: &str, commit: &str, message: &str) -> Result<()> {
         let tags_dir = self.rune_dir.join("refs/tags");
         std::fs::create_dir_all(&tags_dir)?;
-        
+
         // For now, we'll store annotated tags the same as lightweight tags
         // In a full implementation, we'd create a tag object with the message
         let tag_file = tags_dir.join(name);
@@ -439,11 +449,11 @@ impl Store {
     /// Delete a tag
     pub fn delete_tag(&self, name: &str) -> Result<()> {
         let tag_file = self.rune_dir.join("refs/tags").join(name);
-        
+
         if !tag_file.exists() {
             return Err(anyhow::anyhow!("Tag '{}' does not exist", name));
         }
-        
+
         std::fs::remove_file(tag_file)?;
         Ok(())
     }
@@ -452,7 +462,7 @@ impl Store {
     pub fn list_tags(&self) -> Result<Vec<String>> {
         let mut tags = Vec::new();
         let tags_dir = self.rune_dir.join("refs/tags");
-        
+
         if tags_dir.exists() {
             for entry in std::fs::read_dir(tags_dir)? {
                 let entry = entry?;
@@ -461,7 +471,7 @@ impl Store {
                 }
             }
         }
-        
+
         tags.sort();
         Ok(tags)
     }
@@ -469,7 +479,7 @@ impl Store {
     /// Get the commit ID that a tag points to
     pub fn tag_commit(&self, name: &str) -> Option<String> {
         let tag_file = self.rune_dir.join("refs/tags").join(name);
-        
+
         if let Ok(content) = std::fs::read_to_string(tag_file) {
             // For lightweight tags, the file contains just the commit ID
             // For annotated tags, the first line is the commit ID
@@ -488,7 +498,9 @@ impl Store {
                 if parts.len() == 2 {
                     self.diff_commits(parts[0], parts[1])
                 } else {
-                    Err(anyhow::anyhow!("Invalid range format. Use commit1..commit2"))
+                    Err(anyhow::anyhow!(
+                        "Invalid range format. Use commit1..commit2"
+                    ))
                 }
             } else {
                 // Single commit diff (show changes from parent to this commit)
@@ -505,7 +517,7 @@ impl Store {
         let mut diff_output = String::new();
         let current_branch = self.head_ref();
         let latest_commit_id = self.read_ref(&current_branch);
-        
+
         if latest_commit_id.is_none() {
             return Ok("No commits yet. All files are new.".to_string());
         }
@@ -513,26 +525,27 @@ impl Store {
         // Get all files in working directory
         let mut working_files = std::collections::HashSet::new();
         self.collect_files(&self.root, &mut working_files)?;
-        
+
         // For simplicity, show a basic status-like diff for now
         let index = self.read_index()?;
-        
+
         for file_path in &working_files {
             if file_path.starts_with(".rune/") {
                 continue; // Skip .rune directory
             }
-            
-            let relative_path = file_path.strip_prefix(&self.root)
+
+            let relative_path = file_path
+                .strip_prefix(&self.root)
                 .unwrap_or(file_path.as_path())
                 .to_string_lossy();
-            
+
             if index.entries.contains_key(&relative_path.to_string()) {
                 diff_output.push_str(&format!("M  {}\n", relative_path));
             } else {
                 diff_output.push_str(&format!("??  {}\n", relative_path));
             }
         }
-        
+
         if diff_output.is_empty() {
             Ok("No changes in working directory.".to_string())
         } else {
@@ -543,63 +556,75 @@ impl Store {
     /// Show differences for a specific commit (compared to its parent)
     fn diff_commit(&self, commit_id: &str) -> Result<String> {
         let commits = self.log();
-        let commit = commits.iter()
+        let commit = commits
+            .iter()
             .find(|c| c.id.starts_with(commit_id))
             .ok_or_else(|| anyhow::anyhow!("Commit '{}' not found", commit_id))?;
-        
+
         let mut diff_output = format!("commit {}\n", commit.id);
-        diff_output.push_str(&format!("Author: {} <{}>\n", commit.author.name, commit.author.email));
-        diff_output.push_str(&format!("Date: {}\n\n", 
+        diff_output.push_str(&format!(
+            "Author: {} <{}>\n",
+            commit.author.name, commit.author.email
+        ));
+        diff_output.push_str(&format!(
+            "Date: {}\n\n",
             chrono::DateTime::<chrono::Utc>::from_timestamp(commit.time, 0)
                 .unwrap_or_default()
-                .format("%Y-%m-%d %H:%M:%S UTC")));
+                .format("%Y-%m-%d %H:%M:%S UTC")
+        ));
         diff_output.push_str(&format!("    {}\n\n", commit.message));
-        
+
         for file in &commit.files {
             diff_output.push_str(&format!("+++ {}\n", file));
         }
-        
+
         Ok(diff_output)
     }
 
     /// Show differences between two commits
     fn diff_commits(&self, commit1: &str, commit2: &str) -> Result<String> {
         let commits = self.log();
-        
-        let c1 = commits.iter()
+
+        let c1 = commits
+            .iter()
             .find(|c| c.id.starts_with(commit1))
             .ok_or_else(|| anyhow::anyhow!("Commit '{}' not found", commit1))?;
-            
-        let c2 = commits.iter()
+
+        let c2 = commits
+            .iter()
             .find(|c| c.id.starts_with(commit2))
             .ok_or_else(|| anyhow::anyhow!("Commit '{}' not found", commit2))?;
-        
+
         let mut diff_output = format!("diff {}..{}\n", c1.id, c2.id);
-        
+
         // Simple implementation: show files that changed between commits
         let files1: std::collections::HashSet<_> = c1.files.iter().collect();
         let files2: std::collections::HashSet<_> = c2.files.iter().collect();
-        
+
         // Files only in commit2 (added)
         for file in files2.difference(&files1) {
             diff_output.push_str(&format!("+++ {}\n", file));
         }
-        
+
         // Files only in commit1 (removed)
         for file in files1.difference(&files2) {
             diff_output.push_str(&format!("--- {}\n", file));
         }
-        
+
         // Files in both (potentially modified - simplified)
         for file in files1.intersection(&files2) {
             diff_output.push_str(&format!("    {}\n", file));
         }
-        
+
         Ok(diff_output)
     }
 
     /// Helper method to collect all files in a directory
-    fn collect_files(&self, dir: &std::path::Path, files: &mut std::collections::HashSet<std::path::PathBuf>) -> Result<()> {
+    fn collect_files(
+        &self,
+        dir: &std::path::Path,
+        files: &mut std::collections::HashSet<std::path::PathBuf>,
+    ) -> Result<()> {
         if dir.is_dir() {
             for entry in fs::read_dir(dir)? {
                 let entry = entry?;
@@ -679,43 +704,43 @@ impl Store {
         writeln!(f, "{}", serde_json::to_string(&c)?)?;
         self.write_ref(&branch, &id)?;
         self.write_index(&Index::default())?;
-        
+
         // Update reflog entry
         self.update_reflog(&branch, &id, &format!("commit: {}", msg))?;
-        
+
         Ok(c)
     }
 
     pub fn commit_amend(&self, msg: &str, edit_message: bool, author: Author) -> Result<Commit> {
         let idx = self.read_index()?;
         let mut log = self.log();
-        
+
         if log.is_empty() {
             anyhow::bail!("no commits to amend");
         }
-        
+
         // Check if merge is in progress
         if self.rune_dir.join("MERGE_HEAD").exists() {
             anyhow::bail!("cannot amend during merge");
         }
-        
+
         let last_commit = &log[0];
         let branch = self.head_ref();
-        
+
         // Use provided message if edit_message is true, otherwise keep original
         let commit_message = if edit_message {
             msg.to_string()
         } else {
             last_commit.message.clone()
         };
-        
+
         // If index is empty, use files from last commit
         let files = if idx.entries.is_empty() {
             last_commit.files.clone()
         } else {
             idx.entries.keys().cloned().collect::<Vec<_>>()
         };
-        
+
         // Create new commit hash
         let hash = blake3::hash(
             format!(
@@ -728,7 +753,7 @@ impl Store {
             .as_bytes(),
         );
         let id = hex::encode(hash.as_bytes());
-        
+
         // Create amended commit with same parent as original
         let amended_commit = Commit {
             id: id.clone(),
@@ -739,71 +764,74 @@ impl Store {
             files,
             branch: branch.clone(),
         };
-        
+
         // Remove the last commit from log and add amended commit
         log.remove(0);
         log.insert(0, amended_commit.clone());
-        
+
         // Rewrite the entire log file
         let log_path = self.rune_dir.join("log.jsonl");
         fs::remove_file(&log_path).ok(); // Remove old log
-        
+
         let mut f = fs::OpenOptions::new()
             .create(true)
             .write(true)
             .open(&log_path)?;
-        
+
         for commit in log.iter().rev() {
             writeln!(f, "{}", serde_json::to_string(commit)?)?;
         }
-        
+
         // Update branch ref to point to amended commit
         self.write_ref(&branch, &id)?;
-        
+
         // Clear index if it had changes
         if !idx.entries.is_empty() {
             self.write_index(&Index::default())?;
         }
-        
+
         // Update reflog entry
         self.update_reflog(&branch, &id, &format!("commit (amend): {}", commit_message))?;
-        
+
         Ok(amended_commit)
     }
 
     fn update_reflog(&self, ref_name: &str, commit_id: &str, message: &str) -> Result<()> {
         let reflog_dir = self.rune_dir.join("logs");
         fs::create_dir_all(&reflog_dir)?;
-        
+
         let reflog_path = reflog_dir.join(ref_name.replace("/", "_"));
         let mut f = fs::OpenOptions::new()
             .create(true)
             .append(true)
             .open(reflog_path)?;
-        
-        writeln!(f, "{} {} {}", 
-            Utc::now().timestamp(), 
-            commit_id, 
-            message
-        )?;
-        
+
+        writeln!(f, "{} {} {}", Utc::now().timestamp(), commit_id, message)?;
+
         Ok(())
     }
 
-    pub fn revert_commit(&self, commit_id: &str, mainline: Option<usize>, no_commit: bool, author: Author) -> Result<Commit> {
+    pub fn revert_commit(
+        &self,
+        commit_id: &str,
+        mainline: Option<usize>,
+        no_commit: bool,
+        author: Author,
+    ) -> Result<Commit> {
         let log = self.log();
-        
+
         // Find the commit to revert
-        let target_commit = log.iter()
+        let target_commit = log
+            .iter()
             .find(|c| c.id == commit_id || c.id.starts_with(commit_id))
             .ok_or_else(|| anyhow::anyhow!("commit '{}' not found", commit_id))?;
-        
+
         // Check if it's a merge commit and handle mainline
         if target_commit.parent.is_some() && mainline.is_some() {
             // TODO: Handle merge commits with multiple parents
             // For now, we'll treat it as a regular commit
         }
-        
+
         // Get the parent commit to see what was there before
         let parent_files = if let Some(ref parent_id) = target_commit.parent {
             log.iter()
@@ -813,15 +841,15 @@ impl Store {
         } else {
             Vec::new() // If no parent, this was the initial commit
         };
-        
+
         // Create inverse changes:
         // 1. Files that were added in target_commit should be removed
         // 2. Files that were removed in target_commit should be restored
         // 3. Files that were modified should be reverted to parent state
-        
+
         let mut revert_files = Vec::new();
         let mut staged_files = std::collections::BTreeMap::new();
-        
+
         // Files in target commit that weren't in parent = added files (should be removed)
         for file in &target_commit.files {
             if !parent_files.contains(file) {
@@ -836,10 +864,16 @@ impl Store {
                 revert_files.push(file.clone());
                 // Stage the current state for the revert commit
                 let metadata = fs::metadata(self.root.join(file))?;
-                staged_files.insert(file.clone(), metadata.modified()?.duration_since(std::time::UNIX_EPOCH)?.as_secs() as i64);
+                staged_files.insert(
+                    file.clone(),
+                    metadata
+                        .modified()?
+                        .duration_since(std::time::UNIX_EPOCH)?
+                        .as_secs() as i64,
+                );
             }
         }
-        
+
         // Files in parent that aren't in target = removed files (should be restored)
         for file in &parent_files {
             if !target_commit.files.contains(file) {
@@ -852,13 +886,21 @@ impl Store {
                 fs::write(&file_path, format!("# Restored file: {}\n", file))?;
                 revert_files.push(file.clone());
                 let metadata = fs::metadata(&file_path)?;
-                staged_files.insert(file.clone(), metadata.modified()?.duration_since(std::time::UNIX_EPOCH)?.as_secs() as i64);
+                staged_files.insert(
+                    file.clone(),
+                    metadata
+                        .modified()?
+                        .duration_since(std::time::UNIX_EPOCH)?
+                        .as_secs() as i64,
+                );
             }
         }
-        
+
         if no_commit {
             // Just apply changes to working directory and index
-            let index = Index { entries: staged_files };
+            let index = Index {
+                entries: staged_files,
+            };
             self.write_index(&index)?;
             return Ok(Commit {
                 id: "no-commit".to_string(),
@@ -870,12 +912,12 @@ impl Store {
                 branch: self.head_ref(),
             });
         }
-        
+
         // Create revert commit
         let revert_message = format!("Revert \"{}\"", target_commit.message);
         let branch = self.head_ref();
         let branch_head = self.read_ref(&branch);
-        
+
         let hash = blake3::hash(
             format!(
                 "{}{}{:?}{}",
@@ -887,7 +929,7 @@ impl Store {
             .as_bytes(),
         );
         let id = hex::encode(hash.as_bytes());
-        
+
         let revert_commit = Commit {
             id: id.clone(),
             message: revert_message.clone(),
@@ -897,23 +939,23 @@ impl Store {
             files: revert_files,
             branch: branch.clone(),
         };
-        
+
         // Add to log
         let mut f = fs::OpenOptions::new()
             .create(true)
             .append(true)
             .open(self.rune_dir.join("log.jsonl"))?;
         writeln!(f, "{}", serde_json::to_string(&revert_commit)?)?;
-        
+
         // Update branch ref
         self.write_ref(&branch, &id)?;
-        
+
         // Clear index
         self.write_index(&Index::default())?;
-        
+
         // Update reflog
         self.update_reflog(&branch, &id, &format!("revert: {}", target_commit.message))?;
-        
+
         Ok(revert_commit)
     }
 
@@ -934,7 +976,7 @@ impl Store {
         if files.is_empty() {
             // Reset entire staging area
             self.reset_staging_area()?;
-            
+
             if hard {
                 self.reset_working_directory()?;
             }
@@ -944,7 +986,7 @@ impl Store {
                 self.reset_file(file, hard)?;
             }
         }
-        
+
         Ok(())
     }
 
@@ -957,41 +999,50 @@ impl Store {
     /// Reset working directory to match HEAD (destructive)
     fn reset_working_directory(&self) -> Result<()> {
         let head_ref = self.head_ref();
-        let head_commit_id = self.read_ref(&head_ref)
+        let head_commit_id = self
+            .read_ref(&head_ref)
             .ok_or_else(|| anyhow::anyhow!("No commits found - cannot reset working directory"))?;
-        
+
         let commit = self.get_commit(&head_commit_id)?;
-        
+
         // For our simplified implementation, just recreate the files from commit
         // In a real VCS, we would restore the exact blob contents
         for file_path in &commit.files {
             let file_full_path = self.root.join(file_path);
-            
+
             // If the file doesn't exist, create a placeholder (this is simplified)
             if !file_full_path.exists() {
                 if let Some(parent) = file_full_path.parent() {
                     fs::create_dir_all(parent)?;
                 }
                 // Create file with basic content (simplified for demo)
-                fs::write(file_full_path, format!("Content for {} (restored from commit {})", file_path, &head_commit_id[..8]))?;
+                fs::write(
+                    file_full_path,
+                    format!(
+                        "Content for {} (restored from commit {})",
+                        file_path,
+                        &head_commit_id[..8]
+                    ),
+                )?;
             }
         }
-        
+
         Ok(())
     }
 
     /// Reset a specific file from staging and optionally working directory
     fn reset_file(&self, file_path: &std::path::Path, hard: bool) -> Result<()> {
-        let rel_path = file_path.strip_prefix(&self.root)
+        let rel_path = file_path
+            .strip_prefix(&self.root)
             .unwrap_or(file_path)
             .to_string_lossy()
             .to_string();
-        
+
         // Remove from staging area
         let mut index = self.read_index()?;
         index.entries.remove(&rel_path);
         self.write_index(&index)?;
-        
+
         if hard {
             // Reset file in working directory to HEAD version
             let head_ref = self.head_ref();
@@ -1005,7 +1056,7 @@ impl Store {
                 }
             }
         }
-        
+
         Ok(())
     }
 
@@ -1014,23 +1065,27 @@ impl Store {
         for entry in fs::read_dir(&self.root)? {
             let entry = entry?;
             let path = entry.path();
-            
+
             if path.file_name() == Some(std::ffi::OsStr::new(".rune")) {
                 continue; // Skip .rune directory
             }
-            
+
             if path.is_file() {
                 fs::remove_file(path)?;
             } else if path.is_dir() {
                 fs::remove_dir_all(path)?;
             }
         }
-        
+
         Ok(())
     }
 
     /// Restore a file from a specific commit
-    pub fn restore_file_from_commit(&self, commit_id: &str, file_path: &std::path::Path) -> Result<()> {
+    pub fn restore_file_from_commit(
+        &self,
+        commit_id: &str,
+        file_path: &std::path::Path,
+    ) -> Result<()> {
         let file_path_str = file_path.to_string_lossy();
         self.restore_file_from_commit_str(&file_path_str, commit_id)
     }
@@ -1038,23 +1093,26 @@ impl Store {
     /// Restore a file from a specific commit (internal implementation)
     fn restore_file_from_commit_str(&self, file_path: &str, commit_id: &str) -> Result<()> {
         let commit = self.get_commit(commit_id)?;
-        
+
         if commit.files.contains(&file_path.to_string()) {
             // Read the blob content from the objects directory
-            let blob_path = self.rune_dir.join("objects").join(format!("{}.blob", file_path.replace("/", "_")));
+            let blob_path = self
+                .rune_dir
+                .join("objects")
+                .join(format!("{}.blob", file_path.replace("/", "_")));
             if blob_path.exists() {
                 let content = fs::read(blob_path)?;
                 let dest_path = self.root.join(file_path);
-                
+
                 // Create parent directories if they don't exist
                 if let Some(parent) = dest_path.parent() {
                     fs::create_dir_all(parent)?;
                 }
-                
+
                 fs::write(dest_path, content)?;
             }
         }
-        
+
         Ok(())
     }
 
@@ -1070,37 +1128,47 @@ impl Store {
         // Create directories (this is safe even if they exist)
         fs::create_dir_all(self.rune_dir.join("objects"))?;
         fs::create_dir_all(self.rune_dir.join("refs/heads"))?;
-        
+
         // Only create main branch if it doesn't exist
         let main_ref = self.rune_dir.join("refs/heads/main");
         if !main_ref.exists() {
             fs::write(main_ref, b"")?;
         }
-        
+
         // Only set HEAD if it doesn't exist
         let head_file = self.rune_dir.join("HEAD");
         if !head_file.exists() {
             self.set_head("refs/heads/main")?;
         }
-        
+
         // Only create index if it doesn't exist
         let index_file = self.rune_dir.join("index.json");
         if !index_file.exists() {
             self.write_index(&Index::default())?;
         }
-        
+
         Ok(())
     }
 
     /// Detect merge conflicts between two commits
-    fn detect_merge_conflicts(&self, _current_commit: &str, _merge_commit: &str) -> Result<Vec<String>> {
+    fn detect_merge_conflicts(
+        &self,
+        _current_commit: &str,
+        _merge_commit: &str,
+    ) -> Result<Vec<String>> {
         // Simplified implementation - in a real system, this would compare file trees
         // For now, we'll simulate some conflicts for demonstration
         Ok(vec![]) // No conflicts for now
     }
 
     /// Save merge state for abort/continue operations
-    fn save_merge_state(&self, branch_name: &str, current_commit: &str, merge_commit: &str, strategy: Option<&str>) -> Result<()> {
+    fn save_merge_state(
+        &self,
+        branch_name: &str,
+        current_commit: &str,
+        merge_commit: &str,
+        strategy: Option<&str>,
+    ) -> Result<()> {
         #[derive(Serialize)]
         struct MergeState {
             branch_name: String,
@@ -1175,19 +1243,29 @@ impl Store {
 
         // Check if all conflicts are resolved (no files with conflict markers)
         if self.has_unresolved_conflicts()? {
-            return Err(anyhow::anyhow!("Please resolve all conflicts before continuing"));
+            return Err(anyhow::anyhow!(
+                "Please resolve all conflicts before continuing"
+            ));
         }
 
         // Create merge commit
-        let current_branch = self.current_branch()
+        let current_branch = self
+            .current_branch()
             .ok_or_else(|| anyhow::anyhow!("Not on a branch"))?;
-        
-        let mut message = format!("Merge branch '{}' into {}", merge_state.branch_name, current_branch);
+
+        let mut message = format!(
+            "Merge branch '{}' into {}",
+            merge_state.branch_name, current_branch
+        );
         if let Some(strategy) = merge_state.strategy {
             message.push_str(&format!(" (strategy: {})", strategy));
         }
 
-        let merge_commit = self.create_merge_commit(&merge_state.current_commit, &merge_state.merge_commit, &message)?;
+        let merge_commit = self.create_merge_commit(
+            &merge_state.current_commit,
+            &merge_state.merge_commit,
+            &message,
+        )?;
         self.write_ref(&format!("refs/heads/{}", current_branch), &merge_commit)?;
 
         // Remove merge state file
@@ -1250,17 +1328,23 @@ impl Store {
 
         // Check if all conflicts are resolved
         if self.has_unresolved_conflicts()? {
-            return Err(anyhow::anyhow!("Please resolve all conflicts before continuing"));
+            return Err(anyhow::anyhow!(
+                "Please resolve all conflicts before continuing"
+            ));
         }
 
         // Apply current commit
         if !rebase_state.current_commit.is_empty() {
             // Create a new commit with resolved changes
-            let current_branch = self.current_branch()
+            let current_branch = self
+                .current_branch()
                 .ok_or_else(|| anyhow::anyhow!("Not on a branch"))?;
-            
+
             // For now, just update the branch ref (simplified)
-            self.write_ref(&format!("refs/heads/{}", current_branch), &rebase_state.current_commit)?;
+            self.write_ref(
+                &format!("refs/heads/{}", current_branch),
+                &rebase_state.current_commit,
+            )?;
         }
 
         // Continue with remaining commits or finish rebase
@@ -1313,19 +1397,24 @@ impl Store {
     pub fn show_file_at_commit(&self, commit_id: &str, file_path: &str) -> Result<String> {
         // Find the commit
         let commits = self.log();
-        let commit = commits.iter()
+        let commit = commits
+            .iter()
             .find(|c| c.id == commit_id || c.id.starts_with(commit_id))
             .ok_or_else(|| anyhow::anyhow!("Commit '{}' not found", commit_id))?;
 
         // Check if file exists in this commit
         if !commit.files.contains(&file_path.to_string()) {
-            return Err(anyhow::anyhow!("File '{}' not found in commit {}", file_path, commit_id));
+            return Err(anyhow::anyhow!(
+                "File '{}' not found in commit {}",
+                file_path,
+                commit_id
+            ));
         }
 
         // For now, we'll try to read from the current working directory
         // In a real implementation, this would read from the commit's file tree
         let file_full_path = self.root.join(file_path);
-        
+
         if file_full_path.exists() {
             Ok(fs::read_to_string(file_full_path)?)
         } else {
@@ -1360,7 +1449,7 @@ impl Store {
             .take(10) // Check last 10 commits
             .filter(|c| c.files.contains(&file_path.to_string()))
             .count();
-        
+
         Ok(recent_commits_with_file >= 2)
     }
 
@@ -1382,8 +1471,8 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::TempDir;
     use std::fs;
+    use tempfile::TempDir;
 
     fn create_initialized_store() -> (TempDir, Store) {
         let temp_dir = TempDir::new().unwrap();
@@ -1396,7 +1485,7 @@ mod tests {
     fn test_store_open() {
         let temp_dir = TempDir::new().unwrap();
         let store = Store::open(temp_dir.path()).unwrap();
-        
+
         assert_eq!(store.root, temp_dir.path());
         assert_eq!(store.rune_dir, temp_dir.path().join(".rune"));
     }
@@ -1404,11 +1493,11 @@ mod tests {
     #[test]
     fn test_store_discover() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         // Create subdirectory and test discovery
         let subdir = store.root.join("subdir");
         fs::create_dir_all(&subdir).unwrap();
-        
+
         let discovered = Store::discover(&subdir).unwrap();
         assert_eq!(discovered.root, store.root);
     }
@@ -1424,9 +1513,9 @@ mod tests {
     fn test_store_create() {
         let temp_dir = TempDir::new().unwrap();
         let store = Store::open(temp_dir.path()).unwrap();
-        
+
         store.create().unwrap();
-        
+
         // Verify directory structure
         assert!(store.rune_dir.join("objects").exists());
         assert!(store.rune_dir.join("refs/heads").exists());
@@ -1438,12 +1527,12 @@ mod tests {
     #[test]
     fn test_config_operations() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         // Test default config
         let config = store.config();
         assert_eq!(config.core.default_branch, "main");
         assert_eq!(config.lfs.chunk_size, 8 * 1024 * 1024);
-        
+
         // Test writing and reading config
         let new_config = RuneConfig {
             core: CoreCfg {
@@ -1455,10 +1544,10 @@ mod tests {
                 track: vec![],
             },
         };
-        
+
         store.write_config(&new_config).unwrap();
         let read_config = store.config();
-        
+
         assert_eq!(read_config.core.default_branch, "develop");
         assert_eq!(read_config.lfs.chunk_size, 1024);
     }
@@ -1466,11 +1555,11 @@ mod tests {
     #[test]
     fn test_head_ref_operations() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         // Test default head ref
         let head_ref = store.head_ref();
         assert_eq!(head_ref, "refs/heads/main");
-        
+
         // Test setting new head ref
         store.set_head("refs/heads/feature").unwrap();
         let new_head_ref = store.head_ref();
@@ -1480,16 +1569,16 @@ mod tests {
     #[test]
     fn test_ref_operations() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         let ref_name = "refs/heads/test";
         let commit_id = "abc123def456";
-        
+
         // Test writing and reading ref
         store.write_ref(ref_name, commit_id).unwrap();
         let read_id = store.read_ref(ref_name).unwrap();
-        
+
         assert_eq!(read_id, commit_id);
-        
+
         // Test reading non-existent ref
         let non_existent = store.read_ref("refs/heads/nonexistent");
         assert!(non_existent.is_none());
@@ -1498,19 +1587,23 @@ mod tests {
     #[test]
     fn test_index_operations() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         // Test default empty index
         let index = store.read_index().unwrap();
         assert!(index.entries.is_empty());
-        
+
         // Test writing and reading index
         let mut new_index = Index::default();
-        new_index.entries.insert("file1.txt".to_string(), 1234567890);
-        new_index.entries.insert("file2.txt".to_string(), 1234567891);
-        
+        new_index
+            .entries
+            .insert("file1.txt".to_string(), 1234567890);
+        new_index
+            .entries
+            .insert("file2.txt".to_string(), 1234567891);
+
         store.write_index(&new_index).unwrap();
         let read_index = store.read_index().unwrap();
-        
+
         assert_eq!(read_index.entries.len(), 2);
         assert_eq!(read_index.entries.get("file1.txt"), Some(&1234567890));
         assert_eq!(read_index.entries.get("file2.txt"), Some(&1234567891));
@@ -1519,15 +1612,15 @@ mod tests {
     #[test]
     fn test_stage_file() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         // Create a test file
         let test_file = "test.txt";
         let test_content = "Hello, World!";
         fs::write(store.root.join(test_file), test_content).unwrap();
-        
+
         // Stage the file
         store.stage_file(test_file).unwrap();
-        
+
         // Verify file was staged
         let index = store.read_index().unwrap();
         assert!(index.entries.contains_key(test_file));
@@ -1536,7 +1629,7 @@ mod tests {
     #[test]
     fn test_stage_nonexistent_file() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         let result = store.stage_file("nonexistent.txt");
         assert!(result.is_err());
     }
@@ -1544,27 +1637,27 @@ mod tests {
     #[test]
     fn test_commit() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         // Create and stage a test file
         let test_file = "test.txt";
         let test_content = "Hello, World!";
         fs::write(store.root.join(test_file), test_content).unwrap();
         store.stage_file(test_file).unwrap();
-        
+
         // Create commit
         let author = Author {
             name: "Test User".to_string(),
             email: "test@example.com".to_string(),
         };
-        
+
         let commit = store.commit("Initial commit", author.clone()).unwrap();
-        
+
         assert_eq!(commit.message, "Initial commit");
         assert_eq!(commit.author.name, "Test User");
         assert_eq!(commit.author.email, "test@example.com");
         assert_eq!(commit.files, vec![test_file.to_string()]);
         assert!(commit.parent.is_none()); // First commit has no parent
-        
+
         // Verify commit was logged
         let log = store.log();
         assert_eq!(log.len(), 1);
@@ -1574,44 +1667,47 @@ mod tests {
     #[test]
     fn test_commit_nothing_staged() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         let author = Author {
             name: "Test User".to_string(),
             email: "test@example.com".to_string(),
         };
-        
+
         let result = store.commit("Empty commit", author);
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("nothing to commit"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("nothing to commit"));
     }
 
     #[test]
     fn test_multiple_commits() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         let author = Author {
             name: "Test User".to_string(),
             email: "test@example.com".to_string(),
         };
-        
+
         // First commit
         fs::write(store.root.join("file1.txt"), "Content 1").unwrap();
         store.stage_file("file1.txt").unwrap();
         let commit1 = store.commit("First commit", author.clone()).unwrap();
-        
+
         // Second commit
         fs::write(store.root.join("file2.txt"), "Content 2").unwrap();
         store.stage_file("file2.txt").unwrap();
         let commit2 = store.commit("Second commit", author).unwrap();
-        
+
         // Verify commit history
         let log = store.log();
         assert_eq!(log.len(), 2);
-        
+
         // Find commits in log (order may vary)
         let commit1_in_log = log.iter().find(|c| c.id == commit1.id).unwrap();
         let commit2_in_log = log.iter().find(|c| c.id == commit2.id).unwrap();
-        
+
         assert_eq!(commit2_in_log.parent, Some(commit1.id.clone()));
         assert!(commit1_in_log.parent.is_none());
     }
@@ -1619,7 +1715,7 @@ mod tests {
     #[test]
     fn test_empty_log() {
         let (_temp_dir, store) = create_initialized_store();
-        
+
         let log = store.log();
         assert!(log.is_empty());
     }
@@ -1629,7 +1725,7 @@ mod tests {
         let track_cfg = TrackCfg {
             pattern: "*.large".to_string(),
         };
-        
+
         assert_eq!(track_cfg.pattern, "*.large");
     }
 
@@ -1639,7 +1735,7 @@ mod tests {
         index.entries.insert("z_file.txt".to_string(), 1);
         index.entries.insert("a_file.txt".to_string(), 2);
         index.entries.insert("m_file.txt".to_string(), 3);
-        
+
         // BTreeMap should maintain ordering
         let keys: Vec<_> = index.entries.keys().collect();
         assert_eq!(keys, vec!["a_file.txt", "m_file.txt", "z_file.txt"]);
