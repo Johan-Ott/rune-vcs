@@ -1,7 +1,7 @@
 // Simple import fallback to avoid webpack issues
 import React from 'react';
-import { Header } from './components/Header';
-import { FileExplorer } from './components/FileExplorerBridge';
+import { SimpleHeader } from './components/SimpleHeader';
+import { FileExplorerWithTabs } from './components/FileExplorerWithTabs';
 import { StatusBar } from './components/StatusBar';
 import { TooltipProvider } from './components/ui/tooltip';
 import { Toaster } from './components/ui/sonner';
@@ -42,28 +42,17 @@ function AppContent() {
       <div className={`h-screen w-screen overflow-hidden ${state.isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <Header 
+          <SimpleHeader 
             isDark={state.isDark} 
             onThemeToggle={() => setTheme(!state.isDark)}
-            tabs={state.tabs}
-            activeTabId={state.activeTabId}
-            onTabChange={setActiveTab}
-            onNewTab={addTab}
-            onCloseTab={removeTab}
-            onBranchChange={updateTabBranch}
           />
           
           {/* Main Content */}
           <div className="flex-1 flex overflow-hidden">
             {/* Main Panel */}
             <div className="flex-1 flex flex-col">
-              <FileExplorer 
+              <FileExplorerWithTabs 
                 isDark={state.isDark} 
-                tabType={activeTab?.type || 'explorer'}
-                section={state.sidebarSection}
-                isWelcomeTab={activeTab?.isWelcome || false}
-                isProfileTab={isProfileTab}
-                onLocationSelect={handleLocationSelect}
                 onThemeToggle={() => setTheme(!state.isDark)}
               />
             </div>
