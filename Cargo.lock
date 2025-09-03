@@ -4129,7 +4129,7 @@ dependencies = [
 
 [[package]]
 name = "rune-cli"
-version = "0.3.3-alpha.2"
+version = "0.3.3-alpha.3"
 dependencies = [
  "anyhow",
  "axum",
@@ -4210,7 +4210,7 @@ dependencies = [
 
 [[package]]
 name = "rune-draft"
-version = "0.3.3-alpha.2"
+version = "0.3.3-alpha.3"
 dependencies = [
  "anyhow",
  "blake3",
@@ -4285,7 +4285,7 @@ dependencies = [
 
 [[package]]
 name = "rune-planning"
-version = "0.3.3-alpha.2"
+version = "0.3.3-alpha.3"
 dependencies = [
  "anyhow",
  "chrono",
@@ -4368,7 +4368,7 @@ dependencies = [
 
 [[package]]
 name = "rune-workspace"
-version = "0.3.3-alpha.2"
+version = "0.3.3-alpha.3"
 dependencies = [
  "anyhow",
  "blake3",
