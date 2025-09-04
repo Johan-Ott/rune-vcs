@@ -1,0 +1,581 @@
+import React, { useState, useCallback, useEffect } from 'react';
+import { 
+  Folder, 
+  FolderOpen,
+  Star,
+  Search,
+  Globe,
+  X,
+  Plus,
+  File,
+  FileText,
+  FileImage,
+  FileCode,
+  TreePine,
+  List,
+  Grid,
+  MoreHorizontal,
+  Download,
+  Upload,
+  Trash2,
+  Copy,
+  Scissors,
+  Eye,
+  Info,
+  ChevronRight,
+  ChevronDown
+} from 'lucide-react';
+import { TabBar } from './tabs/TabBar';
+impo      </div>
+    );
+  };
+
+  const renderTreeView = (files: any[]) => {
+    return (
+      <div className="tree-view">
+        {files.map((file, index) => (
+          <div
+            key={index}
+            className={`flex items-center p-2 hover:bg-muted cursor-pointer ${
+              selectedFile?.path === file.path ? 'bg-accent' : ''
+            }`}
+            onClick={() => setSelectedFile(file)}
+            onContextMenu={(e) => handleFileContextMenu(e, file)}
+          >
+            {file.type === 'directory' ? (
+              <Folder className="w-4 h-4 mr-2" />
+            ) : (
+              <File className="w-4 h-4 mr-2" />
+            )}
+            <span className="text-sm">{file.name}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderListView = (files: any[]) => {
+    return (
+      <div className="list-view">
+        <div className="grid grid-cols-4 gap-2 p-2 border-b text-xs font-medium text-muted-foreground">
+          <div>Name</div>
+          <div>Type</div>
+          <div>Size</div>
+          <div>Modified</div>
+        </div>
+        {files.map((file, index) => (
+          <div
+            key={index}
+            className={`grid grid-cols-4 gap-2 p-2 hover:bg-muted cursor-pointer ${
+              selectedFile?.path === file.path ? 'bg-accent' : ''
+            }`}
+            onClick={() => setSelectedFile(file)}
+            onContextMenu={(e) => handleFileContextMenu(e, file)}
+          >
+            <div className="flex items-center">
+              {file.type === 'directory' ? (
+                <Folder className="w-4 h-4 mr-2" />
+              ) : (
+                <File className="w-4 h-4 mr-2" />
+              )}
+              <span className="text-sm truncate">{file.name}</span>
+            </div>
+            <div className="text-sm text-muted-foreground">{file.type}</div>
+            <div className="text-sm text-muted-foreground">{file.size || '-'}</div>
+            <div className="text-sm text-muted-foreground">{file.modified || '-'}</div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderGridView = (files: any[]) => {
+    return (
+      <div className="grid grid-cols-4 gap-4 p-4">
+        {files.map((file, index) => (
+          <div
+            key={index}
+            className={`flex flex-col items-center p-4 rounded-lg border hover:bg-muted cursor-pointer ${
+              selectedFile?.path === file.path ? 'bg-accent' : ''
+            }`}
+            onClick={() => setSelectedFile(file)}
+            onContextMenu={(e) => handleFileContextMenu(e, file)}
+          >
+            {file.type === 'directory' ? (
+              <Folder className="w-8 h-8 mb-2" />
+            ) : (
+              <File className="w-8 h-8 mb-2" />
+            )}
+            <span className="text-sm text-center truncate w-full">{file.name}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderTabContent = () => {useTabManager } from './tabs/useTabManager';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Badge } from './ui/badge';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from './ui/dropdown-menu';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuSeparator,
+} from './ui/context-menu';
+
+interface FileItem {
+  id: string;
+  name: string;
+  type: 'folder' | 'file';
+  size?: string;
+  modified: string;
+  path: string;
+  starred?: boolean;
+  fileType?: string;
+}
+
+interface FileExplorerWithTabsProps {
+  isDark: boolean;
+  onThemeToggle: () => void;
+}
+
+// Mock data for the file explorer
+const mockFiles: FileItem[] = [
+  { id: '1', name: 'Documents', type: 'folder', modified: '2 hours ago', path: '/Users/johanottosson/Documents' },
+  { id: '2', name: 'Projects', type: 'folder', modified: '1 day ago', path: '/Users/johanottosson/Projects' },
+  { id: '3', name: 'package.json', type: 'file', size: '2.1 KB', modified: '5 minutes ago', path: '/Users/johanottosson/package.json', fileType: 'json' },
+  { id: '4', name: 'README.md', type: 'file', size: '1.2 KB', modified: '1 hour ago', path: '/Users/johanottosson/README.md', fileType: 'md' },
+  { id: '5', name: 'image.png', type: 'file', size: '245 KB', modified: '2 days ago', path: '/Users/johanottosson/image.png', fileType: 'png' },
+];
+
+export function FileExplorerWithTabs({ isDark, onThemeToggle }: FileExplorerWithTabsProps) {
+  // Tab manager
+  const {
+    tabs,
+    activeTabId,
+    activeTab,
+    activeTabState,
+    addTab,
+    closeTab,
+    selectTab,
+    moveTab,
+    updateActiveTabState,
+  } = useTabManager('/Users/johanottosson/Documents');
+
+  // Local state for file explorer
+  const [selectedFiles, setSelectedFiles] = useState<FileItem[]>([]);
+  const [showDetailsPanel, setShowDetailsPanel] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
+  const [viewMode, setViewMode] = useState<'tree' | 'list' | 'grid'>('tree');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [openContextMenu, setOpenContextMenu] = useState<string | null>(null);
+  const [showCreateDialog, setShowCreateDialog] = useState<'file' | 'folder' | null>(null);
+
+  // Close details panel when no item is selected
+  useEffect(() => {
+    if (!selectedFile) {
+      setShowDetailsPanel(false);
+    }
+  }, [selectedFile]);
+
+  // Prevent multiple context menus
+  useEffect(() => {
+    const handleClick = () => setOpenContextMenu(null);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
+
+  const handleAddTab = (type: 'local' | 'remote' | 'search' | 'bookmarks') => {
+    switch (type) {
+      case 'local':
+        addTab({ 
+          title: 'Documents', 
+          path: '/Users/johanottosson/Documents', 
+          type: 'local',
+          icon: <FolderOpen className="w-4 h-4" />
+        });
+        break;
+      case 'remote':
+        addTab({ 
+          title: 'Remote Files', 
+          path: '/remote', 
+          type: 'remote',
+          icon: <Globe className="w-4 h-4" />
+        });
+        break;
+      case 'search':
+        addTab({ 
+          title: 'Search Results', 
+          path: '/search', 
+          type: 'search',
+          icon: <Search className="w-4 h-4" />
+        });
+        break;
+      case 'bookmarks':
+        addTab({ 
+          title: 'Bookmarks', 
+          path: '/bookmarks', 
+          type: 'bookmarks',
+          icon: <Star className="w-4 h-4" />
+        });
+        break;
+    }
+  };
+
+  // File operation handlers
+  const handleFileSelect = useCallback((file: FileItem) => {
+    setSelectedFile(file);
+    setSelectedFiles([file]);
+    setShowDetailsPanel(true);
+  }, []);
+
+  const handleFileDoubleClick = useCallback((file: FileItem) => {
+    if (file.type === 'folder') {
+      // Navigate to folder or open in current tab
+      updateActiveTabState({ currentPath: file.path });
+    } else {
+      // Open file
+      console.log('Opening file:', file.name);
+    }
+  }, [updateActiveTabState]);
+
+  const handleNewFile = useCallback(() => {
+    setShowCreateDialog('file');
+  }, []);
+
+  const handleNewFolder = useCallback(() => {
+    setShowCreateDialog('folder');
+  }, []);
+
+  const handleDelete = useCallback(() => {
+    if (selectedFiles.length > 0) {
+      console.log('Deleting files:', selectedFiles.map(f => f.name));
+      // Implement actual delete logic
+      setSelectedFiles([]);
+      setSelectedFile(null);
+    }
+  }, [selectedFiles]);
+
+  const handleDownload = useCallback(() => {
+    if (selectedFiles.length > 0) {
+      console.log('Downloading files:', selectedFiles.map(f => f.name));
+      // Implement actual download logic
+    }
+  }, [selectedFiles]);
+
+  const handleCopy = useCallback(() => {
+    if (selectedFiles.length > 0) {
+      console.log('Copying files:', selectedFiles.map(f => f.name));
+      // Implement actual copy logic
+    }
+  }, [selectedFiles]);
+
+  const handleCut = useCallback(() => {
+    if (selectedFiles.length > 0) {
+      console.log('Cutting files:', selectedFiles.map(f => f.name));
+      // Implement actual cut logic
+    }
+  }, [selectedFiles]);
+
+  const getFileIcon = (file: FileItem) => {
+    if (file.type === 'folder') {
+      return <Folder className="w-4 h-4" />;
+    }
+    
+    switch (file.fileType) {
+      case 'json':
+      case 'js':
+      case 'ts':
+      case 'tsx':
+        return <FileCode className="w-4 h-4" />;
+      case 'md':
+      case 'txt':
+        return <FileText className="w-4 h-4" />;
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+      case 'gif':
+        return <FileImage className="w-4 h-4" />;
+      default:
+        return <File className="w-4 h-4" />;
+    }
+  };
+
+  const filteredFiles = mockFiles.filter(file => 
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const renderTabContent = () => {
+    if (!activeTab) return null;
+
+    switch (activeTab.type) {
+      case 'local':
+        return renderLocalFileContent();
+      case 'remote':
+        return renderRemoteContent();
+      case 'search':
+        return renderSearchContent();
+      case 'bookmarks':
+        return renderBookmarksContent();
+      default:
+        return renderLocalFileContent();
+    }
+  };
+
+  const renderLocalFileContent = () => {
+    return (
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Toolbar */}
+        <div className="flex items-center justify-between p-2 border-b bg-muted/30">
+          <div className="flex items-center gap-2">
+            {/* New File/Folder Buttons */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNewFile}
+              className="h-8"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              File
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNewFolder}
+              className="h-8"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              Folder
+            </Button>
+
+            {/* Search */}
+            <div className="relative ml-4">
+              <Input
+                placeholder="Search files..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-8 w-64"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1">
+            {/* View Mode Toggle - Only tree, list, grid */}
+            <Button
+              variant={viewMode === 'tree' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('tree')}
+              className="h-8 w-8 p-0"
+            >
+              <TreePine className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className="h-8 w-8 p-0"
+            >
+              <List className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className="h-8 w-8 p-0"
+            >
+              <Grid className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* File View */}
+          <div className="flex-1 overflow-auto">
+            {viewMode === 'tree' && renderTreeView()}
+            {viewMode === 'list' && renderListView()}
+            {viewMode === 'grid' && renderGridView()}
+          </div>
+
+          {/* Details Panel - only show when file is selected */}
+          {showDetailsPanel && selectedFile && (
+            <div className="w-80 border-l bg-muted/20 p-4 overflow-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Details</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setShowDetailsPanel(false);
+                    setSelectedFile(null);
+                  }}
+                  className="h-6 w-6 p-0"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  {getFileIcon(selectedFile)}
+                  <div>
+                    <div className="font-medium">{selectedFile.name}</div>
+                    <div className="text-sm text-muted-foreground">{selectedFile.type}</div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="font-medium">Size: </span>
+                    {selectedFile.size || 'N/A'}
+                  </div>
+                  <div>
+                    <span className="font-medium">Modified: </span>
+                    {selectedFile.modified}
+                  </div>
+                  <div>
+                    <span className="font-medium">Path: </span>
+                    <code className="text-xs bg-muted px-1 rounded">{selectedFile.path}</code>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-4">
+                  <Button variant="outline" size="sm" onClick={handleDownload}>
+                    <Download className="w-4 h-4 mr-1" />
+                    Download
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={handleDelete}>
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderRemoteContent = () => {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Globe className="w-16 h-16 mx-auto text-muted-foreground" />
+          <div>
+            <h3 className="text-lg font-semibold">Remote Files</h3>
+            <p className="text-muted-foreground">Connect to remote servers and cloud storage</p>
+          </div>
+          <Button onClick={() => console.log('Connect to remote')}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Remote Connection
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderSearchContent = () => {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Search className="w-16 h-16 mx-auto text-muted-foreground" />
+          <div>
+            <h3 className="text-lg font-semibold">Search Files and Folders</h3>
+            <p className="text-muted-foreground">Enter a search query to find files across all locations</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderBookmarksContent = () => {
+    const mockBookmarks = [
+      { id: '1', name: 'Documents', path: '/Users/johanottosson/Documents', icon: <Folder className="w-4 h-4" /> },
+      { id: '2', name: 'Projects', path: '/Users/johanottosson/Projects', icon: <Folder className="w-4 h-4" /> },
+    ];
+
+    return (
+      <div className="flex-1 flex flex-col">
+        <div className="p-4 border-b">
+          <h3 className="text-lg font-semibold">Bookmarks</h3>
+        </div>
+        
+        <div className="flex-1 p-4">
+          {mockBookmarks.length > 0 ? (
+            <div className="space-y-2">
+              {mockBookmarks.map((bookmark) => (
+                <div
+                  key={bookmark.id}
+                  className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 cursor-pointer"
+                  onClick={() => {
+                    // Switch to a local tab and navigate to bookmark
+                    addTab({
+                      title: bookmark.name,
+                      path: bookmark.path,
+                      type: 'local',
+                      icon: bookmark.icon
+                    });
+                  }}
+                >
+                  {bookmark.icon}
+                  <div className="flex-1">
+                    <div className="font-medium">{bookmark.name}</div>
+                    <div className="text-sm text-muted-foreground">{bookmark.path}</div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Remove bookmark:', bookmark.id);
+                    }}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center space-y-4">
+                <Star className="w-16 h-16 mx-auto text-muted-foreground" />
+                <div>
+                  <h3 className="text-lg font-semibold">No Bookmarks</h3>
+                  <p className="text-muted-foreground">Bookmark your favorite locations for quick access</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex-1 flex flex-col h-full">
+      {/* Tab Bar */}
+      <TabBar
+        tabs={tabs}
+        activeTabId={activeTabId}
+        onTabSelect={selectTab}
+        onTabClose={closeTab}
+        onTabAdd={handleAddTab}
+        onTabMove={moveTab}
+        className="border-b"
+      />
+
+      {/* Render content based on active tab type */}
+      {renderTabContent()}
+    </div>
+  );
+}

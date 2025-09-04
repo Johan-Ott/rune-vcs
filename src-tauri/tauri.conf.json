@@ -3,10 +3,9 @@
   "version": "0.3.2-alpha.6",
   "identifier": "com.runevcs.visual-client",
   "build": {
-    "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run dev",
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:3000"
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "frontendDist": "../build"
   },
   "app": {
     "withGlobalTauri": true,

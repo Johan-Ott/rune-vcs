@@ -1,0 +1,5 @@
+id,title,type,status,priority,project,epic,story,tags,effort
+EPIC-001,Core Systems,epic,planned,high,PROJECT-001,,,,0
+PROJECT-001,Test Project,project,planned,critical,,,,mmo;networking;core,0
+STORY-001,User Authentication,story,planned,medium,PROJECT-001,EPIC-001,,,0
+TASK-001,Setup OAuth2 Client SDK,task,planned,medium,PROJECT-001,EPIC-001,STORY-001,,0
