@@ -29,10 +29,9 @@ impl Style {
     pub fn plan_type(plan_type: &PlanType) -> String {
         match plan_type {
             PlanType::Project => plan_type.as_str().red().bold().to_string(),
-            PlanType::Epic => plan_type.as_str().magenta().bold().to_string(),
-            PlanType::Story => plan_type.as_str().blue().bold().to_string(),
-            PlanType::Task => plan_type.as_str().cyan().bold().to_string(),
-            PlanType::SubTask => plan_type.as_str().bright_cyan().to_string(),
+            PlanType::Initiative => plan_type.as_str().magenta().bold().to_string(),
+            PlanType::Issue => plan_type.as_str().blue().bold().to_string(),
+            PlanType::SubIssue => plan_type.as_str().cyan().bold().to_string(),
         }
     }
 

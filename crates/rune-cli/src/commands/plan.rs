@@ -2,7 +2,7 @@ use anyhow::Result;
 use clap::{Args, Subcommand};
 use colored::Colorize;
 use crate::style::Style;
-use rune_planning::{PlanStore, PlanStatus, Priority, PlanType, PlanningConfig, VersionConfig, ComponentConfig, create_plan_with_options, update_status, add_task, add_task_with_meta, update_roots, parse_plan_query, filter_plans, StreamStore, generate_workspace_insights, generate_plan_insights, add_user_story, add_acceptance_criteria, set_priority, set_plan_type, set_epic, set_effort, add_dependency, remove_dependency, PLAN_DIR, Plan, PlanTemplate, TaskMetadata};
+use rune_planning::{PlanStore, PlanStatus, Priority, PlanType, PlanningConfig, VersionConfig, ComponentConfig, create_plan_with_options, update_status, add_task, add_task_with_meta, update_roots, parse_plan_query, filter_plans, StreamStore, generate_workspace_insights, generate_plan_insights, add_user_story, add_acceptance_criteria, set_priority, set_plan_type, set_initiative, set_effort, add_dependency, remove_dependency, PLAN_DIR, Plan, PlanTemplate, IssueMetadata};
 use std::env;
 
 #[derive(Debug, Subcommand)]
@@ -83,8 +83,8 @@ pub enum PlanCmd {
         /// Optional tags (comma separated)
         #[arg(long)]
         tags: Option<String>,
-        /// Plan type (project, epic, story, task, subtask)
-        #[arg(long, value_enum, default_value = "story")]
+        /// Plan type (project, initiative, issue, subissue)
+        #[arg(long, value_enum, default_value = "issue")]
         plan_type: PlanType,
         /// Priority level
         #[arg(long, value_enum, default_value = "medium")]
@@ -92,10 +92,10 @@ pub enum PlanCmd {
         /// Project this plan belongs to
         #[arg(long)]
         project: Option<String>,
-        /// Epic this plan belongs to
+        /// Initiative this plan belongs to
         #[arg(long)]
         epic: Option<String>,
-        /// Story this task belongs to (for tasks)
+        /// Issue this sub-issue belongs to (for sub-issues)
         #[arg(long)]
         story: Option<String>,
         /// Effort estimation
@@ -538,7 +538,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
             println!("{}", "-".repeat(80));
             
             for p in &plans { 
-                let epic_indicator = if p.plan_type == PlanType::Epic { "📋" } else if p.epic.is_some() { "├─" } else { "  " };
+                let epic_indicator = if p.plan_type == PlanType::Initiative { "📋" } else if p.epic.is_some() { "├─" } else { "  " };
                 let tags_str = if !p.tags.is_empty() { format!(" {}", Style::tags(&p.tags)) } else { String::new() };
                 
                 println!("{} {:<8} {:<8} {:<12} {:<8} {:<6} {}{}", 
@@ -555,16 +555,16 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
             
             // Summary
             let total = plans.len();
-            let epics = plans.iter().filter(|p| p.plan_type == PlanType::Epic).count();
-            let stories = plans.iter().filter(|p| p.plan_type == PlanType::Story).count();
-            let tasks = plans.iter().filter(|p| p.plan_type == PlanType::Task).count();
+            let epics = plans.iter().filter(|p| p.plan_type == PlanType::Initiative).count();
+            let stories = plans.iter().filter(|p| p.plan_type == PlanType::Issue).count();
+            let tasks = plans.iter().filter(|p| p.plan_type == PlanType::SubIssue).count();
             let total_effort: u32 = plans.iter().filter_map(|p| p.effort).sum();
             
             println!("\n📊 Summary: {} total ({} {}, {} {}, {} {}) • Total effort: {}", 
                 total, 
-                epics, Style::plan_type(&PlanType::Epic),
-                stories, Style::plan_type(&PlanType::Story), 
-                tasks, Style::plan_type(&PlanType::Task),
+                epics, Style::plan_type(&PlanType::Initiative),
+                stories, Style::plan_type(&PlanType::Issue), 
+                tasks, Style::plan_type(&PlanType::SubIssue),
                 Style::effort(Some(total_effort))
             );
         }
@@ -602,15 +602,15 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
             if plans.is_empty() { println!("No plans match."); return Ok(()); }
             
             // Gruppera plans
-            let epics: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Epic).collect();
-            let orphan_stories: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Story && p.epic.is_none()).collect();
+            let epics: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Initiative).collect();
+            let orphan_stories: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Issue && p.epic.is_none()).collect();
             
             println!("📋 RUNE MMO BOARD ({} plans)\n", plans.len());
             
             // Visa epics med deras stories
             for epic in epics {
-                let epic_stories: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Story && p.epic.as_ref() == Some(&epic.id)).collect();
-                let epic_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Task && p.epic.as_ref() == Some(&epic.id)).collect();
+                let epic_stories: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Issue && p.epic.as_ref() == Some(&epic.id)).collect();
+                let epic_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::SubIssue && p.epic.as_ref() == Some(&epic.id)).collect();
                 let total_effort: u32 = epic_stories.iter().chain(&epic_tasks).filter_map(|s| s.effort).sum();
                 let total_items = epic_stories.len() + epic_tasks.len();
                 let progress = if total_items == 0 { 0 } else {
@@ -622,7 +622,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                     epic.id, Style::status(&epic.status), epic.title, progress, total_effort, tags_str);
                 
                 for story in epic_stories {
-                    let story_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Task && p.story.as_ref() == Some(&story.id)).collect();
+                    let story_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::SubIssue && p.story.as_ref() == Some(&story.id)).collect();
                     let total_tasks = story.tasks.len() + story_tasks.len();
                     let done_tasks = story.tasks.iter().filter(|t| t.done).count() + story_tasks.iter().filter(|t| t.status == PlanStatus::Done).count();
                     let story_tags_str = if !story.tags.is_empty() { format!(" {}", Style::tags(&story.tags)) } else { String::new() };
@@ -759,7 +759,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
             Style::success(&format!("Set {id} type to {}", plan_type.as_str()));
         }
         PlanCmd::SetEpic { id, epic } => {
-            set_epic(&store, &id, &epic)?;
+            set_initiative(&store, &id, &epic)?;
             Style::success(&format!("Set {id} epic to {epic}"));
         }
         PlanCmd::SetEffort { id, effort } => {
@@ -804,11 +804,11 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
             }
         }
         PlanCmd::CreateEpic { title, plans, tags } => {
-            let epic = create_plan_with_options(&store, &title, tags.as_deref(), PlanType::Epic, Priority::High, None, None, None, None)?;
+            let epic = create_plan_with_options(&store, &title, tags.as_deref(), PlanType::Initiative, Priority::High, None, None, None, None)?;
             if let Some(plan_ids) = plans {
                 for plan_id in plan_ids.split(',').map(|s| s.trim()) {
                     if !plan_id.is_empty() {
-                        if let Err(_) = set_epic(&store, plan_id, &epic.id) {
+                        if let Err(_) = set_initiative(&store, plan_id, &epic.id) {
                             println!("Warning: Could not link plan {plan_id} to epic {}", epic.id);
                         }
                     }
@@ -831,7 +831,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
             
             // Visa befintliga epics som man kan länka till
             let plans = store.load_all()?;
-            let epics: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Epic).collect();
+            let epics: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Initiative).collect();
             if !epics.is_empty() {
                 println!("\n📋 Available Epics to link to:");
                 for epic in epics {
@@ -904,7 +904,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                 }
             };
             
-            let plan = create_plan_with_options(&store, &title, None, PlanType::Epic, Priority::High, 
+            let plan = create_plan_with_options(&store, &title, None, PlanType::Initiative, Priority::High, 
                 if project_id.is_empty() { None } else { Some(&project_id) }, None, None, None)?;
                 
             let path = store.path_for(&plan);
@@ -921,7 +921,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
             let epic_id = if let Some(ep) = epic {
                 ep
             } else {
-                let epics: Vec<_> = all_plans.iter().filter(|p| p.plan_type == PlanType::Epic).collect();
+                let epics: Vec<_> = all_plans.iter().filter(|p| p.plan_type == PlanType::Initiative).collect();
                 if epics.len() == 1 {
                     println!("📋 Using epic: {} - {}", epics[0].id, epics[0].title);
                     epics[0].id.clone()
@@ -945,7 +945,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                 None
             };
             
-            let plan = create_plan_with_options(&store, &title, None, PlanType::Story, priority.unwrap_or(Priority::Medium), 
+            let plan = create_plan_with_options(&store, &title, None, PlanType::Issue, priority.unwrap_or(Priority::Medium), 
                 project_id.as_deref(), if epic_id.is_empty() { None } else { Some(&epic_id) }, None, None)?;
                 
             let path = store.path_for(&plan);
@@ -979,13 +979,13 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                 }
             } else {
                 // Auto-detect
-                let stories: Vec<_> = all_plans.iter().filter(|p| p.plan_type == PlanType::Story).collect();
+                let stories: Vec<_> = all_plans.iter().filter(|p| p.plan_type == PlanType::Issue).collect();
                 if stories.len() == 1 {
                     let story = stories[0];
                     println!("📖 Using story: {} - {}", story.id, story.title);
                     (Some(story.id.clone()), story.epic.clone(), story.project.clone())
                 } else {
-                    let epics: Vec<_> = all_plans.iter().filter(|p| p.plan_type == PlanType::Epic).collect();
+                    let epics: Vec<_> = all_plans.iter().filter(|p| p.plan_type == PlanType::Initiative).collect();
                     if epics.len() == 1 {
                         let epic = epics[0];
                         println!("📋 Using epic: {} - {}", epic.id, epic.title);
@@ -1004,7 +1004,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                 }
             };
             
-            let plan = create_plan_with_options(&store, &title, None, PlanType::Task, Priority::Medium, 
+            let plan = create_plan_with_options(&store, &title, None, PlanType::SubIssue, Priority::Medium, 
                 project_id.as_deref(), epic_id.as_deref(), story_id.as_deref(), None)?;
                 
             let path = store.path_for(&plan);
@@ -1064,7 +1064,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
         
         PlanCmd::Progress { epic, details } => {
             let plans = store.load_all()?;
-            let epics: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Epic).collect();
+            let epics: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Initiative).collect();
             
             if let Some(epic_filter) = epic {
                 if let Some(epic_plan) = epics.iter().find(|e| e.id == epic_filter) {
@@ -1079,10 +1079,10 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                     println!();
                 }
                 
-                let total_stories = plans.iter().filter(|p| p.plan_type == PlanType::Story).count();
-                let done_stories = plans.iter().filter(|p| p.plan_type == PlanType::Story && p.status == PlanStatus::Done).count();
-                let total_tasks = plans.iter().filter(|p| p.plan_type == PlanType::Task).count();
-                let done_tasks = plans.iter().filter(|p| p.plan_type == PlanType::Task && p.status == PlanStatus::Done).count();
+                let total_stories = plans.iter().filter(|p| p.plan_type == PlanType::Issue).count();
+                let done_stories = plans.iter().filter(|p| p.plan_type == PlanType::Issue && p.status == PlanStatus::Done).count();
+                let total_tasks = plans.iter().filter(|p| p.plan_type == PlanType::SubIssue).count();
+                let done_tasks = plans.iter().filter(|p| p.plan_type == PlanType::SubIssue && p.status == PlanStatus::Done).count();
                 
                 println!("📈 Overall: {}/{} stories, {}/{} tasks", done_stories, total_stories, done_tasks, total_tasks);
             }
@@ -1643,7 +1643,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                         plan_type: source_plan.plan_type,
                         priority: source_plan.priority,
                         tags: source_plan.tags.clone(),
-                        default_tasks: source_plan.tasks.iter().map(|t| t.description.clone()).collect(),
+                        default_issues: source_plan.tasks.iter().map(|t| t.description.clone()).collect(),
                         default_acceptance_criteria: source_plan.acceptance_criteria.clone(),
                         content_template: source_plan.description.clone(),
                         metadata: std::collections::HashMap::new(),
@@ -1664,8 +1664,8 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                     println!("Type: {}", template.plan_type.as_str());
                     println!("Priority: {}", template.priority.as_str());
                     println!("Tags: {}", template.tags.join(", "));
-                    println!("Default Tasks: {}", template.default_tasks.len());
-                    for task in &template.default_tasks {
+                    println!("Default Issues: {}", template.default_issues.len());
+                    for task in &template.default_issues {
                         println!("  - {}", task);
                     }
                     println!("Acceptance Criteria: {}", template.default_acceptance_criteria.len());
@@ -1691,7 +1691,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
         PlanCmd::AddTaskAdvanced { id, description, assignee, due_date, effort_hours, depends_on } => {
             let mut plan = store.load(&id)?;
             let metadata = if assignee.is_some() || due_date.is_some() || effort_hours.is_some() || depends_on.is_some() {
-                Some(TaskMetadata {
+                Some(IssueMetadata {
                     assignee: assignee.clone(),
                     due_date: due_date.clone(),
                     estimated_hours: effort_hours,
@@ -1755,7 +1755,7 @@ pub fn execute_plan_command(args: PlanArgs) -> Result<()> {
                     println!("⚡ Velocity Report (last {} periods)", periods);
                     
                     let completed_stories: Vec<_> = plans.iter()
-                        .filter(|p| p.plan_type == PlanType::Story && p.status == PlanStatus::Done)
+                        .filter(|p| p.plan_type == PlanType::Issue && p.status == PlanStatus::Done)
                         .collect();
                     
                     let total_completed_effort: u32 = completed_stories.iter()
@@ -2393,8 +2393,8 @@ fn handle_analytics_command(cmd: AnalyticsCmd, root: &std::path::Path) -> Result
 }
 
 fn show_epic_progress(plans: &[Plan], epic: &Plan, details: bool) {
-    let epic_stories: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Story && p.epic.as_ref() == Some(&epic.id)).collect();
-    let epic_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Task && p.epic.as_ref() == Some(&epic.id)).collect();
+    let epic_stories: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Issue && p.epic.as_ref() == Some(&epic.id)).collect();
+    let epic_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::SubIssue && p.epic.as_ref() == Some(&epic.id)).collect();
     
     let total_items = epic_stories.len() + epic_tasks.len();
     let done_items = epic_stories.iter().chain(&epic_tasks).filter(|p| p.status == PlanStatus::Done).count();
@@ -2405,7 +2405,7 @@ fn show_epic_progress(plans: &[Plan], epic: &Plan, details: bool) {
     
     if details {
         for story in epic_stories {
-            let story_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::Task && p.story.as_ref() == Some(&story.id)).collect();
+            let story_tasks: Vec<_> = plans.iter().filter(|p| p.plan_type == PlanType::SubIssue && p.story.as_ref() == Some(&story.id)).collect();
             let story_subtasks = story.tasks.len();
             let story_done_subtasks = story.tasks.iter().filter(|t| t.done).count();
             
@@ -2434,10 +2434,9 @@ fn show_plan_tree(all_plans: &[Plan], plan: &Plan, depth: usize) {
     
     let type_color = match plan.plan_type {
         PlanType::Project => Style::project_color()(&plan.id),
-        PlanType::Epic => Style::epic_color()(&plan.id),
-        PlanType::Story => Style::story_color()(&plan.id),
-        PlanType::Task => Style::task_color()(&plan.id),
-        PlanType::SubTask => Style::task_color()(&plan.id),
+        PlanType::Initiative => Style::epic_color()(&plan.id),
+        PlanType::Issue => Style::story_color()(&plan.id),
+        PlanType::SubIssue => Style::task_color()(&plan.id),
     };
     
     println!("{}{} {} {}", indent, status_icon, type_color, plan.title);
@@ -2446,10 +2445,9 @@ fn show_plan_tree(all_plans: &[Plan], plan: &Plan, depth: usize) {
     let children: Vec<_> = all_plans.iter().filter(|p| {
         match plan.plan_type {
             PlanType::Project => p.project.as_ref() == Some(&plan.id),
-            PlanType::Epic => p.epic.as_ref() == Some(&plan.id),
-            PlanType::Story => p.story.as_ref() == Some(&plan.id),
-            PlanType::Task => false, // Tasks har inga children
-            PlanType::SubTask => false, // SubTasks har inga children
+            PlanType::Initiative => p.epic.as_ref() == Some(&plan.id),
+            PlanType::Issue => p.story.as_ref() == Some(&plan.id),
+            PlanType::SubIssue => false, // SubIssues har inga children
         }
     }).collect();
     
@@ -2618,10 +2616,10 @@ mod analytics_tests {
         let store = PlanStore::new(root);
         store.ensure().unwrap();
         
-        let plan1 = create_test_plan("TEST-001", "Completed", PlanStatus::Done, PlanType::Story);
-        let plan2 = create_test_plan("TEST-002", "In Progress", PlanStatus::InProgress, PlanType::Story);
-        let plan3 = create_test_plan("TEST-003", "Blocked", PlanStatus::Blocked, PlanType::Story);
-        let plan4 = create_test_plan("TEST-004", "Planned", PlanStatus::Planned, PlanType::Story);
+        let plan1 = create_test_plan("TEST-001", "Completed", PlanStatus::Done, PlanType::Issue);
+        let plan2 = create_test_plan("TEST-002", "In Progress", PlanStatus::InProgress, PlanType::Issue);
+        let plan3 = create_test_plan("TEST-003", "Blocked", PlanStatus::Blocked, PlanType::Issue);
+        let plan4 = create_test_plan("TEST-004", "Planned", PlanStatus::Planned, PlanType::Issue);
         
         store.save(&plan1).unwrap();
         store.save(&plan2).unwrap();
@@ -2642,8 +2640,8 @@ mod analytics_tests {
         let store = PlanStore::new(root);
         store.ensure().unwrap();
         
-        let blocked_plan = create_test_plan("TEST-001", "Blocked Item", PlanStatus::Blocked, PlanType::Task);
-        let normal_plan = create_test_plan("TEST-002", "Normal Item", PlanStatus::Planned, PlanType::Task);
+        let blocked_plan = create_test_plan("TEST-001", "Blocked Item", PlanStatus::Blocked, PlanType::SubIssue);
+        let normal_plan = create_test_plan("TEST-002", "Normal Item", PlanStatus::Planned, PlanType::SubIssue);
         
         store.save(&blocked_plan).unwrap();
         store.save(&normal_plan).unwrap();
@@ -2661,8 +2659,8 @@ mod analytics_tests {
         let store = PlanStore::new(root);
         store.ensure().unwrap();
         
-        let plan1 = create_test_plan("TEST-001", "Dependency", PlanStatus::Planned, PlanType::Story);
-        let mut plan2 = create_test_plan("TEST-002", "Dependent", PlanStatus::Planned, PlanType::Story);
+        let plan1 = create_test_plan("TEST-001", "Dependency", PlanStatus::Planned, PlanType::Issue);
+        let mut plan2 = create_test_plan("TEST-002", "Dependent", PlanStatus::Planned, PlanType::Issue);
         
         // Make plan2 depend on plan1
         plan2.dependencies.push("TEST-001".to_string());
@@ -2683,9 +2681,9 @@ mod analytics_tests {
         let store = PlanStore::new(root);
         store.ensure().unwrap();
         
-        let bottleneck = create_test_plan("BOTTLE-001", "Bottleneck", PlanStatus::InProgress, PlanType::Epic);
-        let mut dependent1 = create_test_plan("DEP-001", "Dependent 1", PlanStatus::Planned, PlanType::Story);
-        let mut dependent2 = create_test_plan("DEP-002", "Dependent 2", PlanStatus::Planned, PlanType::Story);
+        let bottleneck = create_test_plan("BOTTLE-001", "Bottleneck", PlanStatus::InProgress, PlanType::Initiative);
+        let mut dependent1 = create_test_plan("DEP-001", "Dependent 1", PlanStatus::Planned, PlanType::Issue);
+        let mut dependent2 = create_test_plan("DEP-002", "Dependent 2", PlanStatus::Planned, PlanType::Issue);
         
         dependent1.dependencies.push("BOTTLE-001".to_string());
         dependent2.dependencies.push("BOTTLE-001".to_string());
@@ -2708,7 +2706,7 @@ mod analytics_tests {
         store.ensure().unwrap();
         
         // Create a critical blocked item to trigger risk detection
-        let mut critical_blocked = create_test_plan("CRIT-001", "Critical Blocked", PlanStatus::Blocked, PlanType::Epic);
+        let mut critical_blocked = create_test_plan("CRIT-001", "Critical Blocked", PlanStatus::Blocked, PlanType::Initiative);
         critical_blocked.priority = Priority::Critical;
         
         store.save(&critical_blocked).unwrap();
@@ -2726,7 +2724,7 @@ mod analytics_tests {
         let store = PlanStore::new(root);
         store.ensure().unwrap();
         
-        let plan = create_test_plan("TEST-001", "Test Plan", PlanStatus::Planned, PlanType::Story);
+        let plan = create_test_plan("TEST-001", "Test Plan", PlanStatus::Planned, PlanType::Issue);
         store.save(&plan).unwrap();
         
         let cmd = AnalyticsCmd::Forecast { days: Some(30) };

@@ -18,16 +18,16 @@ pub struct PlanTemplate {
     pub plan_type: PlanType,
     pub priority: Priority,
     pub tags: Vec<String>,
-    pub default_tasks: Vec<String>,
+    pub default_issues: Vec<String>,
     pub default_acceptance_criteria: Vec<String>,
     pub content_template: String,
     pub metadata: HashMap<String, String>,
     pub created: DateTime<Utc>,
 }
 
-// Förbättrad Task-struktur med metadata
+// Förbättrad IssueMetadata struktur med metadata (Linear-style)
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TaskMetadata {
+pub struct IssueMetadata {
     pub assignee: Option<String>,
     pub due_date: Option<String>,
     pub estimated_hours: Option<f32>,
@@ -36,17 +36,17 @@ pub struct TaskMetadata {
     pub dependencies: Vec<String>,
 }
 
-// Hierarkisk struktur för plans
-pub fn get_project_dir(project_id: &str) -> String {
-    format!("{}/{}", PLAN_DIR, project_id)
+// Hierarkisk struktur för plans (Linear-style)
+pub fn get_initiative_dir(initiative_id: &str) -> String {
+    format!("{}/{}", PLAN_DIR, initiative_id)
 }
 
-pub fn get_epic_dir(project_id: &str, epic_id: &str) -> String {
-    format!("{}/{}/{}", PLAN_DIR, project_id, epic_id)
+pub fn get_project_dir(initiative_id: &str, project_id: &str) -> String {
+    format!("{}/{}/{}", PLAN_DIR, initiative_id, project_id)
 }
 
-pub fn get_story_dir(project_id: &str, epic_id: &str, story_id: &str) -> String {
-    format!("{}/{}/{}/{}", PLAN_DIR, project_id, epic_id, story_id)
+pub fn get_issue_dir(initiative_id: &str, project_id: &str, issue_id: &str) -> String {
+    format!("{}/{}/{}/{}", PLAN_DIR, initiative_id, project_id, issue_id)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, ValueEnum)]
@@ -62,9 +62,9 @@ impl Priority { pub fn as_str(&self) -> &'static str { match self { Self::Low=>"
 impl std::fmt::Display for Priority { fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { f.write_str(self.as_str()) } }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash, ValueEnum)]
-pub enum PlanType { Project, Epic, Story, Task, SubTask }
+pub enum PlanType { Initiative, Project, Issue, SubIssue }
 
-impl PlanType { pub fn as_str(&self) -> &'static str { match self { Self::Project=>"project", Self::Epic=>"epic", Self::Story=>"story", Self::Task=>"task", Self::SubTask=>"subtask" } } }
+impl PlanType { pub fn as_str(&self) -> &'static str { match self { Self::Initiative=>"initiative", Self::Project=>"project", Self::Issue=>"issue", Self::SubIssue=>"subissue" } } }
 impl std::fmt::Display for PlanType { fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { f.write_str(self.as_str()) } }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -75,7 +75,7 @@ pub struct Task {
     pub effort: Option<String>,
     pub path: Option<String>,
     pub tags: Vec<String>,
-    pub metadata: Option<TaskMetadata>,
+    pub metadata: Option<IssueMetadata>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -158,13 +158,13 @@ impl Plan {
                 };
                 format!("{}## Project Overview\n\n(Describe the overall project vision and scope)\n\n## Key Objectives\n{}\n\n## Success Criteria\n\n(Define what success looks like for this project)\n\n## Timeline & Milestones\n\n(Add key milestones and deadlines)\n", metadata, goals_md)
             },
-            PlanType::Epic => {
+            PlanType::Initiative => {
                 let goals_md = if self.goals.is_empty() { "".into() } else { 
                     self.goals.iter().map(|g| format!("- {g}")).collect::<Vec<_>>().join("\n") 
                 };
-                format!("{}## Epic Overview\n\n(Describe the large feature or capability this epic delivers)\n\n## Business Goals\n{}\n\n## User Impact\n\n(Describe how this epic benefits users)\n\n## Technical Approach\n\n(High-level technical strategy)\n", metadata, goals_md)
+                format!("{}## Initiative Overview\n\n(Describe the strategic initiative and its business impact)\n\n## Business Goals\n{}\n\n## Success Metrics\n\n(Define measurable outcomes)\n\n## Technical Strategy\n\n(High-level technical approach)\n", metadata, goals_md)
             },
-            PlanType::Story => {
+            PlanType::Issue => {
                 let user_stories_md = self.user_stories.iter().map(|s| {
                     let criteria_md = s.acceptance_criteria.iter().map(|c| format!("  - {c}")).collect::<Vec<_>>().join("\n");
                     let effort = s.effort.map(|e| format!(" {{effort:{}}}", e)).unwrap_or_default();
@@ -176,9 +176,9 @@ impl Plan {
 
                 let acceptance_criteria_md = self.acceptance_criteria.iter().map(|c| format!("- {c}")).collect::<Vec<_>>().join("\n");
 
-                format!("{}## User Story\n\n(Write the main user story: As a [user type], I want [goal], so that [benefit])\n\n## Additional User Stories\n{}\n\n## Acceptance Criteria\n{}\n\n## Design Notes\n\n(Add UI/UX considerations, mockups, etc.)\n", metadata, user_stories_md, acceptance_criteria_md)
+                format!("{}## Issue Description\n\n(Describe the problem to solve or feature to build)\n\n## User Requirements\n{}\n\n## Acceptance Criteria\n{}\n\n## Design Notes\n\n(Add UI/UX considerations, mockups, etc.)\n", metadata, user_stories_md, acceptance_criteria_md)
             },
-            PlanType::Task => {
+            PlanType::SubIssue => {
                 let tasks_md = self.tasks.iter().map(|t| {
                     format!("- [{}] {}", if t.done {"x"} else {" "}, t.description)
                 }).collect::<Vec<_>>().join("\n");
@@ -186,10 +186,6 @@ impl Plan {
                 let acceptance_criteria_md = self.acceptance_criteria.iter().map(|c| format!("- {c}")).collect::<Vec<_>>().join("\n");
                 
                 format!("{}## Implementation Plan\n\n(Describe the technical approach and implementation steps)\n\n## Sub-tasks\n{}\n\n## Definition of Done\n{}\n\n## Testing Notes\n\n(Add testing strategy and considerations)\n", metadata, tasks_md, acceptance_criteria_md)
-            },
-            PlanType::SubTask => {
-                // SubTasks ska inte längre vara separata filer, men behåller för bakåtkompatibilitet
-                format!("{}## Task Details\n\n(This should be moved to the parent Task as a checklist item)\n\n## Notes\n\n(Add any implementation notes)\n", metadata)
             }
         }
     }
@@ -199,7 +195,7 @@ impl Plan {
         let mut title = String::new();
         let mut status = PlanStatus::Planned;
         let mut priority = Priority::Medium;
-        let mut plan_type = PlanType::Story;
+        let mut plan_type = PlanType::Issue;
         let mut release = None;
         let mut owners: Vec<String> = vec![];
         let mut tags: Vec<String> = vec![];
@@ -225,7 +221,7 @@ impl Plan {
             else if line.starts_with("title:") { title = line[6..].trim().to_string(); }
             else if line.starts_with("status:") { let v = line[7..].trim(); status = match v {"planned"=>PlanStatus::Planned,"active"=>PlanStatus::Active,"in-progress"=>PlanStatus::InProgress,"blocked"=>PlanStatus::Blocked,"done"=>PlanStatus::Done,_=>PlanStatus::Planned}; }
             else if line.starts_with("priority:") { let v = line[9..].trim(); priority = match v {"low"=>Priority::Low,"medium"=>Priority::Medium,"high"=>Priority::High,"critical"=>Priority::Critical,_=>Priority::Medium}; }
-            else if line.starts_with("type:") { let v = line[5..].trim(); plan_type = match v {"project"=>PlanType::Project,"epic"=>PlanType::Epic,"story"=>PlanType::Story,"task"=>PlanType::Task,"subtask"=>PlanType::SubTask,_=>PlanType::Story}; }
+            else if line.starts_with("type:") { let v = line[5..].trim(); plan_type = match v {"project"=>PlanType::Project,"initiative"=>PlanType::Initiative,"issue"=>PlanType::Issue,"subissue"=>PlanType::SubIssue,_=>PlanType::Issue}; }
             else if line.starts_with("release:") { let v = line[8..].trim(); if !v.is_empty() { release = Some(v.to_string()); } }
             else if line.starts_with("owners:") { owners = line[7..].trim().split(',').filter(|s| !s.is_empty()).map(|s| s.trim().to_string()).collect(); }
             else if line.starts_with("tags:") { tags = line[5..].trim().split(',').filter(|s| !s.is_empty()).map(|s| s.trim().to_string()).collect(); }
@@ -332,15 +328,14 @@ impl PlanStore {
         Ok(()) 
     }
     
-    // Generera nästa ID baserat på plan-typ
+    // Generera nästa ID baserat på plan-typ (Linear-style)
     pub fn next_id(&self, plan_type: &PlanType) -> Result<String> { 
         self.ensure()?; 
         let prefix = match plan_type {
-            PlanType::Project => "PROJECT",
-            PlanType::Epic => "EPIC",
-            PlanType::Story => "STORY", 
-            PlanType::Task => "TASK",
-            PlanType::SubTask => "SUBTASK",
+            PlanType::Initiative => "INIT",
+            PlanType::Project => "PROJ",
+            PlanType::Issue => "ISS",
+            PlanType::SubIssue => "SUB",
         };
         
         let mut max = 0u32;
@@ -397,71 +392,49 @@ impl PlanStore {
                 let project_dir = self.dir().join(&plan.id);
                 project_dir.join("project.md")
             },
-            PlanType::Epic => {
+            PlanType::Initiative => {
                 if let Some(ref project_id) = plan.project {
-                    let epic_dir = self.dir().join(project_id).join(&plan.id);
-                    epic_dir.join("epic.md")
+                    let initiative_dir = self.dir().join(project_id).join(&plan.id);
+                    initiative_dir.join("initiative.md")
                 } else {
                     // Fallback till flat struktur
                     self.dir().join(format!("{}.md", plan.id))
                 }
             },
-            PlanType::Story => {
+            PlanType::Issue => {
                 if let Some(ref project_id) = plan.project {
-                    if let Some(ref epic_id) = plan.epic {
-                        // Story får sin egen mapp inom epic-mappen
-                        let story_dir = self.dir().join(project_id).join(epic_id).join(&plan.id);
-                        story_dir.join("story.md")
+                    if let Some(ref initiative_id) = plan.epic {
+                        // Issue får sin egen mapp inom initiative-mappen
+                        let issue_dir = self.dir().join(project_id).join(initiative_id).join(&plan.id);
+                        issue_dir.join("issue.md")
                     } else {
-                        let story_dir = self.dir().join(project_id).join(&plan.id);
-                        story_dir.join("story.md")
+                        let issue_dir = self.dir().join(project_id).join(&plan.id);
+                        issue_dir.join("issue.md")
                     }
                 } else {
                     self.dir().join(format!("{}.md", plan.id))
                 }
             },
-            PlanType::Task => {
+            PlanType::SubIssue => {
                 if let Some(ref project_id) = plan.project {
-                    if let Some(ref story_id) = plan.story {
-                        if let Some(ref epic_id) = plan.epic {
-                            // Task får sin egen mapp inom story-mappen
-                            let task_dir = self.dir().join(project_id).join(epic_id).join(story_id).join(&plan.id);
-                            task_dir.join("task.md")
+                    if let Some(ref issue_id) = plan.story {
+                        if let Some(ref initiative_id) = plan.epic {
+                            // SubIssue får sin egen mapp inom issue-mappen
+                            let subissue_dir = self.dir().join(project_id).join(initiative_id).join(issue_id).join(&plan.id);
+                            subissue_dir.join("subissue.md")
                         } else {
-                            let task_dir = self.dir().join(project_id).join(story_id).join(&plan.id);
-                            task_dir.join("task.md")
+                            let subissue_dir = self.dir().join(project_id).join(issue_id).join(&plan.id);
+                            subissue_dir.join("subissue.md")
                         }
-                    } else if let Some(ref epic_id) = plan.epic {
-                        let task_dir = self.dir().join(project_id).join(epic_id).join(&plan.id);
-                        task_dir.join("task.md")
+                    } else if let Some(ref initiative_id) = plan.epic {
+                        let subissue_dir = self.dir().join(project_id).join(initiative_id).join(&plan.id);
+                        subissue_dir.join("subissue.md")
                     } else {
-                        let task_dir = self.dir().join(project_id).join(&plan.id);
-                        task_dir.join("task.md")
+                        let subissue_dir = self.dir().join(project_id).join(&plan.id);
+                        subissue_dir.join("subissue.md")
                     }
                 } else {
                     self.dir().join(format!("{}.md", plan.id))
-                }
-            },
-            PlanType::SubTask => {
-                // SubTasks ska inte vara separata filer längre, men vi returnerar en path för bakåtkompatibilitet
-                // I praktiken borde detta inte användas - subtasks ska vara checkboxes i tasks
-                if let Some(ref project_id) = plan.project {
-                    if let Some(ref story_id) = plan.story {
-                        if let Some(ref epic_id) = plan.epic {
-                            let story_dir = self.dir().join(project_id).join(epic_id).join(story_id);
-                            story_dir.join(format!("deprecated-{}.md", plan.id))
-                        } else {
-                            let story_dir = self.dir().join(project_id).join(story_id);
-                            story_dir.join(format!("deprecated-{}.md", plan.id))
-                        }
-                    } else if let Some(ref epic_id) = plan.epic {
-                        let epic_dir = self.dir().join(project_id).join(epic_id);
-                        epic_dir.join(format!("deprecated-{}.md", plan.id))
-                    } else {
-                        self.dir().join(project_id).join(format!("deprecated-{}.md", plan.id))
-                    }
-                } else {
-                    self.dir().join(format!("deprecated-{}.md", plan.id))
                 }
             }
         }
@@ -711,7 +684,7 @@ impl PlanStore {
             updated: now,
             goals: vec![],
             user_stories: vec![],
-            tasks: template.default_tasks.iter().map(|desc| Task {
+            tasks: template.default_issues.iter().map(|desc| Task {
                 description: desc.clone(),
                 done: false,
                 task_type: None,
@@ -733,7 +706,7 @@ impl PlanStore {
 }
 
 pub fn create_plan(store: &PlanStore, title: &str, tags: Option<&str>) -> Result<Plan> {
-    create_plan_with_options(store, title, tags, PlanType::Story, Priority::Medium, None, None, None, None)
+    create_plan_with_options(store, title, tags, PlanType::Issue, Priority::Medium, None, None, None, None)
 }
 
 pub fn create_plan_with_options(store: &PlanStore, title: &str, tags: Option<&str>, plan_type: PlanType, priority: Priority, project: Option<&str>, epic: Option<&str>, story: Option<&str>, effort: Option<u32>) -> Result<Plan> {
@@ -995,12 +968,12 @@ pub fn set_plan_type(store: &PlanStore, id: &str, plan_type: PlanType) -> Result
     Ok(())
 }
 
-pub fn set_epic(store: &PlanStore, id: &str, epic: &str) -> Result<()> {
+pub fn set_initiative(store: &PlanStore, id: &str, initiative: &str) -> Result<()> {
     let mut p = store.load(id)?;
-    p.epic = Some(epic.to_string());
+    p.epic = Some(initiative.to_string());
     p.updated = Utc::now();
     store.save(&p)?;
-    log_signal(&store.root, "epic_set", &[("plan", &p.id), ("epic", epic)])?;
+    log_signal(&store.root, "initiative_set", &[("plan", &p.id), ("initiative", initiative)])?;
     Ok(())
 }
 
@@ -1305,18 +1278,18 @@ impl PlanningConfig {
     pub fn validate_plan(&self, plan: &Plan) -> Vec<String> {
         let mut errors = Vec::new();
         
-        // Check if story has acceptance criteria when required
+        // Check if issue has acceptance criteria when required
         if self.automation.require_acceptance_criteria_for_stories 
-            && plan.plan_type == PlanType::Story 
+            && plan.plan_type == PlanType::Issue 
             && plan.acceptance_criteria.is_empty() {
-            errors.push("Stories must have acceptance criteria".to_string());
+            errors.push("Issues must have acceptance criteria".to_string());
         }
         
-        // Check if story has effort when required
+        // Check if issue has effort when required
         if self.automation.require_effort_for_stories 
-            && plan.plan_type == PlanType::Story 
+            && plan.plan_type == PlanType::Issue 
             && plan.effort.is_none() {
-            errors.push("Stories must have effort estimation".to_string());
+            errors.push("Issues must have effort estimation".to_string());
         }
         
         // Check effort bounds
@@ -1337,9 +1310,9 @@ impl PlanningConfig {
     /// Get template content for a plan type
     pub fn get_template(&self, plan_type: &PlanType) -> String {
         match plan_type {
-            PlanType::Epic => self.templates.epic.clone(),
-            PlanType::Story => self.templates.story.clone(),
-            PlanType::Task | PlanType::SubTask => self.templates.task.clone(),
+            PlanType::Initiative => self.templates.epic.clone(),
+            PlanType::Issue => self.templates.story.clone(),
+            PlanType::SubIssue => self.templates.task.clone(),
             PlanType::Project => "# Project: {title}\n\n## Overview\n\n## Objectives\n\n## Timeline\n".to_string(),
         }
     }
@@ -1378,7 +1351,7 @@ mod tests {
         let store = PlanStore::new(tmp.path());
         store.ensure()?;
         let p = create_plan(&store, "Test Plan", Some("alpha,beta"))?;
-        assert!(p.id.starts_with("STORY-")); // Now creates stories by default
+        assert!(p.id.starts_with("ISS-")); // Now creates issues by default
         let all = store.load_all()?;
         assert_eq!(all.len(), 1);
         assert_eq!(all[0].title, "Test Plan");
