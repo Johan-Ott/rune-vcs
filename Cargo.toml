@@ -15,6 +15,8 @@ members = [
     "crates/rune-planning",
     "crates/rune-security",
     "crates/rune-ai",
+    "apps/rune-plan/src-tauri",
+    "apps/rune-source/src-tauri",
     "tests",
 ]
 exclude = [

@@ -1,8 +1,122 @@
-# Binaries and build artifacts
-/target
+# Rust - Binaries and build artifacts
+/target/
+target/
 **/*.rs.bk
+Cargo.lock
 
-# Cargo lock removed - tracking for reproducible app builds
+# Node.js - Package managers and dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+.yarn/
+
+# Frontend build outputs
+dist/
+build/
+.vite/
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+
+# Tauri specific
+apps/*/src-tauri/target/
+apps/*/src-tauri/Cargo.lock
+.tauri/
+
+# Environment and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/secret*
+**/key*
+**/*password*
+**/*token*
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Icon?
+Desktop.ini
+
+# IDEs & Editors
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+*.swn
+*.swm
+*~
+*.bak
+*.old
+
+# Logs and debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Storybook build outputs
+.out
+.storybook-out
 
 # Test files and temp directories
 /test_files/
@@ -24,46 +138,8 @@ utils.py
 component.tsx
 hello.cpp
 
-# Environment and secrets
-.env
-.env.local
-.env.production
-**/secret*
-**/key*
-**/*password*
-**/*token*
-
-# OS-specific
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-Desktop.ini
-
-# IDEs & Editors
-.idea/
-.vscode/
-*.code-workspace
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-*.swp
-*.swo
-*.swn
-*.swm
-
-# Backups
-*~
-*.bak
-*.old
-
 # Test artifacts
 /tests/tmp/
-coverage/
 
 # Rune-specific
 .rune/
@@ -74,10 +150,3 @@ rune-locks/
 # API/Server runtime data
 shrine-data/
 api-data/
-
-# npm
-node_modules/
-
-# Build output
-target/
-build/

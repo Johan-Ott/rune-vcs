@@ -1,8 +1,37 @@
 {
   "name": "rune-vcs-workspace",
   "private": true,
+  "version": "0.3.4-alpha.1",
+  "description": "Rune VCS - Modern version control and project management",
+  "workspaces": [
+    "apps/*",
+    "libs/*",
+    "shared/*"
+  ],
   "scripts": {
-    "dev": "cd src && npm run dev",
-    "build": "cd src && npm run build"
+    "rune-plan": "pnpm --filter rune-plan tauri dev",
+    "rune-plan-dev": "pnpm --filter rune-plan dev",
+    "rune-plan-rel": "pnpm --filter rune-plan tauri build",
+    "rune-plan-web": "pnpm --filter rune-plan preview",
+    
+    "rune-source": "pnpm --filter rune-source tauri dev",
+    "rune-source-dev": "pnpm --filter rune-source dev",
+    "rune-source-rel": "pnpm --filter rune-source tauri build",
+    "rune-source-web": "pnpm --filter rune-source preview",
+    
+    "dev:all": "concurrently \"pnpm rune-plan-dev\" \"pnpm rune-source-dev\"",
+    "build:all": "pnpm --filter ./apps/* build",
+    "tauri:all": "concurrently \"pnpm rune-plan\" \"pnpm rune-source\"",
+    
+    "dev:plan": "cd apps/rune-plan && npm run dev",
+    "dev:source": "cd apps/rune-source && npm run dev",
+    "build:plan": "cd apps/rune-plan && npm run build",
+    "build:source": "cd apps/rune-source && npm run build",
+    "tauri:plan": "cd apps/rune-plan && npm run tauri",
+    "tauri:source": "cd apps/rune-source && npm run tauri"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2",
+    "concurrently": "^8.2.2"
   }
 }
