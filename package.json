@@ -23,6 +23,15 @@
     "build:all": "pnpm --filter ./apps/* build",
     "tauri:all": "concurrently \"pnpm rune-plan\" \"pnpm rune-source\"",
     
+    "shared:build": "pnpm --filter @rune-vcs/api build && pnpm --filter @rune-vcs/state build",
+    "shared:dev": "pnpm --filter @rune-vcs/api dev && pnpm --filter @rune-vcs/state dev",
+    "build:full": "./scripts/build-all.sh",
+    "build:release": "./scripts/build-all.sh --package",
+    "test:all": "./scripts/test-all.sh",
+    "test:coverage": "./scripts/test-all.sh --coverage",
+    "audit:deps": "./scripts/audit-deps.sh",
+    "audit:fix": "./scripts/audit-deps.sh --fix",
+    
     "dev:plan": "cd apps/rune-plan && npm run dev",
     "dev:source": "cd apps/rune-source && npm run dev",
     "build:plan": "cd apps/rune-plan && npm run build",

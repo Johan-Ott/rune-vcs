@@ -196,6 +196,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "tauri-core",
  "tauri-plugin-log",
 ]
 
@@ -5596,6 +5597,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "tauri-core",
  "tokio",
 ]
 
@@ -6559,6 +6561,19 @@ dependencies = [
  "url",
  "uuid",
  "walkdir",
+]
+
+[[package]]
+name = "tauri-core"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "rune-core",
+ "rune-store",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tokio",
 ]
 
 [[package]]

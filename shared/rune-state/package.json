@@ -1,0 +1,26 @@
+{
+  "name": "@rune-vcs/state",
+  "version": "0.1.0",
+  "description": "Shared state management for Rune VCS applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@rune-vcs/api": "workspace:*",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^18.2.15"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

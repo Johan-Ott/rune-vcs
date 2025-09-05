@@ -31,3 +31,4 @@ mime_guess = "2"
 # Rune VCS crates
 rune-core = { path = "../../../crates/rune-core" }
 rune-planning = { path = "../../../crates/rune-planning" }
+tauri-core = { path = "../../../shared/tauri-core" }

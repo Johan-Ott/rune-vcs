@@ -1,0 +1,21 @@
+{
+  "name": "@rune-vcs/api",
+  "version": "0.1.0",
+  "description": "TypeScript API bridge for Rune VCS Tauri apps",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

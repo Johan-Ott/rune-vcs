@@ -3,6 +3,9 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 use base64;
 
+// Import shared tauri-core commands
+use tauri_core::commands::*;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileEntry {
     name: String,
@@ -306,6 +309,12 @@ fn copy_dir_all(src: &Path, dest: &Path) -> std::io::Result<()> {
 pub fn run() {
   tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
+        // Shared commands from tauri-core
+        get_file_info,
+        list_directory,
+        get_vcs_status,
+        open_external,
+        // App-specific commands
         read_dir,
         read_file,
         write_file,

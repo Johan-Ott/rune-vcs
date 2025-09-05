@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+// Import shared tauri-core commands
+use tauri_core::commands::*;
+
 #[derive(Debug, Serialize, Deserialize)]
 struct RepoStatus {
     current_branch: String,
@@ -59,6 +62,12 @@ async fn get_branches() -> Result<Vec<String>, String> {
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
+            // Shared commands from tauri-core
+            get_file_info,
+            list_directory,
+            get_vcs_status,
+            open_external,
+            // App-specific commands
             get_repo_status,
             get_file_diff,
             get_commit_history,

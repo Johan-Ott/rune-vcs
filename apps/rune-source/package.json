@@ -11,6 +11,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@rune-vcs/api": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "@tauri-apps/api": "^2.0.0",

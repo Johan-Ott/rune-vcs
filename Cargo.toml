@@ -15,6 +15,7 @@ members = [
     "crates/rune-planning",
     "crates/rune-security",
     "crates/rune-ai",
+    "shared/tauri-core",
     "apps/rune-plan/src-tauri",
     "apps/rune-source/src-tauri",
     "tests",
