@@ -1,0 +1,171 @@
+{
+  "name": "rune-vcs",
+  "displayName": "Rune VCS",
+  "description": "Version control integration for rune-vcs system",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.103.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "rune-vcs",
+          "title": "Rune VCS",
+          "icon": "$(source-control)"
+        }
+      ]
+    },
+    "views": {
+      "rune-vcs": [
+        {
+          "id": "rune-changes",
+          "name": "Changes",
+          "when": "true",
+          "icon": "$(diff)"
+        },
+        {
+          "id": "rune-branches",
+          "name": "Branches", 
+          "when": "true",
+          "icon": "$(git-branch)"
+        },
+        {
+          "id": "rune-history",
+          "name": "History",
+          "when": "true",
+          "icon": "$(history)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "rune-vcs.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "rune-vcs.commit",
+        "title": "Commit",
+        "icon": "$(check)"
+      },
+      {
+        "command": "rune-vcs.stage",
+        "title": "Stage Changes",
+        "icon": "$(add)"
+      },
+      {
+        "command": "rune-vcs.unstage",
+        "title": "Unstage Changes",
+        "icon": "$(remove)"
+      },
+      {
+        "command": "rune-vcs.discard",
+        "title": "Discard Changes",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "rune-vcs.testConnection",
+        "title": "Test API Connection",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "rune-changes.refresh",
+        "title": "Refresh Changes",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "rune-branches.refresh",
+        "title": "Refresh Branches",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "rune-history.refresh", 
+        "title": "Refresh History",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "rune-vcs.stage",
+          "when": "view == rune-changes && viewItem == unstaged-file",
+          "group": "1_modification"
+        },
+        {
+          "command": "rune-vcs.unstage",
+          "when": "view == rune-changes && viewItem == staged-file",
+          "group": "1_modification"
+        },
+        {
+          "command": "rune-vcs.stage",
+          "when": "view == rune-changes && viewItem == untracked-file",
+          "group": "1_modification"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "rune-changes.refresh",
+          "when": "view == rune-changes",
+          "group": "navigation"
+        },
+        {
+          "command": "rune-branches.refresh",
+          "when": "view == rune-branches",
+          "group": "navigation"
+        },
+        {
+          "command": "rune-history.refresh",
+          "when": "view == rune-history",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "rune-vcs.refresh",
+          "when": "true"
+        },
+        {
+          "command": "rune-vcs.commit",
+          "when": "true"
+        },
+        {
+          "command": "rune-vcs.testConnection",
+          "when": "true"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.103.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "eslint": "^9.34.0",
+    "esbuild": "^0.25.9",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.2",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}

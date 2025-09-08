@@ -1,0 +1,76 @@
+/* Graph visualization styles */
+.history-graph-container {
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.history-graph {
+    display: block;
+    vertical-align: middle;
+}
+
+.history-graph path {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.history-graph circle {
+    stroke-width: 2px;
+}
+
+/* Tree item styling */
+.graph-item {
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+}
+
+.graph-item .label {
+    font-weight: 600;
+}
+
+.graph-item .description {
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+
+/* Visual indicators */
+.current-commit {
+    font-weight: bold;
+    color: var(--vscode-gitDecoration.modifiedResourceForeground);
+}
+
+.merge-commit {
+    color: var(--vscode-gitDecoration.conflictingResourceForeground);
+}
+
+.regular-commit {
+    color: var(--vscode-foreground);
+}
+
+/* Graph colors matching VS Code theme */
+.graph-color-0 { color: #FFB000; }
+.graph-color-1 { color: #DC267F; }
+.graph-color-2 { color: #994F00; }
+.graph-color-3 { color: #40B0A6; }
+.graph-color-4 { color: #B66DFF; }
+.graph-color-5 { color: #00A8E8; }
+.graph-color-6 { color: #00C851; }
+.graph-color-7 { color: #FF4444; }
+
+/* Swimlane visualization */
+.swimlane-line {
+    stroke-width: 2px;
+    fill: none;
+}
+
+.commit-circle {
+    stroke-width: 2px;
+}
+
+.current-commit-circle {
+    stroke-width: 3px;
+}
+
+.merge-commit-circle {
+    stroke-width: 2px;
+}

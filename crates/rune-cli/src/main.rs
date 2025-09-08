@@ -100,8 +100,16 @@ struct Args {
     #[arg(short, long, global = true)]
     yes: bool,
 
+    /// Show basic commands only (for new users and artists)
+    #[arg(long, global = true)]
+    basic: bool,
+
+    /// Show all advanced commands (for power users and developers)
+    #[arg(long, global = true, conflicts_with = "basic")]
+    advanced: bool,
+
     #[command(subcommand)]
-    cmd: Cmd,
+    cmd: Option<Cmd>,
 }
 
 #[derive(Subcommand, Debug)]
@@ -731,8 +739,9 @@ enum BatchOperation {
 
 #[derive(Subcommand, Debug)]
 enum Cmd {
-    /// Run local JSON API server
-    Api {
+    /// Start Rune server for remote use
+    #[command(alias = "api")]
+    Server {
         #[arg(long, default_value = "127.0.0.1:7421")]
         addr: String,
         #[arg(long)]
@@ -2830,15 +2839,83 @@ async fn handle_tutorial_command(cmd: TutorialCmd, ctx: &RuneContext) -> anyhow:
     Ok(())
 }
 
+fn print_basic_help() {
+    println!("{}", "Rune VCS - Basic Commands".bold().blue());
+    println!();
+    println!("{}", "Smart Workflows (recommended):".bold().yellow());
+    println!("  {} init         Start a new project (with remote setup)", Style::status_added());
+    println!("  {} work         Smart workflow: status → stage → commit", Style::status_added()); 
+    println!("  {} ship         Commit and push in one step", Style::status_added());
+    println!("  {} sync         Pull and merge from remote", Style::status_added());
+    println!();
+    println!("{}", "Essential Commands:".bold().yellow());
+    println!("  {} status       Show current status", Style::status_added());
+    println!("  {} log          Show commit history", Style::status_added());
+    println!("  {} checkout     Switch or create branch", Style::status_added());
+    println!("  {} remote       Manage remote repositories", Style::status_added());
+    println!("  {} server       Start Rune server (for remote use)", Style::status_added());
+    println!();
+    println!("{}", "Tips:".dimmed());
+    println!("  • Use 'rune work' for most daily tasks");
+    println!("  • Use 'rune ship' to quickly commit and push");
+    println!("  • Run 'rune --advanced help' to see all commands");
+}
+
+fn print_advanced_help() {
+    println!("{}", "Rune VCS - All Commands".bold().blue());
+    println!();
+    println!("{}", "Basic Commands:".bold().yellow());
+    println!("  init, work, ship, sync, status, log, checkout, remote, server");
+    println!();
+    println!("{}", "Advanced Commands:".bold().yellow());
+    println!("  add, commit, push, pull, merge, revert, diff, ls-files, remove, reset, show");
+    println!("  branch, stash, fetch, ignore, patch, docs, examples, tutorial");
+    println!("  lfs, shrine, delta, intelligence, rebase, cherry-pick, submodule, hooks");
+    println!("  workspace, draft, plan, sign, config, doctor, update, version, tag, benchmark");
+    println!();
+    println!("{}", "AI & Smart Features:".bold().green());
+    println!("  suggest, dashboard, auto-flow, guard, binary, smart-branch, performance");
+    println!("  rollback, changed, conflicts, fix, optimize, health, template, batch, watch");
+    println!();
+    println!("{}", "Natural Language:".bold().cyan());
+    println!("  undo-op, display, what, help-me");
+    println!();
+    println!("Run 'rune <command> --help' for detailed help on any command.");
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     init_colors();
     let args = Args::parse();
     let ctx = RuneContext::new(&args);
 
+    // Handle basic/advanced help
+    if args.basic {
+        print_basic_help();
+        return Ok(());
+    }
+    if args.advanced {
+        print_advanced_help();
+        return Ok(());
+    }
+
     ctx.verbose("Rune VCS starting with enhanced user experience features");
 
-    match args.cmd {
+    // Handle case where no command is provided
+    let cmd = match args.cmd {
+        Some(cmd) => cmd,
+        None => {
+            // No command provided, show help based on basic/advanced mode
+            if args.basic {
+                print_basic_help();
+            } else {
+                print_advanced_help();
+            }
+            return Ok(());
+        }
+    };
+
+    match cmd {
         Cmd::Guide => {
             Style::section_header("Rune VCS Quick Start Guide");
             println!("\n{}", "Repository Management:".bold());
@@ -3751,7 +3828,7 @@ async fn main() -> anyhow::Result<()> {
                 return commands::shrine::serve(addr).await
             }
         },
-        Cmd::Api {
+        Cmd::Server {
             addr,
             with_shrine,
             shrine_addr,
