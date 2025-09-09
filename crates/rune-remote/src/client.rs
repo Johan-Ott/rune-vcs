@@ -3,6 +3,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
+use rune_store::Store;
+
+use crate::protocol::{RemoteProtocol, PushOptions, PullOptions, FetchOptions};
 
 /// Remote server configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -304,6 +307,115 @@ impl RemoteCommands {
                 Ok(false) => println!("✗ Failed to connect"),
                 Err(e) => println!("✗ Error: {}", e),
             }
+        }
+        
+        Ok(())
+    }
+
+    /// Push changes to remote (like `git push`)
+    pub async fn push(
+        repo_path: &std::path::Path, 
+        remote_name: Option<&str>, 
+        branch: Option<&str>,
+        force: bool
+    ) -> Result<()> {
+        let manager = RemoteManager::new(repo_path)?;
+        let remote_name = remote_name.unwrap_or("origin");
+        
+        let remote = manager.get_remote(remote_name)
+            .ok_or_else(|| anyhow::anyhow!("Remote '{}' not found", remote_name))?;
+        
+        let protocol = RemoteProtocol::new(remote.url.clone(), remote.token.clone())?;
+        
+        let _options = PushOptions {
+            branch: branch.map(|s| s.to_string()),
+            force,
+            create_branch: true,
+        };
+        
+        println!("Pushing to {}...", remote.url);
+        
+        // For now, use a simplified implementation
+        // TODO: Implement full protocol integration
+        let store = Store::discover(repo_path)?;
+        let current_ref = store.head_ref();
+        let target_branch = branch.unwrap_or("main");
+        
+        match protocol.push("repository", &store, &current_ref, &format!("refs/heads/{}", target_branch), force).await {
+            Ok(_) => println!("Push completed successfully"),
+            Err(e) => return Err(anyhow::anyhow!("Push failed: {}", e)),
+        }
+        
+        Ok(())
+    }
+
+    /// Pull changes from remote (like `git pull`)
+    pub async fn pull(
+        repo_path: &std::path::Path,
+        remote_name: Option<&str>,
+        branch: Option<&str>,
+        rebase: bool
+    ) -> Result<()> {
+        let manager = RemoteManager::new(repo_path)?;
+        let remote_name = remote_name.unwrap_or("origin");
+        
+        let remote = manager.get_remote(remote_name)
+            .ok_or_else(|| anyhow::anyhow!("Remote '{}' not found", remote_name))?;
+        
+        let protocol = RemoteProtocol::new(remote.url.clone(), remote.token.clone())?;
+        
+        let _options = PullOptions {
+            branch: branch.map(|s| s.to_string()),
+            rebase,
+            fast_forward_only: false,
+        };
+        
+        println!("Pulling from {}...", remote.url);
+        
+        // For now, use a simplified implementation
+        // TODO: Implement full protocol integration
+        let store = Store::discover(repo_path)?;
+        let current_ref = store.head_ref();
+        let target_branch = branch.unwrap_or("main");
+        
+        match protocol.pull("repository", &store, &format!("refs/heads/{}", target_branch), &current_ref, rebase).await {
+            Ok(_) => println!("Pull completed successfully"),
+            Err(e) => return Err(anyhow::anyhow!("Pull failed: {}", e)),
+        }
+        
+        Ok(())
+    }
+
+    /// Fetch changes from remote (like `git fetch`)
+    pub async fn fetch(
+        repo_path: &std::path::Path,
+        remote_name: Option<&str>,
+        branch: Option<&str>
+    ) -> Result<()> {
+        let manager = RemoteManager::new(repo_path)?;
+        let remote_name = remote_name.unwrap_or("origin");
+        
+        let remote = manager.get_remote(remote_name)
+            .ok_or_else(|| anyhow::anyhow!("Remote '{}' not found", remote_name))?;
+        
+        let protocol = RemoteProtocol::new(remote.url.clone(), remote.token.clone())?;
+        
+        let _options = FetchOptions {
+            branch: branch.map(|s| s.to_string()),
+            tags: true,
+            prune: false,
+        };
+        
+        println!("Fetching from {}...", remote.url);
+        
+        // For now, use a simplified implementation
+        // TODO: Implement full protocol integration
+        let store = Store::discover(repo_path)?;
+        let target_branch = branch.unwrap_or("main");
+        
+        match protocol.fetch("repository", &store, &[format!("refs/heads/{}", target_branch)]).await {
+            Ok(refs) => println!("Fetched {} references", refs.refs.len()),
+            Err(e) => return Err(anyhow::anyhow!("Fetch failed: {}", e)),
         }
         
         Ok(())

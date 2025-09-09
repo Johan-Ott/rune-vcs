@@ -9,10 +9,14 @@ use tokio::net::TcpListener;
 
 pub mod auth;
 pub mod client;
+pub mod protocol;
+pub mod server;
 pub mod sync;
 
 pub use auth::{AuthService, Permission};
 pub use client::{RemoteCommands, RemoteConfig, RemoteManager};
+pub use protocol::{RemoteProtocol, RemoteOperations};
+pub use server::{RuneServer, ServerConfig};
 pub use sync::{Branch, Commit, FileChange, FileOperation};
 
 #[derive(Clone)]
